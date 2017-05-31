@@ -3,7 +3,7 @@ using System.IO;
 
 namespace AlisBatchReporter.Classes
 {
-    internal class ReportQuery : Query
+    internal class ReportQuery : GenericQueryDaoImpl
     {
         private readonly string _fromDate;
         private readonly string _toDate;
@@ -14,16 +14,7 @@ namespace AlisBatchReporter.Classes
             _toDate = toDate;
         }
 
-        public override DataTable DoQuery()
-        {
-            var script = File.ReadAllText(QueryPath);
-            var convertedScript = EmbedScript(script);          
-            return GetData(convertedScript);
-        }
-
-        
-
-        private string EmbedScript(string script)
+        public override string EmbedScript(string script)
         {
             var result = script.Replace("{fromDate}", "'" + _fromDate + "'")
                 .Replace("{toDate}", "'" + _toDate + "'");

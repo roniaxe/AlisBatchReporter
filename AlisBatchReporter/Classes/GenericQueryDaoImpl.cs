@@ -1,20 +1,22 @@
 ﻿using System.Data;
 using System.Data.SqlClient;
 using System.Globalization;
+using System.IO;
 using System.Windows.Forms;
+using AlisBatchReporter.DALs;
 
 namespace AlisBatchReporter.Classes
 {
-    public abstract class Query
+    public abstract class GenericQueryDaoImpl : IGenericQueryDao
     {
         protected string QueryPath;
 
-        protected Query(string queryPath)
+        protected GenericQueryDaoImpl(string queryPath)
         {
             QueryPath = queryPath;
         }
 
-        protected DataTable GetData(string selectCommand)
+        public DataTable GetData(string selectCommand)
         {
             DataTable table = null;
             try
@@ -45,6 +47,13 @@ namespace AlisBatchReporter.Classes
             return table;
         }
 
-        public abstract DataTable DoQuery();
+        public DataTable DoQuery()
+        {
+            var script = File.ReadAllText(QueryPath);
+            var convertedScript = EmbedScript(script);
+            return GetData(convertedScript);
+        }
+
+        public abstract string EmbedScript(string script);
     }
 }

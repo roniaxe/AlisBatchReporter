@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
@@ -18,6 +19,8 @@ namespace AlisBatchReporter.Forms
         private void DataForm_Load(object sender, EventArgs e)
         {
             dataGridView1.Hide();
+            exportButton.Visible = false;
+
 
             // Create the context menu items
             _batchRunNumberContextMenu.MenuItems.Add("Load GBA", LoadGbaData);
@@ -28,14 +31,30 @@ namespace AlisBatchReporter.Forms
         {
             // Get the right click batch run number
             var batchRunNum = dataGridView1.CurrentCell.Value.ToString();
-            
+
             // Create query
             SimpleQuery timeingQuery = new SimpleQuery(@"..\..\Resources\SQL\RunningTime.sql", batchRunNum);
 
-            // Run Query and convert result into HH:MM:SS, show in a message box
-            TimeSpan time = TimeSpan.FromSeconds((int)timeingQuery.DoQuery().Rows[0].ItemArray[0]);
-            string str = time.ToString(@"hh\:mm\:ss\:fff");
-            MessageBox.Show($@"Seconds Ran: {str}");
+            BackgroundWorker backgroundWorker = new BackgroundWorker
+            {
+                WorkerSupportsCancellation = true,
+                WorkerReportsProgress = true
+            };
+            progressBar1.Visible = true;
+            backgroundWorker.DoWork += (o, args) =>
+            {
+                SimpleQuery report = args.Argument as SimpleQuery;
+                args.Result = report?.DoQuery();
+            };
+            backgroundWorker.RunWorkerCompleted += (o, args) =>
+            {
+                DataTable workerResult = (DataTable) args.Result;
+                TimeSpan time = TimeSpan.FromSeconds((int) workerResult.Rows[0].ItemArray[0]);
+                string str = time.ToString(@"hh\:mm\:ss\:fff");
+                MessageBox.Show($@"Seconds Ran: {str}");
+                progressBar1.Visible = false;
+            };
+            backgroundWorker.RunWorkerAsync(timeingQuery);
         }
 
         private void LoadGbaData(object sender, EventArgs e)
@@ -59,21 +78,24 @@ namespace AlisBatchReporter.Forms
             if (e.Button == MouseButtons.Right)
             {
                 var hitTestInfo = dataGridView1.HitTest(e.X, e.Y);
-                var cellHeaderText = dataGridView1.Columns[hitTestInfo.ColumnIndex].HeaderText;
-                
-                if (hitTestInfo.Type == DataGridViewHitTestType.Cell && cellHeaderText.Equals("Batch Run Number"))
+                if (hitTestInfo.Type == DataGridViewHitTestType.Cell)
                 {
-                    // Set pressed cell as active
-                    dataGridView1.CurrentCell = dataGridView1.Rows[hitTestInfo.RowIndex].Cells[hitTestInfo.ColumnIndex];
-                    
-                    // Set cell to be selected 
-                    dataGridView1.Rows[hitTestInfo.RowIndex].Cells[hitTestInfo.ColumnIndex].Selected = true;
+                    var cellHeaderText = dataGridView1.Columns[hitTestInfo.ColumnIndex].HeaderText;
+                    if (cellHeaderText.Equals("Batch Run Number"))
+                    {
+                        // Set pressed cell as active
+                        dataGridView1.CurrentCell = dataGridView1.Rows[hitTestInfo.RowIndex]
+                            .Cells[hitTestInfo.ColumnIndex];
 
-                    // Focus on the grid
-                    dataGridView1.Focus();
+                        // Set cell to be selected 
+                        dataGridView1.Rows[hitTestInfo.RowIndex].Cells[hitTestInfo.ColumnIndex].Selected = true;
 
-                    // Show context menu items
-                    _batchRunNumberContextMenu.Show(dataGridView1, new Point(e.X, e.Y));
+                        // Focus on the grid
+                        dataGridView1.Focus();
+
+                        // Show context menu items
+                        _batchRunNumberContextMenu.Show(dataGridView1, new Point(e.X, e.Y));
+                    }
                 }
             }
         }
@@ -82,26 +104,26 @@ namespace AlisBatchReporter.Forms
         {
             // Create query
             ReportQuery newQuery = new ReportQuery(
-                @"..\..\Resources\SQL\BatchAudit.sql", 
-                fromDate.Value.ToShortDateString(), 
+                @"..\..\Resources\SQL\BatchAudit.sql",
+                fromDate.Value.ToShortDateString(),
                 toDate.Value.ToShortDateString()
-                );
+            );
 
             // Set the datasource, run query (populate grid in backgroundWorker1_RunWorkerCompleted)
             dataGridView1.DataSource = bindingSource1;
             progressBar1.Visible = true;
             backgroundWorker1.RunWorkerAsync(newQuery);
             dataGridView1.Show();
-
         }
 
-        private void backgroundWorker1_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
+        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
             ReportQuery report = e.Argument as ReportQuery;
             e.Result = report?.DoQuery();
         }
 
-        private void backgroundWorker1_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+        private void backgroundWorker1_RunWorkerCompleted(object sender,
+            RunWorkerCompletedEventArgs e)
         {
             DataTable workerResult = (DataTable) e.Result;
             bindingSource1.DataSource = workerResult;

@@ -128,10 +128,10 @@
             // 
             // refreshButton
             // 
-            //this.refreshButton.Image = global::WindowsFormsApplication1.Properties.Resources.refresh__1_;
-            this.refreshButton.Location = new System.Drawing.Point(38, 43);
+            this.refreshButton.Image = global::AlisBatchReporter.Properties.Resources.Button_Refresh_icon;
+            this.refreshButton.Location = new System.Drawing.Point(187, 79);
             this.refreshButton.Name = "refreshButton";
-            this.refreshButton.Size = new System.Drawing.Size(39, 31);
+            this.refreshButton.Size = new System.Drawing.Size(39, 35);
             this.refreshButton.TabIndex = 5;
             this.refreshButton.UseVisualStyleBackColor = true;
             this.refreshButton.Click += new System.EventHandler(this.refreshButton_Click);

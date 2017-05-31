@@ -6,6 +6,8 @@ namespace AlisBatchReporter.DALs
     {
         DataTable GetData(string selectCommand);
 
-        DataTable DoQuery();        
+        DataTable DoQuery();
+
+        string EmbedScript(string script);
     }
 }

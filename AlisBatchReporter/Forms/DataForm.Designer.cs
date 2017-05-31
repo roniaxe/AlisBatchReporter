@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DataForm));
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.toDate = new System.Windows.Forms.DateTimePicker();
             this.label2 = new System.Windows.Forms.Label();
@@ -36,6 +37,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.createButton = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.exportButton = new System.Windows.Forms.Button();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.closeButton = new System.Windows.Forms.Button();
@@ -66,13 +68,11 @@
             // 
             // toDate
             // 
-            this.toDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.toDate.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.toDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.toDate.Location = new System.Drawing.Point(465, 67);
+            this.toDate.Location = new System.Drawing.Point(197, 73);
             this.toDate.Name = "toDate";
-            this.toDate.Size = new System.Drawing.Size(105, 24);
+            this.toDate.Size = new System.Drawing.Size(133, 24);
             this.toDate.TabIndex = 10;
             // 
             // label2
@@ -81,7 +81,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(350, 73);
+            this.label2.Location = new System.Drawing.Point(15, 73);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(65, 18);
             this.label2.TabIndex = 9;
@@ -89,14 +89,12 @@
             // 
             // fromDate
             // 
-            this.fromDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.fromDate.Checked = false;
             this.fromDate.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.fromDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.fromDate.Location = new System.Drawing.Point(465, 17);
+            this.fromDate.Location = new System.Drawing.Point(197, 18);
             this.fromDate.Name = "fromDate";
-            this.fromDate.Size = new System.Drawing.Size(105, 24);
+            this.fromDate.Size = new System.Drawing.Size(133, 24);
             this.fromDate.TabIndex = 8;
             // 
             // label1
@@ -105,7 +103,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(350, 23);
+            this.label1.Location = new System.Drawing.Point(15, 23);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(83, 18);
             this.label1.TabIndex = 7;
@@ -125,6 +123,7 @@
             // 
             this.panel1.AutoScroll = true;
             this.panel1.AutoSize = true;
+            this.panel1.Controls.Add(this.exportButton);
             this.panel1.Controls.Add(this.progressBar1);
             this.panel1.Controls.Add(this.groupBox1);
             this.panel1.Controls.Add(this.label1);
@@ -138,11 +137,22 @@
             this.panel1.Size = new System.Drawing.Size(1125, 539);
             this.panel1.TabIndex = 11;
             // 
+            // exportButton
+            // 
+            this.exportButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.exportButton.Image = ((System.Drawing.Image)(resources.GetObject("exportButton.Image")));
+            this.exportButton.Location = new System.Drawing.Point(1041, 122);
+            this.exportButton.Name = "exportButton";
+            this.exportButton.Size = new System.Drawing.Size(26, 29);
+            this.exportButton.TabIndex = 14;
+            this.exportButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.exportButton.UseVisualStyleBackColor = true;
+            // 
             // progressBar1
             // 
-            this.progressBar1.Location = new System.Drawing.Point(740, 122);
+            this.progressBar1.Location = new System.Drawing.Point(822, 122);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(103, 29);
+            this.progressBar1.Size = new System.Drawing.Size(162, 29);
             this.progressBar1.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
             this.progressBar1.TabIndex = 12;
             this.progressBar1.Visible = false;
@@ -151,7 +161,7 @@
             // 
             this.groupBox1.Controls.Add(this.closeButton);
             this.groupBox1.Controls.Add(this.createButton);
-            this.groupBox1.Location = new System.Drawing.Point(353, 108);
+            this.groupBox1.Location = new System.Drawing.Point(18, 99);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(312, 43);
             this.groupBox1.TabIndex = 13;
@@ -207,5 +217,6 @@
         private System.Windows.Forms.Button closeButton;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.ProgressBar progressBar1;
+        private System.Windows.Forms.Button exportButton;
     }
 }

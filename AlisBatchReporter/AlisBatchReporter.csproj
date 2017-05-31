@@ -48,16 +48,10 @@
     <Compile Include="Classes\ComboboxItem.cs" />
     <Compile Include="Classes\ConnectionString.cs" />
     <Compile Include="Classes\Global.cs" />
-    <Compile Include="Classes\Query.cs" />
+    <Compile Include="Classes\GenericQueryDaoImpl.cs" />
     <Compile Include="Classes\ReportQuery.cs" />
     <Compile Include="Classes\SimpleQuery.cs" />
     <Compile Include="DALs\IGenericQueryDao.cs" />
-    <Compile Include="Form1.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\ConfigForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -104,6 +98,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="connectionStrings.config" />
     <None Include="Properties\Settings.settings">
@@ -121,6 +116,8 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <None Include="Resources\excel_export_icon.ico" />
+    <None Include="Resources\Button-Refresh-icon.png" />
     <Content Include="Resources\SQL\BatchAudit.sql" />
     <Content Include="Resources\SQL\RunningTime.sql" />
     <Content Include="Resources\SQL\SimpleGBA.sql" />
