@@ -147,6 +147,7 @@
             this.exportButton.TabIndex = 14;
             this.exportButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.exportButton.UseVisualStyleBackColor = true;
+            this.exportButton.Click += new System.EventHandler(this.exportButton_Click);
             // 
             // progressBar1
             // 
