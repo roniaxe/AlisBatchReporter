@@ -19,7 +19,7 @@ namespace AlisBatchReporter.Classes
             DataTable table = null;
             try
             {
-                // Specify a connection string. Replace the given value with a 
+                // Specify a connection string. Replace the given value with a
                 // valid connection string for a Northwind SQL Server sample
                 // database accessible to your system.
                 var connectionString = Global.ChosenConnection;
