@@ -1,7 +1,7 @@
 SELECT
    REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (gba.description, '0', ''), '1', ''), '2', ''), '3', ''), '4', ''), '5', ''), '6', ''), '7', ''), '8', ''), '9', '') as "Error Message",
    MIN(gba.entry_time) AS "Err Time",
-   tt.task_name,
+   tt.task_name AS "Task",
    gba.batch_run_num AS "Batch Run Number",
    SUM(
 	  CASE

@@ -14,10 +14,5 @@ namespace AlisBatchReporter.Classes
             Env = env;
             Database = database;
         }
-
-        public ConnectionString()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

@@ -1,11 +1,17 @@
 SELECT
-   * 
+   TOP 100 GBA.DESCRIPTION,
+   GBA.ENTRY_TIME,
+   GBA.ENTRY_TYPE,
+   GBA.BATCH_RUN_NUM,
+   GBA.PRIMARY_KEY_TYPE,
+   GBA.PRIMARY_KEY,
+   GBA.SECONDARY_KEY_TYPE,
+   GBA.SECONDARY_KEY,
+   GBA.BATCH_ID,
+   GBA.TASK_ID 
 FROM
-   g_batch_audit 
+   G_BATCH_AUDIT GBA 
 WHERE
-   batch_run_num = {batchRunNum}
-   AND entry_type IN 
-   (
-      5,
-      6
-   )
+   GBA.BATCH_RUN_NUM = {batchRunNum}
+ORDER BY
+   GBA.DESCRIPTION

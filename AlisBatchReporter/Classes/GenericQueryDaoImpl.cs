@@ -21,28 +21,16 @@ namespace AlisBatchReporter.Classes
             DataTable table = null;
             try
             {
-                // Specify a connection string. Replace the given value with 
-                // valid connection string for a Northwind SQL Server sample
-                // database accessible to your system.
                 var connectionString = Global.ChosenConnection;
-
-                // Create a new data adapter based on the specified query.
                 var dataAdapter = new SqlDataAdapter(selectCommand, connectionString);
-
-                // Create a command builder to generate SQL update, insert, and
-                // delete commands based on selectCommand. These are used to
-                // update the database.
                 SqlCommandBuilder commandBuilder = new SqlCommandBuilder(dataAdapter);
-
-                // Populate a new data table and bind it to the BindingSource.
                 table = new DataTable {Locale = CultureInfo.InvariantCulture};
+
                 dataAdapter.Fill(table);
             }
-            catch (SqlException)
+            catch (SqlException exception)
             {
-                MessageBox.Show("To run this example, replace the value of the " +
-                                "connectionString variable with a connection string that is " +
-                                "valid for your system.");
+                MessageBox.Show(exception.Message);
             }
             return table;
         }

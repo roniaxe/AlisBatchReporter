@@ -1,7 +1,4 @@
-﻿using System.Data;
-using System.IO;
-
-namespace AlisBatchReporter.Classes
+﻿namespace AlisBatchReporter.Classes
 {
     internal class ReportQuery : GenericQueryDaoImpl
     {

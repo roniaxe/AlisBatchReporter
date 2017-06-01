@@ -19,8 +19,7 @@ namespace AlisBatchReporter.Forms
         private void DataForm_Load(object sender, EventArgs e)
         {
             dataGridView1.Hide();
-            exportButton.Visible = false;
-
+            exportButton.Visible = false;           
 
             // Create the context menu items
             _batchRunNumberContextMenu.MenuItems.Add("Load GBA", LoadGbaData);
@@ -51,8 +50,8 @@ namespace AlisBatchReporter.Forms
                 DataTable workerResult = (DataTable) args.Result;
                 TimeSpan time = TimeSpan.FromSeconds((int) workerResult.Rows[0].ItemArray[0]);
                 string str = time.ToString(@"hh\:mm\:ss\:fff");
-                MessageBox.Show($@"Seconds Ran: {str}");
                 progressBar1.Visible = false;
+                MessageBox.Show($@"Seconds Ran: {str}");
             };
             backgroundWorker.RunWorkerAsync(timeingQuery);
         }
@@ -103,17 +102,24 @@ namespace AlisBatchReporter.Forms
         private void createButton_Click(object sender, EventArgs e)
         {
             // Create query
+            ResetComps();
             ReportQuery newQuery = new ReportQuery(
                 @"..\..\Resources\SQL\BatchAudit.sql",
                 fromDate.Value.ToShortDateString(),
                 toDate.Value.ToShortDateString()
             );
 
-            // Set the datasource, run query (populate grid in backgroundWorker1_RunWorkerCompleted)
+            // Set the datasource, run query (populate grid in backgroundWorker1_RunWorkerCompleted)   
             dataGridView1.DataSource = bindingSource1;
             progressBar1.Visible = true;
-            backgroundWorker1.RunWorkerAsync(newQuery);
-            dataGridView1.Show();           
+            dataGridView1.Show();
+            backgroundWorker1.RunWorkerAsync(newQuery);           
+        }
+
+        private void ResetComps()
+        {
+            dataGridView1.DataSource = null;
+            dataGridView1.Rows.Clear();
         }
 
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
@@ -128,7 +134,7 @@ namespace AlisBatchReporter.Forms
             DataTable workerResult = (DataTable) e.Result;
             bindingSource1.DataSource = workerResult;
             progressBar1.Visible = false;
-            exportButton.Visible = true;
+            exportButton.Visible = dataGridView1.Rows.Count != 0;
         }
 
         /// <summary> 
@@ -142,7 +148,6 @@ namespace AlisBatchReporter.Forms
 
             try
             {
-
                 Microsoft.Office.Interop.Excel._Worksheet worksheet = workbook.ActiveSheet;
 
                 worksheet.Name = "ExportedFromDatGrid";
@@ -162,7 +167,8 @@ namespace AlisBatchReporter.Forms
                         }
                         else
                         {
-                            worksheet.Cells[cellRowIndex, cellColumnIndex] = dataGridView1.Rows[i].Cells[j].Value.ToString();
+                            worksheet.Cells[cellRowIndex, cellColumnIndex] =
+                                dataGridView1.Rows[i].Cells[j].Value.ToString();
                         }
                         cellColumnIndex++;
                     }
@@ -171,14 +177,17 @@ namespace AlisBatchReporter.Forms
                 }
 
                 //Getting the location and file name of the excel to save from user. 
-                SaveFileDialog saveDialog = new SaveFileDialog();
-                saveDialog.Filter = "Excel files (*.xlsx)|*.xlsx|All files (*.*)|*.*";
-                saveDialog.FilterIndex = 2;
+                SaveFileDialog saveDialog =
+                    new SaveFileDialog
+                    {
+                        Filter = @"Excel files (*.xlsx)|*.xlsx|All files (*.*)|*.*",
+                        FilterIndex = 2
+                    };
 
                 if (saveDialog.ShowDialog() == DialogResult.OK)
                 {
                     workbook.SaveAs(saveDialog.FileName);
-                    MessageBox.Show("Export Successful");
+                    MessageBox.Show(@"Export Successful");
                 }
             }
             catch (Exception ex)
@@ -188,10 +197,7 @@ namespace AlisBatchReporter.Forms
             finally
             {
                 excel.Quit();
-                workbook = null;
-                excel = null;
             }
-
         }
 
         private void exportButton_Click(object sender, EventArgs e)

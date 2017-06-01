@@ -30,7 +30,7 @@ namespace AlisBatchReporter.Forms
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Alis Batch Reporter 1.0");
+            MessageBox.Show(@"Export Successful");
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)

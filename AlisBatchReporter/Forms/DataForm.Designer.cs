@@ -141,7 +141,7 @@
             // 
             this.exportButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.exportButton.Image = ((System.Drawing.Image)(resources.GetObject("exportButton.Image")));
-            this.exportButton.Location = new System.Drawing.Point(1041, 122);
+            this.exportButton.Location = new System.Drawing.Point(1041, 113);
             this.exportButton.Name = "exportButton";
             this.exportButton.Size = new System.Drawing.Size(26, 29);
             this.exportButton.TabIndex = 14;
@@ -151,7 +151,7 @@
             // 
             // progressBar1
             // 
-            this.progressBar1.Location = new System.Drawing.Point(822, 122);
+            this.progressBar1.Location = new System.Drawing.Point(831, 113);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(162, 29);
             this.progressBar1.Style = System.Windows.Forms.ProgressBarStyle.Marquee;

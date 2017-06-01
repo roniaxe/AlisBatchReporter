@@ -8,23 +8,96 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace AlisBatchReporter.Properties
-{
-
-
+namespace AlisBatchReporter.Properties {
+    
+    
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "11.0.0.0")]
-    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase
-    {
-
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "14.0.0.0")]
+    public sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
+        
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
-
-        public static Settings Default
-        {
-            get
-            {
+        
+        public static Settings Default {
+            get {
                 return defaultInstance;
             }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool SaveCredentialsSelected
+        {
+            get {
+                return ((bool)(this["SaveCredentialsSelected"]));
+            }
+            set { (this["SaveCredentialsSelected"]) = value; }
+        }
+
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string RackspaceUser
+        {
+            get {
+                return ((string)(this["RackspaceUser"]));
+            }
+            set { (this["RackspaceUser"]) = value; }
+        }
+
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string RackspacePass
+        {
+            get {
+                return ((string)(this["RackspacePass"]));
+            }
+            set { (this["RackspacePass"]) = value; }
+        }
+
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ProdUser
+        {
+            get {
+                return ((string)(this["ProdUser"]));
+            }
+            set { (this["ProdUser"]) = value; }
+        }
+
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ProdPass
+        {
+            get {
+                return ((string)(this["ProdPass"]));
+            }
+            set { (this["ProdPass"]) = value; }
+        }
+
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string SapiensUser
+        {
+            get {
+                return ((string)(this["SapiensUser"]));
+            }
+            set { (this["SapiensUser"]) = value; }
+        }
+
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string SapiensPass
+        {
+            get {
+                return ((string)(this["SapiensPass"]));
+            }
+            set { (this["SapiensPass"]) = value; }
         }
     }
 }
