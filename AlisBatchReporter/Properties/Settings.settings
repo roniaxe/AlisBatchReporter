@@ -2,25 +2,52 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="AlisBatchReporter.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="SaveCredentialsSelected" Type="System.Boolean" Scope="Application">
+    <Setting Name="SaveCredentialsSelected" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="RackspaceUser" Type="System.String" Scope="Application">
+    <Setting Name="RackspaceUser" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="RackspacePass" Type="System.String" Scope="Application">
+    <Setting Name="RackspacePass" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="ProdUser" Type="System.String" Scope="Application">
+    <Setting Name="ProdUser" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="ProdPass" Type="System.String" Scope="Application">
+    <Setting Name="ProdPass" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="SapiensUser" Type="System.String" Scope="Application">
+    <Setting Name="SapiensUser" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="SapiensPass" Type="System.String" Scope="Application">
+    <Setting Name="SapiensPass" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="RackspaceAdd" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="ProdAdd" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="SapiensAdd" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="LastSaveEnv" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="LastSaveConnStr" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="RackspaceDb" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="ProdDb" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="SapiensDb" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="LastSaveDb" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
   </Settings>

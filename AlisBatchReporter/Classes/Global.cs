@@ -2,9 +2,10 @@
 {
     static class Global
     {
-        public static string Env { get; set; } = "Prod";
+        public static string Env { get; set; } = Properties.Settings.Default.LastSaveEnv;
 
-        public static string ChosenConnection { get; set; } =
-            "Data Source=10.134.5.30;Initial Catalog=alis_db_prod;Persist Security Info=True;User ID=Ebachmeir;Password=9Ke2n!47T";
+        public static string ChosenConnection { get; set; } = Properties.Settings.Default.LastSaveConnStr;
+        public static string Db { get; set; }
+        public static bool SavedCheckBox { get; set; }
     }
 }

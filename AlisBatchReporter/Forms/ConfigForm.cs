@@ -7,12 +7,14 @@ using System.Text;
 using System.Windows.Forms;
 using System.Xml.Linq;
 using AlisBatchReporter.Classes;
+using AlisBatchReporter.Infra;
 
 namespace AlisBatchReporter.Forms
 {
     public partial class ConfigForm : Form
     {
-        readonly StringBuilder _connString = new StringBuilder();
+        private readonly StringBuilder _connString = new StringBuilder();
+        private List<ComboboxItem> _envComboboxItems;
 
         public ConfigForm()
         {
@@ -21,31 +23,35 @@ namespace AlisBatchReporter.Forms
 
         private void ConfigForm_Load(object sender, EventArgs e)
         {
-            ReadConfigurations();
+            //ReadConfigurations();
             PopulateEnvCombobox();
-            checkBoxSave.Checked = Properties.Settings.Default.SaveCredentialsSelected;
+            checkBoxSave.Checked = Global.SavedCheckBox;
         }
 
         private void PopulateEnvCombobox()
         {
-            ComboboxItem prod = new ComboboxItem
+            _envComboboxItems = new List<ComboboxItem>
             {
-                Text = "Prod",
-                Value = "Data Source=10.134.5.30;Persist Security Info=True;User ID=Ebachmeir;Password=9Ke2n!47T"
+                new ComboboxItem()
+                {
+                    Text = "Prod",
+                    Value = "10.134.5.30"
+                },
+                new ComboboxItem
+                {
+                    Text = "Rackspace",
+                    Value = "756027-LSQLDEV1.FBLIFE.COM"
+                },
+                new ComboboxItem
+                {
+                    Text = "Sapiens",
+                    Value = "alis-db-sql3"
+                }
             };
-            ComboboxItem rackspace = new ComboboxItem
-            {
-                Text = "Rackspace",
-                Value = "Data Source=756027-LSQLDEV1.FBLIFE.COM;Persist Security Info=True;"
-            };
-            ComboboxItem sapiens = new ComboboxItem
-            {
-                Text = "Sapiens",
-                Value = "Data Source=alis-db-sql3;Persist Security Info=True;User ID=AlisUser;Password=it12345*"
-            };
-            comboBoxEnv.Items.Add(prod);
-            comboBoxEnv.Items.Add(rackspace);
-            comboBoxEnv.Items.Add(sapiens);
+            comboBoxEnv.Items.AddRange(_envComboboxItems.ToArray());
+            ComboboxItem selected = _envComboboxItems.Find(item => item.Text.Equals(Global.Env));
+            comboBoxEnv.SelectedItem = selected;
+            //ReadFromAppSettings();
         }
 
         private void ReadConfigurations()
@@ -71,43 +77,117 @@ namespace AlisBatchReporter.Forms
 
         private void saveButton_Click(object sender, EventArgs e)
         {
-            if (!string.IsNullOrEmpty(_connString.ToString()))
+            if (ValidateForm())
             {
+                string user = textBoxUser.Text;
+                string pass = textBoxPassword.Text.Protect();
+                string serverAddress = textBoxServerAddress.Text;
+                string db = (string) comboBoxDb.SelectedItem;
+                if (checkBoxSave.Checked)
+                {                    
+                    if (((ComboboxItem) comboBoxEnv.SelectedItem).Text.Equals("Rackspace"))
+                    {
+                        Properties.Settings.Default.RackspaceUser = user;
+                        Properties.Settings.Default.RackspacePass = pass;
+                        Properties.Settings.Default.RackspaceAdd = serverAddress;
+                        Properties.Settings.Default.RackspaceDb = db;
+                    }
+                    if (((ComboboxItem) comboBoxEnv.SelectedItem).Text.Equals("Prod"))
+                    {
+                        Properties.Settings.Default.ProdUser = user;
+                        Properties.Settings.Default.ProdPass = pass;
+                        Properties.Settings.Default.ProdAdd = serverAddress;
+                        Properties.Settings.Default.ProdDb = db;
+                    }
+                    if (((ComboboxItem) comboBoxEnv.SelectedItem).Text.Equals("Sapiens"))
+                    {
+                        Properties.Settings.Default.SapiensUser = user;
+                        Properties.Settings.Default.SapiensPass = pass;
+                        Properties.Settings.Default.SapiensAdd = serverAddress;
+                        Properties.Settings.Default.SapiensDb = db;
+                    }
+                    Properties.Settings.Default.LastSaveEnv = ((ComboboxItem)comboBoxEnv.SelectedItem).Text;
+                    Properties.Settings.Default.LastSaveConnStr = _connString.ToString();
+                    Properties.Settings.Default.LastSaveDb = db;
+                }
+                else
+                {
+                    Properties.Settings.Default.LastSaveEnv = null;
+                    Properties.Settings.Default.LastSaveConnStr = null;
+                    Properties.Settings.Default.LastSaveDb = null;
+                }
+                Properties.Settings.Default.SaveCredentialsSelected = checkBoxSave.Checked;
+                Properties.Settings.Default.Save();
+                UpdateConnString();
                 Global.ChosenConnection = _connString.ToString();
                 Global.Env = ((ComboboxItem) comboBoxEnv.SelectedItem).Text;
-                Properties.Settings.Default.SaveCredentialsSelected = checkBoxSave.Checked;
+                Global.Db = db;
+                Close();
+                ((MainForm) ParentForm)?.Activate();
             }
-            if (checkBoxSave.Checked)
+        }
+
+        private bool ValidateForm()
+        {
+            bool isValid = true;
+            // Clear error provider only once.
+            errorProvider1.Clear();
+
+            //use if condition for every condtion, dont use else-if
+            if (comboBoxEnv.SelectedItem == null)
             {
-                if (Global.Env.Equals("Rackspace"))
-                {
-                    Properties.Settings.Default.RackspaceUser = textBoxUser.Text;
-                    Properties.Settings.Default.RackspacePass = textBoxPassword.Text;
-                }
-                if (Global.Env.Equals("Prod"))
-                {
-                    Properties.Settings.Default.ProdUser = textBoxUser.Text;
-                    Properties.Settings.Default.ProdPass = textBoxPassword.Text;
-                }
-                if (Global.Env.Equals("Sapiens"))
-                {
-                    Properties.Settings.Default.SapiensUser = textBoxUser.Text;
-                    Properties.Settings.Default.SapiensPass = textBoxPassword.Text;
-                }
-                Properties.Settings.Default.Save();
+                errorProvider1.SetError(comboBoxEnv, "field required!");
+                isValid = false;
             }
-            Close();
-            ((MainForm) ParentForm)?.Activate();
+
+            if (string.IsNullOrEmpty(textBoxServerAddress.Text.Trim()))
+            {
+                errorProvider1.SetError(textBoxServerAddress, "field required!");
+                isValid = false;
+            }
+
+            if (string.IsNullOrEmpty(textBoxUser.Text.Trim()))
+            {
+                errorProvider1.SetError(textBoxUser, "field required!");
+                isValid = false;
+            }
+
+            if (string.IsNullOrEmpty(textBoxPassword.Text.Trim()))
+            {
+                errorProvider1.SetError(textBoxPassword, "field required!");
+                isValid = false;
+            }
+
+            if (comboBoxDb.SelectedItem == null)
+            {
+                errorProvider1.SetError(comboBoxDb, "field required!");
+                isValid = false;
+            }
+            return isValid;
         }
 
         private void cancelButton_Click(object sender, EventArgs e)
         {
+            errorProvider1.Clear();
             Close();
+            ((MainForm) ParentForm)?.Activate();
         }
 
         private void refreshButton_Click(object sender, EventArgs e)
         {
-            ReadConfigurations();
+            Properties.Settings.Default.Reset();
+            InitComponents();
+        }
+
+        private void InitComponents()
+        {
+            textBoxServerAddress.Text = "";
+            textBoxUser.Text = "";
+            textBoxPassword.Text = "";
+            checkBoxSave.Checked = false;
+            comboBoxDb.SelectedItem = null;
+            comboBoxDb.DataSource = null;
+            comboBoxDb.Items.Clear();
         }
 
         private void buttonGetDb_Click(object sender, EventArgs e)
@@ -118,60 +198,92 @@ namespace AlisBatchReporter.Forms
             }
             else
             {
-                List<string> list = new List<string>();
-                _connString.Append(((ComboboxItem) comboBoxEnv.SelectedItem).Value)
-                    .Append("User ID=").Append(textBoxUser.Text).Append(";")
-                    .Append("Password=").Append(textBoxPassword.Text).Append(";");
-
-                using (SqlConnection con = new SqlConnection(_connString.ToString()))
+                try
                 {
-                    con.Open();
+                    List<string> list = new List<string>();
+                    UpdateConnString();
 
-                    // Set up a command with the given query and associate
-                    // this with the current connection.
-                    using (SqlCommand cmd = new SqlCommand("SELECT name from sys.databases", con))
+                    using (SqlConnection con = new SqlConnection(_connString.ToString()))
                     {
-                        using (IDataReader dr = cmd.ExecuteReader())
+                        con.Open();
+                        using (SqlCommand cmd = new SqlCommand("SELECT name from sys.databases", con))
                         {
-                            while (dr.Read())
+                            using (IDataReader dr = cmd.ExecuteReader())
                             {
-                                list.Add(dr[0].ToString());
+                                while (dr.Read())
+                                {
+                                    list.Add(dr[0].ToString());
+                                }
                             }
                         }
                     }
+                    comboBoxDb.DataSource = list;
                 }
-                comboBoxDb.DataSource = list;
+                catch (SqlException sqlException)
+                {
+                    MessageBox.Show(sqlException.Message);
+                }
+            }
+        }
+
+        private void UpdateConnString()
+        {
+            _connString.Clear();
+
+            _connString
+                .Append("Data Source=")
+                .Append(textBoxServerAddress.Text).Append(";")
+                .Append("User ID=").Append(textBoxUser.Text).Append(";")
+                .Append("Password=").Append(textBoxPassword.Text).Append(";")
+                .Append("Persist Security Info=True;");
+            if (comboBoxDb.SelectedItem != null)
+            {
+                _connString.Append("Initial Catalog=")
+                    .Append(comboBoxDb.SelectedItem).Append(";");
             }
         }
 
         private void comboBoxDb_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (comboBoxDb.SelectedItem != null)
-            {
-                _connString.Append("Initial Catalog=")
-                    .Append(comboBoxDb.SelectedItem);
-            }
+            UpdateConnString();
         }
 
         private void comboBoxEnv_SelectedIndexChanged(object sender, EventArgs e)
         {
+            ReadFromAppSettings();
+            textBoxServerAddress.Text = ((ComboboxItem) comboBoxEnv.SelectedItem).Value.ToString();
+        }
+
+        private void ReadFromAppSettings()
+        {
+            InitComponents();
             if (Properties.Settings.Default.SaveCredentialsSelected)
             {
-                if (Global.Env.Equals("Rackspace"))
+                if (((ComboboxItem) comboBoxEnv.SelectedItem).Text.Equals("Rackspace"))
                 {
                     textBoxUser.Text = Properties.Settings.Default.RackspaceUser;
-                    textBoxPassword.Text = Properties.Settings.Default.RackspacePass;
+                    textBoxServerAddress.Text = Properties.Settings.Default.RackspaceAdd;
+                    textBoxPassword.Text = !string.IsNullOrEmpty(Properties.Settings.Default.RackspacePass)
+                        ? Properties.Settings.Default.RackspacePass.Unprotect()
+                        : "";
                 }
-                if (Global.Env.Equals("Prod"))
+                if (((ComboboxItem) comboBoxEnv.SelectedItem).Text.Equals("Prod"))
                 {
                     textBoxUser.Text = Properties.Settings.Default.ProdUser;
-                    textBoxPassword.Text = Properties.Settings.Default.ProdPass;
+                    textBoxServerAddress.Text = Properties.Settings.Default.ProdAdd;
+                    textBoxPassword.Text = !string.IsNullOrEmpty(Properties.Settings.Default.ProdPass)
+                        ? Properties.Settings.Default.ProdPass.Unprotect()
+                        : "";
                 }
-                if (Global.Env.Equals("Sapiens"))
+                if (((ComboboxItem) comboBoxEnv.SelectedItem).Text.Equals("Sapiens"))
                 {
                     textBoxUser.Text = Properties.Settings.Default.SapiensUser;
-                    textBoxPassword.Text = Properties.Settings.Default.SapiensPass;
+                    textBoxServerAddress.Text = Properties.Settings.Default.SapiensAdd;
+                    textBoxPassword.Text = !string.IsNullOrEmpty(Properties.Settings.Default.SapiensPass)
+                        ? Properties.Settings.Default.SapiensPass.Unprotect()
+                        : "";
                 }
+                checkBoxSave.Checked = Properties.Settings.Default.SaveCredentialsSelected;
             }
         }
     }
