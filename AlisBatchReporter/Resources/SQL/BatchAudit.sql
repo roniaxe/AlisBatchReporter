@@ -1,6 +1,7 @@
 SELECT
    REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (gba.description, '0', ''), '1', ''), '2', ''), '3', ''), '4', ''), '5', ''), '6', ''), '7', ''), '8', ''), '9', '') as "Error Message",
    MIN(gba.entry_time) AS "Err Time",
+   gba.task_id AS "Task ID",
    tt.task_name AS "Task",
    gba.batch_run_num AS "Batch Run Number",
    SUM(
@@ -28,7 +29,7 @@ FROM
 WHERE
    1=1
    AND gba.entry_time > {fromDate}
-   AND gba.entry_time <= {toDate}
+   AND gba.entry_time - 1 <= {toDate}
    AND gba.entry_type IN 
    (
       5,
@@ -36,6 +37,7 @@ WHERE
    )
 GROUP BY
    REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (gba.description, '0', ''), '1', ''), '2', ''), '3', ''), '4', ''), '5', ''), '6', ''), '7', ''), '8', ''), '9', ''),
+   gba.task_id,
    tt.task_name,
    gba.batch_run_num
 ORDER BY COUNT(*) DESC

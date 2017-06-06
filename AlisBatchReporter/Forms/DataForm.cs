@@ -24,6 +24,7 @@ namespace AlisBatchReporter.Forms
             // Create the context menu items
             _batchRunNumberContextMenu.MenuItems.Add("Load GBA", LoadGbaData);
             _batchRunNumberContextMenu.MenuItems.Add("Running Time", RunningTime);
+            fromDate.Value = DateTime.Today.AddDays(-1);
         }
 
         private void RunningTime(object sender, EventArgs e)

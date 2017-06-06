@@ -84,7 +84,8 @@ namespace AlisBatchReporter.Forms
                 string serverAddress = textBoxServerAddress.Text;
                 string db = (string) comboBoxDb.SelectedItem;
                 if (checkBoxSave.Checked)
-                {                    
+                {
+                    UpdateConnString();
                     if (((ComboboxItem) comboBoxEnv.SelectedItem).Text.Equals("Rackspace"))
                     {
                         Properties.Settings.Default.RackspaceUser = user;
@@ -115,13 +116,13 @@ namespace AlisBatchReporter.Forms
                     Properties.Settings.Default.LastSaveEnv = null;
                     Properties.Settings.Default.LastSaveConnStr = null;
                     Properties.Settings.Default.LastSaveDb = null;
-                }
-                Properties.Settings.Default.SaveCredentialsSelected = checkBoxSave.Checked;
-                Properties.Settings.Default.Save();
-                UpdateConnString();
+                }               
+                Global.SavedCheckBox = checkBoxSave.Checked;
                 Global.ChosenConnection = _connString.ToString();
                 Global.Env = ((ComboboxItem) comboBoxEnv.SelectedItem).Text;
                 Global.Db = db;
+                Properties.Settings.Default.SaveCredentialsSelected = Global.SavedCheckBox;
+                Properties.Settings.Default.Save();               
                 Close();
                 ((MainForm) ParentForm)?.Activate();
             }
@@ -206,7 +207,7 @@ namespace AlisBatchReporter.Forms
                     using (SqlConnection con = new SqlConnection(_connString.ToString()))
                     {
                         con.Open();
-                        using (SqlCommand cmd = new SqlCommand("SELECT name from sys.databases", con))
+                        using (SqlCommand cmd = new SqlCommand("SELECT name from sys.databases ORDER BY name", con))
                         {
                             using (IDataReader dr = cmd.ExecuteReader())
                             {
@@ -281,9 +282,9 @@ namespace AlisBatchReporter.Forms
                     textBoxServerAddress.Text = Properties.Settings.Default.SapiensAdd;
                     textBoxPassword.Text = !string.IsNullOrEmpty(Properties.Settings.Default.SapiensPass)
                         ? Properties.Settings.Default.SapiensPass.Unprotect()
-                        : "";
+                        : "";                   
                 }
-                checkBoxSave.Checked = Properties.Settings.Default.SaveCredentialsSelected;
+                checkBoxSave.Checked = Global.SavedCheckBox;
             }
         }
     }

@@ -45,7 +45,8 @@ namespace AlisBatchReporter.Forms
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(@"Export Successful");
+            MessageBox.Show($@"Version: {Global.Version}" + "\n" +
+                            @"For Issues/Requests - Contact Roni Axelrad - roni.axelrad@sapiens.com");
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
