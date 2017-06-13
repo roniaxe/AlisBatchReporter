@@ -43,6 +43,8 @@
             this.closeButton = new System.Windows.Forms.Button();
             this.bindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.comboBoxFunc = new System.Windows.Forms.ComboBox();
+            this.labelReportType = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.panel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -59,10 +61,10 @@
             this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridView1.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCellsExceptHeaders;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(18, 157);
+            this.dataGridView1.Location = new System.Drawing.Point(18, 217);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.ReadOnly = true;
-            this.dataGridView1.Size = new System.Drawing.Size(1049, 238);
+            this.dataGridView1.Size = new System.Drawing.Size(1049, 178);
             this.dataGridView1.TabIndex = 0;
             this.dataGridView1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.dataGridView1_MouseUp);
             // 
@@ -70,7 +72,7 @@
             // 
             this.toDate.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.toDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.toDate.Location = new System.Drawing.Point(197, 73);
+            this.toDate.Location = new System.Drawing.Point(273, 106);
             this.toDate.Name = "toDate";
             this.toDate.Size = new System.Drawing.Size(133, 24);
             this.toDate.TabIndex = 10;
@@ -81,7 +83,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(15, 73);
+            this.label2.Location = new System.Drawing.Point(65, 106);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(65, 18);
             this.label2.TabIndex = 9;
@@ -92,7 +94,7 @@
             this.fromDate.Checked = false;
             this.fromDate.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.fromDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.fromDate.Location = new System.Drawing.Point(197, 18);
+            this.fromDate.Location = new System.Drawing.Point(273, 61);
             this.fromDate.Name = "fromDate";
             this.fromDate.Size = new System.Drawing.Size(133, 24);
             this.fromDate.TabIndex = 8;
@@ -103,7 +105,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(15, 23);
+            this.label1.Location = new System.Drawing.Point(65, 67);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(83, 18);
             this.label1.TabIndex = 7;
@@ -111,7 +113,7 @@
             // 
             // createButton
             // 
-            this.createButton.Location = new System.Drawing.Point(35, 14);
+            this.createButton.Location = new System.Drawing.Point(68, 161);
             this.createButton.Name = "createButton";
             this.createButton.Size = new System.Drawing.Size(75, 23);
             this.createButton.TabIndex = 6;
@@ -126,11 +128,7 @@
             this.panel1.Controls.Add(this.exportButton);
             this.panel1.Controls.Add(this.progressBar1);
             this.panel1.Controls.Add(this.groupBox1);
-            this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.dataGridView1);
-            this.panel1.Controls.Add(this.toDate);
-            this.panel1.Controls.Add(this.label2);
-            this.panel1.Controls.Add(this.fromDate);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
@@ -160,17 +158,23 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.labelReportType);
             this.groupBox1.Controls.Add(this.closeButton);
+            this.groupBox1.Controls.Add(this.comboBoxFunc);
             this.groupBox1.Controls.Add(this.createButton);
-            this.groupBox1.Location = new System.Drawing.Point(18, 99);
+            this.groupBox1.Controls.Add(this.fromDate);
+            this.groupBox1.Controls.Add(this.label1);
+            this.groupBox1.Controls.Add(this.toDate);
+            this.groupBox1.Controls.Add(this.label2);
+            this.groupBox1.Location = new System.Drawing.Point(18, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(312, 43);
+            this.groupBox1.Size = new System.Drawing.Size(494, 190);
             this.groupBox1.TabIndex = 13;
             this.groupBox1.TabStop = false;
             // 
             // closeButton
             // 
-            this.closeButton.Location = new System.Drawing.Point(179, 14);
+            this.closeButton.Location = new System.Drawing.Point(331, 161);
             this.closeButton.Name = "closeButton";
             this.closeButton.Size = new System.Drawing.Size(75, 23);
             this.closeButton.TabIndex = 12;
@@ -185,6 +189,24 @@
             this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
             this.backgroundWorker1.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker1_RunWorkerCompleted);
             // 
+            // comboBoxFunc
+            // 
+            this.comboBoxFunc.FormattingEnabled = true;
+            this.comboBoxFunc.Location = new System.Drawing.Point(273, 19);
+            this.comboBoxFunc.Name = "comboBoxFunc";
+            this.comboBoxFunc.Size = new System.Drawing.Size(133, 21);
+            this.comboBoxFunc.TabIndex = 13;
+            // 
+            // labelReportType
+            // 
+            this.labelReportType.AutoSize = true;
+            this.labelReportType.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelReportType.Location = new System.Drawing.Point(65, 19);
+            this.labelReportType.Name = "labelReportType";
+            this.labelReportType.Size = new System.Drawing.Size(93, 18);
+            this.labelReportType.TabIndex = 15;
+            this.labelReportType.Text = "Report Type:";
+            // 
             // DataForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -196,8 +218,8 @@
             this.Load += new System.EventHandler(this.DataForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
             this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -219,5 +241,7 @@
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Button exportButton;
+        private System.Windows.Forms.ComboBox comboBoxFunc;
+        private System.Windows.Forms.Label labelReportType;
     }
 }
