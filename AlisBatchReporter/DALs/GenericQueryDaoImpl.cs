@@ -3,9 +3,9 @@ using System.Data.SqlClient;
 using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
-using AlisBatchReporter.DALs;
+using AlisBatchReporter.Classes;
 
-namespace AlisBatchReporter.Classes
+namespace AlisBatchReporter.DALs
 {
     public abstract class GenericQueryDaoImpl : IGenericQueryDao
     {

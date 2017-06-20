@@ -55,7 +55,7 @@
     <Compile Include="Classes\ComboboxItem.cs" />
     <Compile Include="Classes\ConnectionString.cs" />
     <Compile Include="Classes\Global.cs" />
-    <Compile Include="Classes\GenericQueryDaoImpl.cs" />
+    <Compile Include="DALs\GenericQueryDaoImpl.cs" />
     <Compile Include="Classes\ReportQuery.cs" />
     <Compile Include="Classes\SimpleQuery.cs" />
     <Compile Include="DALs\IGenericQueryDao.cs" />

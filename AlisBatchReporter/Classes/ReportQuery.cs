@@ -1,4 +1,6 @@
-﻿namespace AlisBatchReporter.Classes
+﻿using AlisBatchReporter.DALs;
+
+namespace AlisBatchReporter.Classes
 {
     internal class ReportQuery : GenericQueryDaoImpl
     {

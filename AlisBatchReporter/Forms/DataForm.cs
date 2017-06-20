@@ -21,7 +21,6 @@ namespace AlisBatchReporter.Forms
         private void DataForm_Load(object sender, EventArgs e)
         {
             dataGridView1.Hide();
-            exportButton.Visible = false;
 
             // Create the context menu items
             _batchRunNumberContextMenu.MenuItems.Add("Load GBA", LoadGbaData);

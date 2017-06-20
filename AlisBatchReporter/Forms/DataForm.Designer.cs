@@ -40,11 +40,11 @@
             this.exportButton = new System.Windows.Forms.Button();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.labelReportType = new System.Windows.Forms.Label();
             this.closeButton = new System.Windows.Forms.Button();
+            this.comboBoxFunc = new System.Windows.Forms.ComboBox();
             this.bindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            this.comboBoxFunc = new System.Windows.Forms.ComboBox();
-            this.labelReportType = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.panel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -139,17 +139,18 @@
             // 
             this.exportButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.exportButton.Image = ((System.Drawing.Image)(resources.GetObject("exportButton.Image")));
-            this.exportButton.Location = new System.Drawing.Point(1041, 113);
+            this.exportButton.Location = new System.Drawing.Point(1041, 173);
             this.exportButton.Name = "exportButton";
             this.exportButton.Size = new System.Drawing.Size(26, 29);
             this.exportButton.TabIndex = 14;
             this.exportButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.exportButton.UseVisualStyleBackColor = true;
+            this.exportButton.Visible = false;
             this.exportButton.Click += new System.EventHandler(this.exportButton_Click);
             // 
             // progressBar1
             // 
-            this.progressBar1.Location = new System.Drawing.Point(831, 113);
+            this.progressBar1.Location = new System.Drawing.Point(848, 173);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(162, 29);
             this.progressBar1.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
@@ -172,6 +173,16 @@
             this.groupBox1.TabIndex = 13;
             this.groupBox1.TabStop = false;
             // 
+            // labelReportType
+            // 
+            this.labelReportType.AutoSize = true;
+            this.labelReportType.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelReportType.Location = new System.Drawing.Point(65, 19);
+            this.labelReportType.Name = "labelReportType";
+            this.labelReportType.Size = new System.Drawing.Size(93, 18);
+            this.labelReportType.TabIndex = 15;
+            this.labelReportType.Text = "Report Type:";
+            // 
             // closeButton
             // 
             this.closeButton.Location = new System.Drawing.Point(331, 161);
@@ -182,13 +193,6 @@
             this.closeButton.UseVisualStyleBackColor = true;
             this.closeButton.Click += new System.EventHandler(this.closeButton_Click);
             // 
-            // backgroundWorker1
-            // 
-            this.backgroundWorker1.WorkerReportsProgress = true;
-            this.backgroundWorker1.WorkerSupportsCancellation = true;
-            this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
-            this.backgroundWorker1.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker1_RunWorkerCompleted);
-            // 
             // comboBoxFunc
             // 
             this.comboBoxFunc.FormattingEnabled = true;
@@ -197,15 +201,12 @@
             this.comboBoxFunc.Size = new System.Drawing.Size(133, 21);
             this.comboBoxFunc.TabIndex = 13;
             // 
-            // labelReportType
+            // backgroundWorker1
             // 
-            this.labelReportType.AutoSize = true;
-            this.labelReportType.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelReportType.Location = new System.Drawing.Point(65, 19);
-            this.labelReportType.Name = "labelReportType";
-            this.labelReportType.Size = new System.Drawing.Size(93, 18);
-            this.labelReportType.TabIndex = 15;
-            this.labelReportType.Text = "Report Type:";
+            this.backgroundWorker1.WorkerReportsProgress = true;
+            this.backgroundWorker1.WorkerSupportsCancellation = true;
+            this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
+            this.backgroundWorker1.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker1_RunWorkerCompleted);
             // 
             // DataForm
             // 
