@@ -31,6 +31,7 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.validateExportsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -39,7 +40,8 @@
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.label1 = new System.Windows.Forms.Label();
             this.currentRunningLabel = new System.Windows.Forms.Label();
-            this.validateExportsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.unallocatedSuspenseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.eftExportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -72,6 +74,15 @@
             this.newToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
             this.newToolStripMenuItem.Text = "New Report";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
+            // 
+            // validateExportsToolStripMenuItem
+            // 
+            this.validateExportsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.unallocatedSuspenseToolStripMenuItem,
+            this.eftExportToolStripMenuItem});
+            this.validateExportsToolStripMenuItem.Name = "validateExportsToolStripMenuItem";
+            this.validateExportsToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.validateExportsToolStripMenuItem.Text = "Validate Exports";
             // 
             // exitToolStripMenuItem
             // 
@@ -140,12 +151,19 @@
             this.currentRunningLabel.Size = new System.Drawing.Size(0, 24);
             this.currentRunningLabel.TabIndex = 2;
             // 
-            // validateExportsToolStripMenuItem
+            // unallocatedSuspenseToolStripMenuItem
             // 
-            this.validateExportsToolStripMenuItem.Name = "validateExportsToolStripMenuItem";
-            this.validateExportsToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
-            this.validateExportsToolStripMenuItem.Text = "Validate Exports";
-            this.validateExportsToolStripMenuItem.Click += new System.EventHandler(this.validateExportsToolStripMenuItem_Click);
+            this.unallocatedSuspenseToolStripMenuItem.Name = "unallocatedSuspenseToolStripMenuItem";
+            this.unallocatedSuspenseToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+            this.unallocatedSuspenseToolStripMenuItem.Text = "Unallocated Suspense";
+            this.unallocatedSuspenseToolStripMenuItem.Click += new System.EventHandler(this.unallocatedSuspenseToolStripMenuItem_Click);
+            // 
+            // eftExportToolStripMenuItem
+            // 
+            this.eftExportToolStripMenuItem.Name = "eftExportToolStripMenuItem";
+            this.eftExportToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+            this.eftExportToolStripMenuItem.Text = "Eft Export";
+            this.eftExportToolStripMenuItem.Click += new System.EventHandler(this.eftExportToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -182,6 +200,8 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label currentRunningLabel;
         private System.Windows.Forms.ToolStripMenuItem validateExportsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem unallocatedSuspenseToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem eftExportToolStripMenuItem;
     }
 }
 

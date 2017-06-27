@@ -42,10 +42,11 @@ namespace AlisBatchReporter.Forms
         {
             ResetComps();
             var sqlFileName = ((ComboboxItem) exportTablesComboBox.SelectedItem).Value;
-            SimpleExportQuery query = 
-                new SimpleExportQuery(@"..\..\Resources\SQL\" + sqlFileName, keyTextBox.Text);
+            var keyType = internalRadioButton.Checked ? "Internal" : "External";
+            SimpleExportQuery query =
+                new SimpleExportQuery(@"..\..\Resources\SQL\" + sqlFileName, keyTextBox.Text, keyType);
 
-            TriggerBgWorkerForQuery(query);           
+            TriggerBgWorkerForQuery(query);
         }
 
         private void TriggerBgWorkerForQuery(SimpleExportQuery query)
@@ -65,12 +66,41 @@ namespace AlisBatchReporter.Forms
             };
             backgroundWorker.RunWorkerCompleted += (o, args) =>
             {
-                DataTable workerResult = (DataTable)args.Result;
+                DataTable workerResult = (DataTable) args.Result;
                 bindingSource1.DataSource = workerResult;
                 dataGridView1.Visible = true;
                 progressBar1.Visible = false;
             };
             backgroundWorker.RunWorkerAsync(query);
+        }
+
+        private void keyTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (internalRadioButton.Checked)
+            {
+                if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) &&
+                    e.KeyChar != '.')
+                {
+                    e.Handled = true;
+                }
+
+                // only allow one decimal point
+                var textBox = sender as TextBox;
+                if (textBox != null && e.KeyChar == '.' && textBox.Text.IndexOf('.') > -1)
+                {
+                    e.Handled = true;
+                }
+            }
+        }
+
+        private void externalRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            keyTextBox.Text = "";
+        }
+
+        private void internalRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            keyTextBox.Text = "";
         }
     }
 }

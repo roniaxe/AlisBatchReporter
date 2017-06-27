@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="Classes\ComboboxItem.cs" />
     <Compile Include="Classes\ConnectionString.cs" />
+    <Compile Include="Classes\EftExportQuery.cs" />
     <Compile Include="Classes\Global.cs" />
     <Compile Include="Classes\SimpleExportQuery.cs" />
     <Compile Include="DALs\GenericQueryDaoImpl.cs" />
@@ -71,6 +72,12 @@
     </Compile>
     <Compile Include="Forms\DataForm.Designer.cs">
       <DependentUpon>DataForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\EftExportValidateForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\EftExportValidateForm.Designer.cs">
+      <DependentUpon>EftExportValidateForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\ExportValidationForm.cs">
       <SubType>Form</SubType>
@@ -99,6 +106,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\DataForm.resx">
       <DependentUpon>DataForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\EftExportValidateForm.resx">
+      <DependentUpon>EftExportValidateForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ExportValidationForm.resx">
       <DependentUpon>ExportValidationForm.cs</DependentUpon>
@@ -138,13 +148,15 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Content Include="bin\Debug\EFTExport.txt" />
+    <Content Include="Resources\SQL\IEftExport.sql" />
     <Content Include="Resources\SQL\TaskList.sql" />
     <Content Include="Resources\SQL\UnallocatedSuspenseReport.sql" />
     <None Include="Resources\excel_export_icon.ico" />
     <None Include="Resources\Button-Refresh-icon.png" />
     <Content Include="Resources\SQL\BatchAudit.sql" />
     <Content Include="Resources\SQL\RunningTime.sql" />
-    <Content Include="Resources\SQL\SimpleGBA.sql" />
+    <Content Include="SimpleGBA.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

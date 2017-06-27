@@ -68,10 +68,16 @@ namespace AlisBatchReporter.Forms
             Global.SavedCheckBox = Properties.Settings.Default.SaveCredentialsSelected;
         }
 
-        private void validateExportsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void unallocatedSuspenseToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ExportValidationForm exportValidationForm = new ExportValidationForm();
             exportValidationForm.Show();
+        }
+
+        private void eftExportToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            EftExportValidateForm eftExportValidateForm = new EftExportValidateForm();
+            eftExportValidateForm.Show();
         }
     }
 }
