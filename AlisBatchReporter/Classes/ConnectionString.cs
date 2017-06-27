@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace AlisBatchReporter.Classes
+﻿namespace AlisBatchReporter.Classes
 {
     internal class ConnectionString
     {

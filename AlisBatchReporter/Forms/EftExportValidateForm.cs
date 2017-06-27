@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using AlisBatchReporter.Classes;
 
@@ -29,7 +27,7 @@ namespace AlisBatchReporter.Forms
                 new EftExportQuery(@"..\..\Resources\SQL\IEftExport.sql");
 
             var eftFileContent = File.ReadAllLines(Directory.GetCurrentDirectory() + @"\EFTExport.txt");
-            fileValidations(eftFileContent);
+            FileValidations(eftFileContent);
             foreach (var row in eftFileContent)
             {
                 if (row.StartsWith("6"))
@@ -39,72 +37,10 @@ namespace AlisBatchReporter.Forms
                     _idNums.Add(intData);
                 }
             }
-            _idNums.Sort((i1, i2) => i2.CompareTo(i1));
+            //_idNums.Sort((i1, i2) => i2.CompareTo(i1));
             TriggerBgWorkerForQuery(query);
         }
-
-        private void fileValidations(string[] eftFileContent)
-        {
-            StringBuilder errorString = new StringBuilder();
-            bool firstFive = true;
-            List<int> construction = new List<int>();
-            int listIdx = 0;
-            for (int i = 0; i < eftFileContent.Length; i++)
-            {
-                if (string.IsNullOrEmpty(eftFileContent[i]))
-                {
-                    errorString.Append($"Empty Row In Line: {i}{Environment.NewLine}");
-                }
-                if (i == 0)
-                {
-                    if (!eftFileContent[i].StartsWith("1"))
-                    {
-                        errorString.Append($"Bad Start Of File: {eftFileContent[i]}{Environment.NewLine}");
-                    }
-                    construction.Add(1);
-                    listIdx++;
-                }
-                if (eftFileContent[i].StartsWith("5"))
-                {
-                    if (firstFive)
-                    {
-                        firstFive = false;
-                    }
-                    else
-                    {
-                        if (construction[listIdx - 1] != 8)
-                        {
-                            errorString.Append($"Comp Start Without End In Line {i}: {eftFileContent[i]}{Environment.NewLine}");
-                        }
-                    }
-                    construction.Add(5);
-                    listIdx++;
-
-                }
-                if (eftFileContent[i].StartsWith("8"))
-                {
-                    if (construction[listIdx - 1] != 5)
-                    {
-                        errorString.Append($"End Comp Without Start In Line {i}: {eftFileContent[i]}{Environment.NewLine}");
-                    }
-                    construction.Add(8);
-                    listIdx++;
-                }
-                if (i == eftFileContent.Length - 1)
-                {
-                    if (!eftFileContent[i].StartsWith("9"))
-                    {
-                        errorString.Append($"No End Of File {i}: {eftFileContent[i]}{Environment.NewLine}");
-                    }
-                    else
-                    {
-                        errorString.Append($"End Of File Line: {eftFileContent[i]}{Environment.NewLine}");
-                    }
-                }
-            }
-            errorTextBox.Text = errorString.ToString();
-        }
-
+       
         private void TriggerBgWorkerForQuery(EftExportQuery query)
         {
             progressBar1.Visible = true;
@@ -128,11 +64,9 @@ namespace AlisBatchReporter.Forms
                 var list = sorted.Rows.OfType<DataRow>()
                     .Select(dr => dr.Field<string>("individual_identification_number")).ToList();
                 List<int> intList = list.Select(int.Parse).ToList();
-                intList.Sort((i1, i2) => i2.CompareTo(i1));
+                //intList.Sort((i1, i2) => i2.CompareTo(i1));
                 var inFileNotInDb = _idNums.Except(intList).ToList();
                 var inDbNotInFile = intList.Except(_idNums).ToList();
-                //var inFileNotInDbBindingList = ToDataTable(inFileNotInDb);
-                //var inDbNotInFileBindingList = ToDataTable(inDbNotInFile);
                 bindingSource1.DataSource = inFileNotInDb.Select(x => new {Value = x}).ToList();
                 bindingSource2.DataSource = inDbNotInFile.Select(x => new {Value = x}).ToList();
                 dataGridView1.DataSource = bindingSource1;
@@ -140,6 +74,68 @@ namespace AlisBatchReporter.Forms
                 progressBar1.Visible = false;
             };
             backgroundWorker.RunWorkerAsync(query);
+        }
+
+        private void FileValidations(string[] eftFileContent)
+        {
+            StringBuilder errorString = new StringBuilder();
+            bool firstFive = true;
+            List<int> construction = new List<int>();
+            int listIdx = 0;
+            for (int i = 0; i < eftFileContent.Length; i++)
+            {
+                if (string.IsNullOrEmpty(eftFileContent[i]))
+                {
+                    errorString.Append($"Empty Row In Line: {i + 1}{Environment.NewLine}");
+                }
+                if (i == 0)
+                {
+                    if (!eftFileContent[i].StartsWith("1"))
+                    {
+                        errorString.Append($"Bad Start Of File: {eftFileContent[i]}{Environment.NewLine}");
+                    }
+                    construction.Add(1);
+                    listIdx++;
+                }
+                if (eftFileContent[i].StartsWith("5"))
+                {
+                    if (firstFive)
+                    {
+                        firstFive = false;
+                    }
+                    else
+                    {
+                        if (construction[listIdx - 1] != 8)
+                        {
+                            errorString.Append($"Comp Start Without End In Line {i + 1}: {eftFileContent[i]}{Environment.NewLine}");
+                        }
+                    }
+                    construction.Add(5);
+                    listIdx++;
+
+                }
+                if (eftFileContent[i].StartsWith("8"))
+                {
+                    if (construction[listIdx - 1] != 5)
+                    {
+                        errorString.Append($"End Comp Without Start In Line {i + 1}: {eftFileContent[i]}{Environment.NewLine}");
+                    }
+                    construction.Add(8);
+                    listIdx++;
+                }
+                if (i == eftFileContent.Length - 1)
+                {
+                    if (!eftFileContent[i].StartsWith("9"))
+                    {
+                        errorString.Append($"No End Of File {i+1}: {eftFileContent[i]}{Environment.NewLine}");
+                    }
+                    else
+                    {
+                        errorString.Append($"End Of File Line: {eftFileContent[i]}{Environment.NewLine}");
+                    }
+                }
+            }
+            errorTextBox.Text = errorString.ToString();
         }
 
         private void ResetComps()

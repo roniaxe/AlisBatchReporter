@@ -156,7 +156,7 @@
     <None Include="Resources\Button-Refresh-icon.png" />
     <Content Include="Resources\SQL\BatchAudit.sql" />
     <Content Include="Resources\SQL\RunningTime.sql" />
-    <Content Include="SimpleGBA.sql" />
+    <Content Include="Resources\SQL\SimpleGBA.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

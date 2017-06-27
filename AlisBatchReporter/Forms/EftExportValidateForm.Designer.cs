@@ -39,6 +39,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.errorTextBox = new System.Windows.Forms.TextBox();
+            this.structTextBox = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource2)).BeginInit();
@@ -127,11 +129,30 @@
             this.errorTextBox.Size = new System.Drawing.Size(1066, 179);
             this.errorTextBox.TabIndex = 7;
             // 
+            // structTextBox
+            // 
+            this.structTextBox.Location = new System.Drawing.Point(30, 159);
+            this.structTextBox.Multiline = true;
+            this.structTextBox.Name = "structTextBox";
+            this.structTextBox.Size = new System.Drawing.Size(235, 171);
+            this.structTextBox.TabIndex = 8;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(27, 133);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(72, 13);
+            this.label3.TabIndex = 9;
+            this.label3.Text = "File Structure:";
+            // 
             // EftExportValidateForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1148, 810);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.structTextBox);
             this.Controls.Add(this.errorTextBox);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -163,5 +184,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox errorTextBox;
+        private System.Windows.Forms.TextBox structTextBox;
+        private System.Windows.Forms.Label label3;
     }
 }
