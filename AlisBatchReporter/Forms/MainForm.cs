@@ -79,5 +79,11 @@ namespace AlisBatchReporter.Forms
             EftExportValidateForm eftExportValidateForm = new EftExportValidateForm();
             eftExportValidateForm.Show();
         }
+
+        private void dMFIOutboundValidationsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DmfiValidationsForm dmfiValidationsForm = new DmfiValidationsForm();
+            dmfiValidationsForm.Show();
+        }
     }
 }

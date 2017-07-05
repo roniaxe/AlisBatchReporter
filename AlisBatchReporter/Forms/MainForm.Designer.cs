@@ -32,6 +32,8 @@
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.validateExportsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.unallocatedSuspenseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.eftExportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -40,8 +42,7 @@
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.label1 = new System.Windows.Forms.Label();
             this.currentRunningLabel = new System.Windows.Forms.Label();
-            this.unallocatedSuspenseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.eftExportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.dMFIOutboundValidationsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -79,10 +80,25 @@
             // 
             this.validateExportsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.unallocatedSuspenseToolStripMenuItem,
-            this.eftExportToolStripMenuItem});
+            this.eftExportToolStripMenuItem,
+            this.dMFIOutboundValidationsToolStripMenuItem});
             this.validateExportsToolStripMenuItem.Name = "validateExportsToolStripMenuItem";
             this.validateExportsToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
             this.validateExportsToolStripMenuItem.Text = "Validate Exports";
+            // 
+            // unallocatedSuspenseToolStripMenuItem
+            // 
+            this.unallocatedSuspenseToolStripMenuItem.Name = "unallocatedSuspenseToolStripMenuItem";
+            this.unallocatedSuspenseToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
+            this.unallocatedSuspenseToolStripMenuItem.Text = "Unallocated Suspense";
+            this.unallocatedSuspenseToolStripMenuItem.Click += new System.EventHandler(this.unallocatedSuspenseToolStripMenuItem_Click);
+            // 
+            // eftExportToolStripMenuItem
+            // 
+            this.eftExportToolStripMenuItem.Name = "eftExportToolStripMenuItem";
+            this.eftExportToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
+            this.eftExportToolStripMenuItem.Text = "Eft Export";
+            this.eftExportToolStripMenuItem.Click += new System.EventHandler(this.eftExportToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
@@ -151,19 +167,12 @@
             this.currentRunningLabel.Size = new System.Drawing.Size(0, 24);
             this.currentRunningLabel.TabIndex = 2;
             // 
-            // unallocatedSuspenseToolStripMenuItem
+            // dMFIOutboundValidationsToolStripMenuItem
             // 
-            this.unallocatedSuspenseToolStripMenuItem.Name = "unallocatedSuspenseToolStripMenuItem";
-            this.unallocatedSuspenseToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
-            this.unallocatedSuspenseToolStripMenuItem.Text = "Unallocated Suspense";
-            this.unallocatedSuspenseToolStripMenuItem.Click += new System.EventHandler(this.unallocatedSuspenseToolStripMenuItem_Click);
-            // 
-            // eftExportToolStripMenuItem
-            // 
-            this.eftExportToolStripMenuItem.Name = "eftExportToolStripMenuItem";
-            this.eftExportToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
-            this.eftExportToolStripMenuItem.Text = "Eft Export";
-            this.eftExportToolStripMenuItem.Click += new System.EventHandler(this.eftExportToolStripMenuItem_Click);
+            this.dMFIOutboundValidationsToolStripMenuItem.Name = "dMFIOutboundValidationsToolStripMenuItem";
+            this.dMFIOutboundValidationsToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
+            this.dMFIOutboundValidationsToolStripMenuItem.Text = "DMFI Outbound Validations";
+            this.dMFIOutboundValidationsToolStripMenuItem.Click += new System.EventHandler(this.dMFIOutboundValidationsToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -202,6 +211,7 @@
         private System.Windows.Forms.ToolStripMenuItem validateExportsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem unallocatedSuspenseToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem eftExportToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem dMFIOutboundValidationsToolStripMenuItem;
     }
 }
 

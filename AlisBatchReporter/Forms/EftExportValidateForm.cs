@@ -5,7 +5,6 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Windows.Forms;
 using AlisBatchReporter.Classes;
 
@@ -26,9 +25,9 @@ namespace AlisBatchReporter.Forms
             EftExportQuery query =
                 new EftExportQuery(@"..\..\Resources\SQL\IEftExport.sql");
 
-            var eftFileContent = File.ReadAllLines(Directory.GetCurrentDirectory() + @"\EFTExport.txt");
+            var eftFileContent = File.ReadAllLines(@"\\dmfdwh001pr\X\Deploy\Prod\FTP\Outbound\EFTExport\EFTExport.txt");
+            //var eftFileContent = File.ReadAllLines(Directory.GetCurrentDirectory() + @"\EFTExport.txt");
             StructureValidation(eftFileContent);
-            //FileValidations(eftFileContent);
             foreach (var row in eftFileContent)
             {
                 if (row.StartsWith("6"))
@@ -64,13 +63,6 @@ namespace AlisBatchReporter.Forms
                             mainShulter = true;
                             break;
                         case '5':
-                            //if (!mainShulter)
-                            //{
-                            //    errorTextBox.AppendText(
-                            //        $@"Beginning of company before beginning of file. Line {i + 1}{
-                            //                Environment.NewLine
-                            //            }");
-                            //}
                             if (childShulter)
                             {
                                 errorTextBox.AppendText(
