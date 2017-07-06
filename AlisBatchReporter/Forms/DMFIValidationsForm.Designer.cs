@@ -39,7 +39,8 @@
             // 
             this.validationTypesCombobox.FormattingEnabled = true;
             this.validationTypesCombobox.Items.AddRange(new object[] {
-            "AnalyticFeed"});
+            "IRF1 File Comparison",
+            "IRF2 File Comparison"});
             this.validationTypesCombobox.Location = new System.Drawing.Point(12, 80);
             this.validationTypesCombobox.Name = "validationTypesCombobox";
             this.validationTypesCombobox.Size = new System.Drawing.Size(121, 21);
