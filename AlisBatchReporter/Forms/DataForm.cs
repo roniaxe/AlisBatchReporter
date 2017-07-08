@@ -82,9 +82,7 @@ namespace AlisBatchReporter.Forms
         {
             // Get the right click batch run number
             var batchRunNum = dataGridView1.CurrentCell.Value.ToString();
-            
-
-
+           
             // Create query, and send it to form
             SimpleQuery gbaQuery = new SimpleQuery(@"..\..\Resources\SQL\SimpleGBA.sql", batchRunNum, GetTaskId(dataGridView1));
             SingleBatchRunForm singleForm = new SingleBatchRunForm(gbaQuery);

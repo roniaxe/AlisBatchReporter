@@ -55,7 +55,9 @@
     <Compile Include="Classes\ComboboxItem.cs" />
     <Compile Include="Classes\ConnectionString.cs" />
     <Compile Include="Classes\EftExportQuery.cs" />
+    <Compile Include="Classes\FindObjectQuery.cs" />
     <Compile Include="Classes\Global.cs" />
+    <Compile Include="Classes\RefQuery.cs" />
     <Compile Include="Classes\SimpleExportQuery.cs" />
     <Compile Include="DALs\GenericQueryDaoImpl.cs" />
     <Compile Include="Classes\ReportQuery.cs" />
@@ -91,6 +93,12 @@
     <Compile Include="Forms\ExportValidationForm.Designer.cs">
       <DependentUpon>ExportValidationForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\FindObjectForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FindObjectForm.Designer.cs">
+      <DependentUpon>FindObjectForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -121,6 +129,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ExportValidationForm.resx">
       <DependentUpon>ExportValidationForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FindObjectForm.resx">
+      <DependentUpon>FindObjectForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
@@ -159,7 +170,9 @@
     <Folder Include="bin\Debug\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\SQL\CmaByBatchRunNo.sql" />
     <Content Include="Resources\SQL\IEftExport.sql" />
+    <Content Include="Resources\SQL\FindObject.sql" />
     <Content Include="Resources\SQL\TaskList.sql" />
     <Content Include="Resources\SQL\UnallocatedSuspenseReport.sql" />
     <None Include="Resources\excel_export_icon.ico" />

@@ -127,7 +127,6 @@ namespace AlisBatchReporter.Forms
                 WorkerSupportsCancellation = true,
                 WorkerReportsProgress = true
             };
-            progressBar1.Visible = true;
             backgroundWorker.DoWork += (o, args) =>
             {
                 EftExportQuery report = args.Argument as EftExportQuery;

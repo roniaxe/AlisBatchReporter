@@ -34,6 +34,7 @@
             this.validateExportsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.unallocatedSuspenseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.eftExportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.dMFIOutboundValidationsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -42,7 +43,7 @@
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.label1 = new System.Windows.Forms.Label();
             this.currentRunningLabel = new System.Windows.Forms.Label();
-            this.dMFIOutboundValidationsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.findObjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -64,6 +65,7 @@
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.newToolStripMenuItem,
             this.validateExportsToolStripMenuItem,
+            this.findObjectToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
@@ -99,6 +101,13 @@
             this.eftExportToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
             this.eftExportToolStripMenuItem.Text = "Eft Export";
             this.eftExportToolStripMenuItem.Click += new System.EventHandler(this.eftExportToolStripMenuItem_Click);
+            // 
+            // dMFIOutboundValidationsToolStripMenuItem
+            // 
+            this.dMFIOutboundValidationsToolStripMenuItem.Name = "dMFIOutboundValidationsToolStripMenuItem";
+            this.dMFIOutboundValidationsToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
+            this.dMFIOutboundValidationsToolStripMenuItem.Text = "DMFI Outbound Validations";
+            this.dMFIOutboundValidationsToolStripMenuItem.Click += new System.EventHandler(this.dMFIOutboundValidationsToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
@@ -167,12 +176,12 @@
             this.currentRunningLabel.Size = new System.Drawing.Size(0, 24);
             this.currentRunningLabel.TabIndex = 2;
             // 
-            // dMFIOutboundValidationsToolStripMenuItem
+            // findObjectToolStripMenuItem
             // 
-            this.dMFIOutboundValidationsToolStripMenuItem.Name = "dMFIOutboundValidationsToolStripMenuItem";
-            this.dMFIOutboundValidationsToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
-            this.dMFIOutboundValidationsToolStripMenuItem.Text = "DMFI Outbound Validations";
-            this.dMFIOutboundValidationsToolStripMenuItem.Click += new System.EventHandler(this.dMFIOutboundValidationsToolStripMenuItem_Click);
+            this.findObjectToolStripMenuItem.Name = "findObjectToolStripMenuItem";
+            this.findObjectToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.findObjectToolStripMenuItem.Text = "Find Object";
+            this.findObjectToolStripMenuItem.Click += new System.EventHandler(this.findObjectToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -212,6 +221,7 @@
         private System.Windows.Forms.ToolStripMenuItem unallocatedSuspenseToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem eftExportToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem dMFIOutboundValidationsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem findObjectToolStripMenuItem;
     }
 }
 

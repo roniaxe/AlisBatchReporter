@@ -1,0 +1,14 @@
+SELECT
+   * 
+FROM
+   C_MONEY_ALLOC 
+WHERE
+   MONEY_SOURCE_PRIMARY_KEY IN 
+   (
+      SELECT
+         INTERNAL_NUMBER 
+      FROM
+         C_EXTERNAL_PAYMENT 
+      WHERE
+         SCREEN_BATCH_NUMBER = {value}
+   )

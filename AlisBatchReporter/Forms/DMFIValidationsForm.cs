@@ -54,7 +54,7 @@ namespace AlisBatchReporter.Forms
                 // Compare
                 var indexArr = new int[]
                 {
-                    3, 13, 23, 33, 35, 38, 48, 58
+                    3, 13, 23, 33, 35, 36, 38, 48, 58
                 };
                 SplitAndCompare(sourceDic, outboundDic, indexArr);
                 // Create Output

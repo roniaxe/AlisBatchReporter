@@ -85,5 +85,11 @@ namespace AlisBatchReporter.Forms
             DmfiValidationsForm dmfiValidationsForm = new DmfiValidationsForm();
             dmfiValidationsForm.Show();
         }
+
+        private void findObjectToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FindObjectForm findObjectForm = new FindObjectForm();
+            findObjectForm.Show();
+        }
     }
 }
