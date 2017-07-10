@@ -46,6 +46,18 @@ namespace AlisBatchReporter.Forms
             bool mainShulter = false, childShulter = false, exitLoop = false;
             for (int i = 0; i < eftFileContent.Length; i++)
             {
+                if (eftFileContent[i].Length != 94)
+                {
+                    errorTextBox.Text +=
+                        $@"Short Line, only {eftFileContent[i].Length} characters: {i + 1}{Environment.NewLine}";
+                }
+                else
+                {
+                    if (eftFileContent[i][93].Equals(' '))
+                    {
+                        errorTextBox.AppendText($@"Empty Char at end of row, Line: {i + 1}{Environment.NewLine}");
+                    }
+                }
                 if (string.IsNullOrEmpty(eftFileContent[i]))
                 {
                     errorTextBox.AppendText($@"Empty row! Line {i + 1}{Environment.NewLine}");
@@ -58,7 +70,7 @@ namespace AlisBatchReporter.Forms
                             if (i != 0)
                             {
                                 errorTextBox.AppendText(
-                                    $@"Beginning of file, not in the beginning. Line {i + 1}{Environment.NewLine}");
+                                    $@"File Header not in the beginning of file. Line {i + 1}{Environment.NewLine}");
                             }
                             mainShulter = true;
                             break;
@@ -66,7 +78,7 @@ namespace AlisBatchReporter.Forms
                             if (childShulter)
                             {
                                 errorTextBox.AppendText(
-                                    $@"Beginning of company while company didn't close. Line {i + 1}{
+                                    $@"Batch Header, while no batch control closing. Line {i + 1}{
                                             Environment.NewLine
                                         }");
                             }
@@ -77,14 +89,14 @@ namespace AlisBatchReporter.Forms
                             if (!childShulter)
                             {
                                 errorTextBox.AppendText(
-                                    $@"Bank row without company open. Line {i + 1}{Environment.NewLine}");
+                                    $@"Entry Outside of a batch. Line {i + 1}{Environment.NewLine}");
                             }
                             break;
                         case '8':
                             if (!childShulter)
                             {
                                 errorTextBox.AppendText(
-                                    $@"End company without beginning. Line {i + 1}{Environment.NewLine}");
+                                    $@"Batch Control while not batch header opener. Line {i + 1}{Environment.NewLine}");
                             }
                             childShulter = false;
                             break;
@@ -92,7 +104,7 @@ namespace AlisBatchReporter.Forms
                             if (!mainShulter)
                             {
                                 errorTextBox.AppendText(
-                                    $@"End of file without beginning. Line {i + 1}{Environment.NewLine}");
+                                    $@"File Control while no file header opener. Line {i + 1}{Environment.NewLine}");
                             }
                             else
                             {
@@ -103,6 +115,15 @@ namespace AlisBatchReporter.Forms
                     }
                     if (exitLoop)
                     {
+                        var lastDigit = i % 10;
+                        var rowsToGo = 10 - lastDigit;
+                        if (eftFileContent.Length != i + rowsToGo)
+                        {
+                            errorTextBox.AppendText(
+                                $@"File Block is not completed. File Length {eftFileContent.Length}, Length need to be {
+                                        i + rowsToGo
+                                    }{Environment.NewLine}");
+                        }
                         break;
                     }
                 }
@@ -130,7 +151,14 @@ namespace AlisBatchReporter.Forms
             backgroundWorker.DoWork += (o, args) =>
             {
                 EftExportQuery report = args.Argument as EftExportQuery;
-                args.Result = report?.DoQuery();
+                try
+                {
+                    args.Result = report?.DoQuery();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
             };
             backgroundWorker.RunWorkerCompleted += (o, args) =>
             {

@@ -1,5 +1,4 @@
-﻿using System.Windows.Forms;
-using AlisBatchReporter.DALs;
+﻿using AlisBatchReporter.DALs;
 
 namespace AlisBatchReporter.Classes
 {

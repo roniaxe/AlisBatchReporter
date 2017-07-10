@@ -65,7 +65,14 @@ namespace AlisBatchReporter.Forms
             backgroundWorker.DoWork += (o, args) =>
             {
                 SimpleQuery report = args.Argument as SimpleQuery;
-                args.Result = report?.DoQuery();
+                try
+                {
+                    args.Result = report?.DoQuery();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
             };
             backgroundWorker.RunWorkerCompleted += (o, args) =>
             {
@@ -187,7 +194,14 @@ namespace AlisBatchReporter.Forms
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
             ReportQuery report = e.Argument as ReportQuery;
-            e.Result = report?.DoQuery();
+            try
+            {
+                e.Result = report?.DoQuery();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void backgroundWorker1_RunWorkerCompleted(object sender,
@@ -265,6 +279,11 @@ namespace AlisBatchReporter.Forms
         private void exportButton_Click(object sender, EventArgs e)
         {
             ExportToExcel();
+        }
+
+        private void fromDate_ValueChanged(object sender, EventArgs e)
+        {
+            toDate.Value = fromDate.Value.AddDays(1);
         }
     }
 }

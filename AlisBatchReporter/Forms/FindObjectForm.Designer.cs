@@ -61,6 +61,7 @@
             this.fromDate.Name = "fromDate";
             this.fromDate.Size = new System.Drawing.Size(133, 24);
             this.fromDate.TabIndex = 12;
+            this.fromDate.ValueChanged += new System.EventHandler(this.fromDate_ValueChanged);
             // 
             // fromDateLabel
             // 

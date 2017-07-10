@@ -38,8 +38,10 @@
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.externalRadioButton = new System.Windows.Forms.RadioButton();
             this.internalRadioButton = new System.Windows.Forms.RadioButton();
+            this.externalRadioButton = new System.Windows.Forms.RadioButton();
+            this.button1 = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -125,17 +127,6 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "groupBox1";
             // 
-            // externalRadioButton
-            // 
-            this.externalRadioButton.AutoSize = true;
-            this.externalRadioButton.Location = new System.Drawing.Point(98, 31);
-            this.externalRadioButton.Name = "externalRadioButton";
-            this.externalRadioButton.Size = new System.Drawing.Size(63, 17);
-            this.externalRadioButton.TabIndex = 4;
-            this.externalRadioButton.Text = "External";
-            this.externalRadioButton.UseVisualStyleBackColor = true;
-            this.externalRadioButton.CheckedChanged += new System.EventHandler(this.externalRadioButton_CheckedChanged);
-            // 
             // internalRadioButton
             // 
             this.internalRadioButton.AutoSize = true;
@@ -149,11 +140,42 @@
             this.internalRadioButton.UseVisualStyleBackColor = true;
             this.internalRadioButton.CheckedChanged += new System.EventHandler(this.internalRadioButton_CheckedChanged);
             // 
+            // externalRadioButton
+            // 
+            this.externalRadioButton.AutoSize = true;
+            this.externalRadioButton.Location = new System.Drawing.Point(98, 31);
+            this.externalRadioButton.Name = "externalRadioButton";
+            this.externalRadioButton.Size = new System.Drawing.Size(63, 17);
+            this.externalRadioButton.TabIndex = 4;
+            this.externalRadioButton.Text = "External";
+            this.externalRadioButton.UseVisualStyleBackColor = true;
+            this.externalRadioButton.CheckedChanged += new System.EventHandler(this.externalRadioButton_CheckedChanged);
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(150, 251);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 8;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(109, 261);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(35, 13);
+            this.label1.TabIndex = 9;
+            this.label1.Text = "label1";
+            // 
             // ExportValidationForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(796, 286);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.dataGridView1);
@@ -185,5 +207,7 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.RadioButton internalRadioButton;
         private System.Windows.Forms.RadioButton externalRadioButton;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Label label1;
     }
 }

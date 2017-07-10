@@ -76,8 +76,15 @@ namespace AlisBatchReporter.Forms
 
         private void eftExportToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            EftExportValidateForm eftExportValidateForm = new EftExportValidateForm();
-            eftExportValidateForm.Show();
+            if (string.IsNullOrEmpty(Global.Env) || string.IsNullOrEmpty(Global.ChosenConnection))
+            {
+                MessageBox.Show(@"Please Choose Environment In Settings", @"No Database Selected");
+            }
+            else
+            {
+                EftExportValidateForm eftExportValidateForm = new EftExportValidateForm();
+                eftExportValidateForm.Show();
+            }            
         }
 
         private void dMFIOutboundValidationsToolStripMenuItem_Click(object sender, EventArgs e)

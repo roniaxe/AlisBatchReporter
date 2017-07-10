@@ -55,7 +55,14 @@ namespace AlisBatchReporter.Forms
             backgroundWorker.DoWork += (o, args) =>
             {
                 RefQuery report = args.Argument as RefQuery;
-                args.Result = report?.DoQuery();
+                try
+                {
+                    args.Result = report?.DoQuery();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
             };
             backgroundWorker.RunWorkerCompleted += (o, args) =>
             {
@@ -100,7 +107,14 @@ namespace AlisBatchReporter.Forms
             backgroundWorker.DoWork += (o, args) =>
             {
                 FindObjectQuery report = args.Argument as FindObjectQuery;
-                args.Result = report?.DoQuery();
+                try
+                {
+                    args.Result = report?.DoQuery();
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.Message);
+                }               
             };
             backgroundWorker.RunWorkerCompleted += (o, args) =>
             {
@@ -189,6 +203,11 @@ namespace AlisBatchReporter.Forms
             {
                 entityTextBox3.Enabled = false;
             }
+        }
+
+        private void fromDate_ValueChanged(object sender, EventArgs e)
+        {
+            toDate.Value = fromDate.Value.AddDays(1);
         }
     }
 }

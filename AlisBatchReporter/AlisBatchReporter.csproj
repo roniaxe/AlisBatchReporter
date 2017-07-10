@@ -59,6 +59,8 @@
     <Compile Include="Classes\Global.cs" />
     <Compile Include="Classes\RefQuery.cs" />
     <Compile Include="Classes\SimpleExportQuery.cs" />
+    <Compile Include="Classes\UIError.cs" />
+    <Compile Include="Classes\UIProgress.cs" />
     <Compile Include="DALs\GenericQueryDaoImpl.cs" />
     <Compile Include="Classes\ReportQuery.cs" />
     <Compile Include="Classes\SimpleQuery.cs" />
