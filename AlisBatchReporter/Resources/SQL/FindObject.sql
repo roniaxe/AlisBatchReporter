@@ -7,6 +7,7 @@ SELECT
    GBA.primary_key as "Primary Key",
    GBA.secondary_key_type as "Secondary Key Type",
    GBA.secondary_key as "Secondary Key",
+   GBA.entry_type as "Entry Type",
    GBA.description as "Details"
 FROM
    G_BATCH_AUDIT GBA,

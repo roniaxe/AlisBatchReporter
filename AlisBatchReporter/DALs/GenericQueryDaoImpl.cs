@@ -23,7 +23,7 @@ namespace AlisBatchReporter.DALs
             {
                 var connectionString = Global.ChosenConnection;
                 var dataAdapter = new SqlDataAdapter(selectCommand, connectionString);
-                dataAdapter.SelectCommand.CommandTimeout = 60;
+                dataAdapter.SelectCommand.CommandTimeout = 120;
                 SqlCommandBuilder commandBuilder = new SqlCommandBuilder(dataAdapter);
                 table = new DataTable {Locale = CultureInfo.InvariantCulture};
 

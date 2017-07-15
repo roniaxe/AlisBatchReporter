@@ -127,9 +127,9 @@ namespace AlisBatchReporter.Forms
 
         private void dataGridView1_MouseUp(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Right)
-            {
-                var hitTestInfo = dataGridView1.HitTest(e.X, e.Y);
+            var hitTestInfo = dataGridView1.HitTest(e.X, e.Y);
+            if (e.Button == MouseButtons.Right && hitTestInfo.RowIndex != -1 && hitTestInfo.ColumnIndex != -1)
+            {              
                 if (hitTestInfo.Type == DataGridViewHitTestType.Cell)
                 {
                     var cellHeaderText = dataGridView1.Columns[hitTestInfo.ColumnIndex].HeaderText;
@@ -170,12 +170,19 @@ namespace AlisBatchReporter.Forms
         private void createButton_Click(object sender, EventArgs e)
         {
             string selectedFunc = ((ComboboxItem) comboBoxFunc.SelectedItem).Value.ToString();
+            bool typeRadioButton = false;
+            if (groupBox2.Visible)
+            {
+                typeRadioButton = onlyErrorsRadioButton.Checked;
+            }
             // Create query
             ResetComps();
             ReportQuery newQuery = new ReportQuery(
                 @"..\..\Resources\SQL\" + selectedFunc,
                 fromDate.Value.ToShortDateString(),
-                toDate.Value.ToShortDateString()
+                toDate.Value.ToShortDateString(),
+                polFilterTextBox.Text,
+                typeRadioButton
             );
 
             // Set the datasource, run query (populate grid in backgroundWorker1_RunWorkerCompleted)   
@@ -284,6 +291,23 @@ namespace AlisBatchReporter.Forms
         private void fromDate_ValueChanged(object sender, EventArgs e)
         {
             toDate.Value = fromDate.Value.AddDays(1);
+        }
+
+        private void comboBoxFunc_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (((ComboboxItem) comboBoxFunc.SelectedItem).Text.Equals("Report"))
+            {
+                polFilterLabel.Visible = true;
+                polFilterTextBox.Visible = true;
+                groupBox2.Visible = true;
+            }
+            else
+            {
+                groupBox2.Visible = false;
+                polFilterTextBox.Text = "";
+                polFilterLabel.Visible = false;
+                polFilterTextBox.Visible = false;
+            }
         }
     }
 }

@@ -128,10 +128,9 @@ namespace AlisBatchReporter.Forms
 
         private void dataGridView1_MouseUp(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Right)
-            {                
-                var hitTestInfo = dataGridView1.HitTest(e.X, e.Y);
-
+            var hitTestInfo = dataGridView1.HitTest(e.X, e.Y);
+            if (e.Button == MouseButtons.Right && hitTestInfo.RowIndex != -1 && hitTestInfo.ColumnIndex != -1)
+            {                               
                 // Set pressed cell as active
                 dataGridView1.CurrentCell = dataGridView1.Rows[hitTestInfo.RowIndex]
                     .Cells[hitTestInfo.ColumnIndex];

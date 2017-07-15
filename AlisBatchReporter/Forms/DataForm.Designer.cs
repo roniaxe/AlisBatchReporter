@@ -45,10 +45,16 @@
             this.comboBoxFunc = new System.Windows.Forms.ComboBox();
             this.bindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.polFilterTextBox = new System.Windows.Forms.TextBox();
+            this.polFilterLabel = new System.Windows.Forms.Label();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.allTypesRadioButton = new System.Windows.Forms.RadioButton();
+            this.onlyErrorsRadioButton = new System.Windows.Forms.RadioButton();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.panel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).BeginInit();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // dataGridView1
@@ -160,6 +166,9 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.groupBox2);
+            this.groupBox1.Controls.Add(this.polFilterLabel);
+            this.groupBox1.Controls.Add(this.polFilterTextBox);
             this.groupBox1.Controls.Add(this.labelReportType);
             this.groupBox1.Controls.Add(this.closeButton);
             this.groupBox1.Controls.Add(this.comboBoxFunc);
@@ -170,7 +179,7 @@
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Location = new System.Drawing.Point(18, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(494, 190);
+            this.groupBox1.Size = new System.Drawing.Size(689, 190);
             this.groupBox1.TabIndex = 13;
             this.groupBox1.TabStop = false;
             // 
@@ -201,6 +210,7 @@
             this.comboBoxFunc.Name = "comboBoxFunc";
             this.comboBoxFunc.Size = new System.Drawing.Size(133, 21);
             this.comboBoxFunc.TabIndex = 13;
+            this.comboBoxFunc.SelectedIndexChanged += new System.EventHandler(this.comboBoxFunc_SelectedIndexChanged);
             // 
             // backgroundWorker1
             // 
@@ -208,6 +218,59 @@
             this.backgroundWorker1.WorkerSupportsCancellation = true;
             this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
             this.backgroundWorker1.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker1_RunWorkerCompleted);
+            // 
+            // polFilterTextBox
+            // 
+            this.polFilterTextBox.Location = new System.Drawing.Point(559, 20);
+            this.polFilterTextBox.Name = "polFilterTextBox";
+            this.polFilterTextBox.Size = new System.Drawing.Size(100, 20);
+            this.polFilterTextBox.TabIndex = 16;
+            this.polFilterTextBox.WordWrap = false;
+            // 
+            // polFilterLabel
+            // 
+            this.polFilterLabel.AutoSize = true;
+            this.polFilterLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.polFilterLabel.Location = new System.Drawing.Point(446, 22);
+            this.polFilterLabel.Name = "polFilterLabel";
+            this.polFilterLabel.Size = new System.Drawing.Size(88, 18);
+            this.polFilterLabel.TabIndex = 17;
+            this.polFilterLabel.Text = "Policy Filter:";
+            this.polFilterLabel.Visible = false;
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.onlyErrorsRadioButton);
+            this.groupBox2.Controls.Add(this.allTypesRadioButton);
+            this.groupBox2.Location = new System.Drawing.Point(449, 46);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(210, 58);
+            this.groupBox2.TabIndex = 18;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Record Type Filter";
+            // 
+            // allTypesRadioButton
+            // 
+            this.allTypesRadioButton.AutoSize = true;
+            this.allTypesRadioButton.Location = new System.Drawing.Point(110, 23);
+            this.allTypesRadioButton.Name = "allTypesRadioButton";
+            this.allTypesRadioButton.Size = new System.Drawing.Size(68, 17);
+            this.allTypesRadioButton.TabIndex = 19;
+            this.allTypesRadioButton.TabStop = true;
+            this.allTypesRadioButton.Text = "All Types";
+            this.allTypesRadioButton.UseVisualStyleBackColor = true;
+            // 
+            // onlyErrorsRadioButton
+            // 
+            this.onlyErrorsRadioButton.AutoSize = true;
+            this.onlyErrorsRadioButton.Checked = true;
+            this.onlyErrorsRadioButton.Location = new System.Drawing.Point(19, 23);
+            this.onlyErrorsRadioButton.Name = "onlyErrorsRadioButton";
+            this.onlyErrorsRadioButton.Size = new System.Drawing.Size(76, 17);
+            this.onlyErrorsRadioButton.TabIndex = 20;
+            this.onlyErrorsRadioButton.TabStop = true;
+            this.onlyErrorsRadioButton.Text = "Only Errors";
+            this.onlyErrorsRadioButton.UseVisualStyleBackColor = true;
             // 
             // DataForm
             // 
@@ -223,6 +286,8 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).EndInit();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -245,5 +310,10 @@
         private System.Windows.Forms.Button exportButton;
         private System.Windows.Forms.ComboBox comboBoxFunc;
         private System.Windows.Forms.Label labelReportType;
+        private System.Windows.Forms.Label polFilterLabel;
+        private System.Windows.Forms.TextBox polFilterTextBox;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.RadioButton onlyErrorsRadioButton;
+        private System.Windows.Forms.RadioButton allTypesRadioButton;
     }
 }

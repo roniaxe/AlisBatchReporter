@@ -214,5 +214,53 @@ namespace AlisBatchReporter.Properties {
                 this["LastSaveDb"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string WhiteSitUser {
+            get {
+                return ((string)(this["WhiteSitUser"]));
+            }
+            set {
+                this["WhiteSitUser"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string WhiteSitPass {
+            get {
+                return ((string)(this["WhiteSitPass"]));
+            }
+            set {
+                this["WhiteSitPass"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string WhiteSitDb {
+            get {
+                return ((string)(this["WhiteSitDb"]));
+            }
+            set {
+                this["WhiteSitDb"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string WhiteSitAdd {
+            get {
+                return ((string)(this["WhiteSitAdd"]));
+            }
+            set {
+                this["WhiteSitAdd"] = value;
+            }
+        }
     }
 }

@@ -39,6 +39,11 @@ namespace AlisBatchReporter.Forms
                 },
                 new ComboboxItem
                 {
+                    Text = "White SIT",
+                    Value = "876630-sqldev.fblife.com"
+                },
+                new ComboboxItem
+                {
                     Text = "Rackspace",
                     Value = "756027-LSQLDEV1.FBLIFE.COM"
                 },
@@ -106,6 +111,13 @@ namespace AlisBatchReporter.Forms
                         Properties.Settings.Default.SapiensPass = pass;
                         Properties.Settings.Default.SapiensAdd = serverAddress;
                         Properties.Settings.Default.SapiensDb = db;
+                    }
+                    if (((ComboboxItem)comboBoxEnv.SelectedItem).Text.Equals("White SIT"))
+                    {
+                        Properties.Settings.Default.WhiteSitUser = user;
+                        Properties.Settings.Default.WhiteSitPass = pass;
+                        Properties.Settings.Default.WhiteSitAdd = serverAddress;
+                        Properties.Settings.Default.WhiteSitDb = db;
                     }
                     Properties.Settings.Default.LastSaveEnv = ((ComboboxItem)comboBoxEnv.SelectedItem).Text;
                     Properties.Settings.Default.LastSaveConnStr = _connString.ToString();
@@ -283,6 +295,14 @@ namespace AlisBatchReporter.Forms
                     textBoxPassword.Text = !string.IsNullOrEmpty(Properties.Settings.Default.SapiensPass)
                         ? Properties.Settings.Default.SapiensPass.Unprotect()
                         : "";                   
+                }
+                if (((ComboboxItem)comboBoxEnv.SelectedItem).Text.Equals("White SIT"))
+                {
+                    textBoxUser.Text = Properties.Settings.Default.WhiteSitUser;
+                    textBoxServerAddress.Text = Properties.Settings.Default.WhiteSitAdd;
+                    textBoxPassword.Text = !string.IsNullOrEmpty(Properties.Settings.Default.WhiteSitPass)
+                        ? Properties.Settings.Default.WhiteSitPass.Unprotect()
+                        : "";
                 }
                 checkBoxSave.Checked = Global.SavedCheckBox;
             }
