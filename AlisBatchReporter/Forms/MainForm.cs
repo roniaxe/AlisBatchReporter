@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using AlisBatchReporter.Classes;
+using AlisBatchReporter.Views.MVPTest;
 
 namespace AlisBatchReporter.Forms
 {
@@ -97,6 +98,14 @@ namespace AlisBatchReporter.Forms
         {
             FindObjectForm findObjectForm = new FindObjectForm();
             findObjectForm.Show();
+        }
+
+        private void toolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            ConfForm confForm = new ConfForm();
+            EnvRepository repository = new EnvRepository();
+            ConfigPresenter unused = new ConfigPresenter(confForm, repository);
+            confForm.Show();
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using AlisBatchReporter.Classes;
 
@@ -19,15 +20,31 @@ namespace AlisBatchReporter.Forms
             InitializeComponent();
         }
 
-        private void createButton_Click(object sender, EventArgs e)
+        private async void createButton_Click(object sender, EventArgs e)
         {
             ResetComps();
             EftExportQuery query =
                 new EftExportQuery(@"..\..\Resources\SQL\IEftExport.sql");
-
-            var eftFileContent = File.ReadAllLines(@"\\dmfdwh001pr\X\Deploy\Prod\FTP\Outbound\EFTExport\EFTExport.txt");
-            //var eftFileContent = File.ReadAllLines(Directory.GetCurrentDirectory() + @"\EFTExport.txt");
+            string[] eftFileContent;
+            try
+            {
+                HangAndReport();
+                processLogTextBox.AppendText($@"Reading EFT Export File...");
+                eftFileContent =
+                    await Task.Run(() => File.ReadAllLines(
+                        @"\\dmfdwh001pr\X\Deploy\Prod\FTP\Outbound\EFTExport\EFTExport.txt"));     
+                processLogTextBox.AppendText($@"Done!{Environment.NewLine}");         
+            }
+            catch (FileNotFoundException fileNotFoundException)
+            {
+                Console.WriteLine($@"Error {DateTimeOffset.Now}: {fileNotFoundException.Message}");
+                MessageBox.Show(@"File Not Found");
+                throw;
+            }
+            processLogTextBox.AppendText(@"Validating File Structure...");
             StructureValidation(eftFileContent);
+            processLogTextBox.AppendText($@"Done!{Environment.NewLine}");
+            processLogTextBox.AppendText(@"Splitting File...");
             foreach (var row in eftFileContent)
             {
                 if (row.StartsWith("6"))
@@ -37,8 +54,23 @@ namespace AlisBatchReporter.Forms
                     _idNums.Add(intData);
                 }
             }
-            //_idNums.Sort((i1, i2) => i2.CompareTo(i1));
+            processLogTextBox.AppendText($@"Done!{Environment.NewLine}");
+            processLogTextBox.AppendText(@"Reading (I_EFT_EXPORT) Table...");
             TriggerBgWorkerForQuery(query);
+            processLogTextBox.AppendText($@"Done!{Environment.NewLine}");
+            Release();
+        }
+
+        private void Release()
+        {
+            UseWaitCursor = false;
+            createButton.Enabled = true;
+        }
+
+        private void HangAndReport()
+        {           
+            createButton.Enabled = false;
+            UseWaitCursor = true;
         }
 
         private void StructureValidation(string[] eftFileContent)
@@ -166,6 +198,7 @@ namespace AlisBatchReporter.Forms
                 //DataView dv = workerResult.DefaultView;
                 //dv.Sort = "individual_identification_number desc";
                 //DataTable sorted = dv.ToTable();
+                processLogTextBox.AppendText(@"Compating File Records To DB Table Records...");
                 var list = workerResult.Rows.OfType<DataRow>()
                     .Select(dr => dr.Field<string>("individual_identification_number")).ToList();
                 List<int> intList = list.Select(int.Parse).ToList();
@@ -177,6 +210,7 @@ namespace AlisBatchReporter.Forms
                 dataGridView1.DataSource = bindingSource1;
                 dataGridView2.DataSource = bindingSource2;
                 progressBar1.Visible = false;
+                processLogTextBox.AppendText($@"Done!{Environment.NewLine}");
             };
             backgroundWorker.RunWorkerAsync(query);
         }

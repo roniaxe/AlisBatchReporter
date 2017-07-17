@@ -33,7 +33,7 @@
             this.validateButton = new System.Windows.Forms.Button();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.label1 = new System.Windows.Forms.Label();
-            this.progressBar2 = new System.Windows.Forms.ProgressBar();
+            this.processTextBox = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // validationTypesCombobox
@@ -83,19 +83,20 @@
             this.label1.TabIndex = 6;
             this.label1.Text = "label2";
             // 
-            // progressBar2
+            // processTextBox
             // 
-            this.progressBar2.Location = new System.Drawing.Point(12, 243);
-            this.progressBar2.Name = "progressBar2";
-            this.progressBar2.Size = new System.Drawing.Size(100, 23);
-            this.progressBar2.TabIndex = 7;
+            this.processTextBox.Location = new System.Drawing.Point(12, 210);
+            this.processTextBox.Multiline = true;
+            this.processTextBox.Name = "processTextBox";
+            this.processTextBox.Size = new System.Drawing.Size(506, 163);
+            this.processTextBox.TabIndex = 8;
             // 
             // DmfiValidationsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1124, 584);
-            this.Controls.Add(this.progressBar2);
+            this.Controls.Add(this.processTextBox);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.validateButton);
@@ -115,6 +116,6 @@
         private System.Windows.Forms.Button validateButton;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ProgressBar progressBar2;
+        private System.Windows.Forms.TextBox processTextBox;
     }
 }

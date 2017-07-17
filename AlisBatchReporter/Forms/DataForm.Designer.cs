@@ -40,21 +40,21 @@
             this.exportButton = new System.Windows.Forms.Button();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.onlyErrorsRadioButton = new System.Windows.Forms.RadioButton();
+            this.allTypesRadioButton = new System.Windows.Forms.RadioButton();
+            this.polFilterLabel = new System.Windows.Forms.Label();
+            this.polFilterTextBox = new System.Windows.Forms.TextBox();
             this.labelReportType = new System.Windows.Forms.Label();
             this.closeButton = new System.Windows.Forms.Button();
             this.comboBoxFunc = new System.Windows.Forms.ComboBox();
             this.bindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            this.polFilterTextBox = new System.Windows.Forms.TextBox();
-            this.polFilterLabel = new System.Windows.Forms.Label();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.allTypesRadioButton = new System.Windows.Forms.RadioButton();
-            this.onlyErrorsRadioButton = new System.Windows.Forms.RadioButton();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.panel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).BeginInit();
             this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).BeginInit();
             this.SuspendLayout();
             // 
             // dataGridView1
@@ -183,6 +183,59 @@
             this.groupBox1.TabIndex = 13;
             this.groupBox1.TabStop = false;
             // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.onlyErrorsRadioButton);
+            this.groupBox2.Controls.Add(this.allTypesRadioButton);
+            this.groupBox2.Location = new System.Drawing.Point(449, 46);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(210, 58);
+            this.groupBox2.TabIndex = 18;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Record Type Filter";
+            // 
+            // onlyErrorsRadioButton
+            // 
+            this.onlyErrorsRadioButton.AutoSize = true;
+            this.onlyErrorsRadioButton.Checked = true;
+            this.onlyErrorsRadioButton.Location = new System.Drawing.Point(19, 23);
+            this.onlyErrorsRadioButton.Name = "onlyErrorsRadioButton";
+            this.onlyErrorsRadioButton.Size = new System.Drawing.Size(76, 17);
+            this.onlyErrorsRadioButton.TabIndex = 20;
+            this.onlyErrorsRadioButton.TabStop = true;
+            this.onlyErrorsRadioButton.Text = "Only Errors";
+            this.onlyErrorsRadioButton.UseVisualStyleBackColor = true;
+            // 
+            // allTypesRadioButton
+            // 
+            this.allTypesRadioButton.AutoSize = true;
+            this.allTypesRadioButton.Location = new System.Drawing.Point(110, 23);
+            this.allTypesRadioButton.Name = "allTypesRadioButton";
+            this.allTypesRadioButton.Size = new System.Drawing.Size(68, 17);
+            this.allTypesRadioButton.TabIndex = 19;
+            this.allTypesRadioButton.TabStop = true;
+            this.allTypesRadioButton.Text = "All Types";
+            this.allTypesRadioButton.UseVisualStyleBackColor = true;
+            // 
+            // polFilterLabel
+            // 
+            this.polFilterLabel.AutoSize = true;
+            this.polFilterLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.polFilterLabel.Location = new System.Drawing.Point(446, 22);
+            this.polFilterLabel.Name = "polFilterLabel";
+            this.polFilterLabel.Size = new System.Drawing.Size(88, 18);
+            this.polFilterLabel.TabIndex = 17;
+            this.polFilterLabel.Text = "Policy Filter:";
+            this.polFilterLabel.Visible = false;
+            // 
+            // polFilterTextBox
+            // 
+            this.polFilterTextBox.Location = new System.Drawing.Point(559, 20);
+            this.polFilterTextBox.Name = "polFilterTextBox";
+            this.polFilterTextBox.Size = new System.Drawing.Size(100, 20);
+            this.polFilterTextBox.TabIndex = 16;
+            this.polFilterTextBox.WordWrap = false;
+            // 
             // labelReportType
             // 
             this.labelReportType.AutoSize = true;
@@ -219,59 +272,6 @@
             this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
             this.backgroundWorker1.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker1_RunWorkerCompleted);
             // 
-            // polFilterTextBox
-            // 
-            this.polFilterTextBox.Location = new System.Drawing.Point(559, 20);
-            this.polFilterTextBox.Name = "polFilterTextBox";
-            this.polFilterTextBox.Size = new System.Drawing.Size(100, 20);
-            this.polFilterTextBox.TabIndex = 16;
-            this.polFilterTextBox.WordWrap = false;
-            // 
-            // polFilterLabel
-            // 
-            this.polFilterLabel.AutoSize = true;
-            this.polFilterLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.polFilterLabel.Location = new System.Drawing.Point(446, 22);
-            this.polFilterLabel.Name = "polFilterLabel";
-            this.polFilterLabel.Size = new System.Drawing.Size(88, 18);
-            this.polFilterLabel.TabIndex = 17;
-            this.polFilterLabel.Text = "Policy Filter:";
-            this.polFilterLabel.Visible = false;
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.onlyErrorsRadioButton);
-            this.groupBox2.Controls.Add(this.allTypesRadioButton);
-            this.groupBox2.Location = new System.Drawing.Point(449, 46);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(210, 58);
-            this.groupBox2.TabIndex = 18;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Record Type Filter";
-            // 
-            // allTypesRadioButton
-            // 
-            this.allTypesRadioButton.AutoSize = true;
-            this.allTypesRadioButton.Location = new System.Drawing.Point(110, 23);
-            this.allTypesRadioButton.Name = "allTypesRadioButton";
-            this.allTypesRadioButton.Size = new System.Drawing.Size(68, 17);
-            this.allTypesRadioButton.TabIndex = 19;
-            this.allTypesRadioButton.TabStop = true;
-            this.allTypesRadioButton.Text = "All Types";
-            this.allTypesRadioButton.UseVisualStyleBackColor = true;
-            // 
-            // onlyErrorsRadioButton
-            // 
-            this.onlyErrorsRadioButton.AutoSize = true;
-            this.onlyErrorsRadioButton.Checked = true;
-            this.onlyErrorsRadioButton.Location = new System.Drawing.Point(19, 23);
-            this.onlyErrorsRadioButton.Name = "onlyErrorsRadioButton";
-            this.onlyErrorsRadioButton.Size = new System.Drawing.Size(76, 17);
-            this.onlyErrorsRadioButton.TabIndex = 20;
-            this.onlyErrorsRadioButton.TabStop = true;
-            this.onlyErrorsRadioButton.Text = "Only Errors";
-            this.onlyErrorsRadioButton.UseVisualStyleBackColor = true;
-            // 
             // DataForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -285,9 +285,9 @@
             this.panel1.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

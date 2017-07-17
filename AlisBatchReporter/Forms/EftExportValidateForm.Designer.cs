@@ -39,6 +39,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.errorTextBox = new System.Windows.Forms.TextBox();
+            this.processLogTextBox = new System.Windows.Forms.TextBox();
+            this.appLogLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource2)).BeginInit();
@@ -73,7 +75,7 @@
             this.closeButton.Name = "closeButton";
             this.closeButton.Size = new System.Drawing.Size(75, 23);
             this.closeButton.TabIndex = 2;
-            this.closeButton.Text = "Close";
+            this.closeButton.Text = "CloseForm";
             this.closeButton.UseVisualStyleBackColor = true;
             this.closeButton.Click += new System.EventHandler(this.closeButton_Click);
             // 
@@ -127,11 +129,32 @@
             this.errorTextBox.Size = new System.Drawing.Size(1066, 179);
             this.errorTextBox.TabIndex = 7;
             // 
+            // processLogTextBox
+            // 
+            this.processLogTextBox.Enabled = false;
+            this.processLogTextBox.Location = new System.Drawing.Point(30, 162);
+            this.processLogTextBox.Multiline = true;
+            this.processLogTextBox.Name = "processLogTextBox";
+            this.processLogTextBox.Size = new System.Drawing.Size(235, 417);
+            this.processLogTextBox.TabIndex = 8;
+            // 
+            // appLogLabel
+            // 
+            this.appLogLabel.AutoSize = true;
+            this.appLogLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.appLogLabel.Location = new System.Drawing.Point(25, 117);
+            this.appLogLabel.Name = "appLogLabel";
+            this.appLogLabel.Size = new System.Drawing.Size(147, 25);
+            this.appLogLabel.TabIndex = 9;
+            this.appLogLabel.Text = "Logger Update:";
+            // 
             // EftExportValidateForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1148, 810);
+            this.Controls.Add(this.appLogLabel);
+            this.Controls.Add(this.processLogTextBox);
             this.Controls.Add(this.errorTextBox);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -163,5 +186,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox errorTextBox;
+        private System.Windows.Forms.TextBox processLogTextBox;
+        private System.Windows.Forms.Label appLogLabel;
     }
 }

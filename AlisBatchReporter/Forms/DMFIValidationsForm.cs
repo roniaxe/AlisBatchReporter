@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using AlisBatchReporter.Classes;
 
@@ -158,9 +160,13 @@ namespace AlisBatchReporter.Forms
                         3, 13, 23, 25, 35, 45, 55, 56, 59,
                         69, 74, 94, 96, 97, 122, 137, 152, 162, 172, 182, 192, 202, 212, 213, 215, 217, 218
                     };
+                    processTextBox.AppendText(@"Validating...");
                     SplitAndCompare(sourceDic, outboundDic, indexArr);
+                    processTextBox.AppendText($@"Done!{Environment.NewLine}");
                     // Create Output
+                    processTextBox.AppendText(@"Writing To File...");
                     CreateOutputFile();
+                    processTextBox.AppendText($@"Done!{Environment.NewLine}");
                 }
                 else
                 {
@@ -278,22 +284,25 @@ namespace AlisBatchReporter.Forms
                 var idxName = (IRF1) idx;
                 if (!source[idx].Equals(outbound[idx]))
                 {
-                    AddDiffrence(idxName, source[1]);
+                    Task.Run(()=> AddDiffrence(idxName, source[1], source[idx], outbound[idx]));
                 }
             }
 
             if (validationTypesCombobox.Text.Equals("IRF2 File Comparison"))
             {
                 var idxName = (IRF2) idx;
-                if (idx > 18 && idx < 23)
+                if ((idx > 18 && idx < 23) || idx == 8)
                 {
                     double castedToDoubleSource, castedToDoubleOutbound;
                     if (Double.TryParse(source[idx], out castedToDoubleSource) &&
                         Double.TryParse(outbound[idx], out castedToDoubleOutbound))
                     {
-                        if (Math.Abs(castedToDoubleSource - castedToDoubleOutbound) > 0)
+                        var diff = Math.Abs(castedToDoubleSource - castedToDoubleOutbound);
+                        if ((idx != 20 && diff > 0) || (idx == 20 && diff > 2))
                         {
-                            AddDiffrence(idxName, source[1] + " - " + source[6]);
+                            Task.Run(()=> AddDiffrence(idxName, source[1] + " - " + source[6],
+                                castedToDoubleSource.ToString(CultureInfo.InvariantCulture),
+                                castedToDoubleOutbound.ToString(CultureInfo.InvariantCulture)));
                         }
                     }
                 }
@@ -301,23 +310,23 @@ namespace AlisBatchReporter.Forms
                 {
                     if (!source[idx].Equals(outbound[idx]))
                     {
-                        AddDiffrence(idxName, source[1] + "-" + source[6]);
+                        Task.Run(() => AddDiffrence(idxName, source[1] + "-" + source[6], source[idx], outbound[idx]));
                     }
                 }
             }
         }
 
-        private void AddDiffrence(object idxName, string polNo)
+        private void AddDiffrence(object idxName, string polNo, string souceValue, string outboundValue)
         {
             if (_differencesCount.ContainsKey(idxName.ToString()))
             {
-                _differencesCount[idxName.ToString()].Add(polNo);
+                _differencesCount[idxName.ToString()].Add(polNo + $@"  LifeCom Value: {souceValue}, DMFI Value: {outboundValue}");
             }
             else
             {
                 _differencesCount.Add(idxName.ToString(), new List<string>
                 {
-                    polNo
+                    polNo + $@"  LifeCom Value: {souceValue}, DMFI Value: {outboundValue}"
                 });
             }
         }
