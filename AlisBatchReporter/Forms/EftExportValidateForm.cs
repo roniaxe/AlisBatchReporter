@@ -32,8 +32,8 @@ namespace AlisBatchReporter.Forms
                 processLogTextBox.AppendText($@"Reading EFT Export File...");
                 eftFileContent =
                     await Task.Run(() => File.ReadAllLines(
-                        @"\\dmfdwh001pr\X\Deploy\Prod\FTP\Outbound\EFTExport\EFTExport.txt"));     
-                processLogTextBox.AppendText($@"Done!{Environment.NewLine}");         
+                        @"\\dmfdwh001pr\X\Deploy\Prod\FTP\Outbound\EFTExport\EFTExport.txt"));
+                processLogTextBox.AppendText($@"Done!{Environment.NewLine}");
             }
             catch (FileNotFoundException fileNotFoundException)
             {
@@ -68,7 +68,7 @@ namespace AlisBatchReporter.Forms
         }
 
         private void HangAndReport()
-        {           
+        {
             createButton.Enabled = false;
             UseWaitCursor = true;
         }
@@ -76,6 +76,8 @@ namespace AlisBatchReporter.Forms
         private void StructureValidation(string[] eftFileContent)
         {
             bool mainShulter = false, childShulter = false, exitLoop = false;
+            int sixRowCounter = 0, debitSum = 0, creditSum = 0;
+            long hashTotal = 0;
             for (int i = 0; i < eftFileContent.Length; i++)
             {
                 if (eftFileContent[i].Length != 94)
@@ -123,6 +125,22 @@ namespace AlisBatchReporter.Forms
                                 errorTextBox.AppendText(
                                     $@"Entry Outside of a batch. Line {i + 1}{Environment.NewLine}");
                             }
+                            if (eftFileContent[i].Substring(1, 2).Equals("27"))
+                            {
+                                int debitIntValue;
+                                int.TryParse(eftFileContent[i].Substring(29, 10), out debitIntValue);
+                                debitSum += debitIntValue;
+                            }
+                            if (eftFileContent[i].Substring(1, 2).Equals("22"))
+                            {
+                                int creditIntValue;
+                                int.TryParse(eftFileContent[i].Substring(29, 10), out creditIntValue);
+                                creditSum += creditIntValue;
+                            }
+                            int hash;
+                            int.TryParse(eftFileContent[i].Substring(3, 8), out hash);
+                            hashTotal += hash;
+                            sixRowCounter++;
                             break;
                         case '8':
                             if (!childShulter)
@@ -130,6 +148,33 @@ namespace AlisBatchReporter.Forms
                                 errorTextBox.AppendText(
                                     $@"Batch Control while not batch header opener. Line {i + 1}{Environment.NewLine}");
                             }
+                            // Count 6 Rows
+                            int sixCounterIntValue;
+                            int.TryParse(eftFileContent[i].Substring(4, 6), out sixCounterIntValue);
+                            if (sixCounterIntValue != sixRowCounter)
+                            {
+                                errorTextBox.AppendText(
+                                    $@"Wrong count of '6' rows in '8' row Of Batch No {eftFileContent[i][93]}, Counted {sixCounterIntValue}, while needed to be {sixRowCounter}{Environment.NewLine}");
+                            }
+                            // Sum Debits
+                            int debitSumIntValue;
+                            int.TryParse(eftFileContent[i].Substring(20, 12), out debitSumIntValue);
+                            if (debitSumIntValue != debitSum)
+                            {
+                                errorTextBox.AppendText(
+                                    $@"Debit sum on (8) row of batch {eftFileContent[i][93]} is {debitSumIntValue}, need to be {debitSum}{Environment.NewLine}");
+                            }
+                            // Sum Credit
+                            int creditSumIntValue;
+                            int.TryParse(eftFileContent[i].Substring(32, 12), out creditSumIntValue);
+                            if (creditSumIntValue != creditSum)
+                            {
+                                errorTextBox.AppendText(
+                                    $@"Credit sum on (8) row of batch {eftFileContent[i][93]} is {creditSumIntValue}, need to be {creditSum}{Environment.NewLine}");
+                            }
+                            sixRowCounter = 0;
+                            debitSum = 0;
+                            creditSum = 0;
                             childShulter = false;
                             break;
                         case '9':
@@ -141,6 +186,18 @@ namespace AlisBatchReporter.Forms
                             else
                             {
                                 exitLoop = true;
+                            }                         
+                            int hashFromFile;
+                            int.TryParse(eftFileContent[i].Substring(21, 10), out hashFromFile);
+                            string hashTotalString = hashTotal.ToString();
+                            if (hashTotalString.Length > 10)
+                            {
+                                hashTotal = long.Parse(hashTotalString.Substring(hashTotalString.Length - 10, 10));
+                            }
+                            if (hashTotal != hashFromFile)
+                            {
+                                errorTextBox.AppendText(
+                                    $@"Hash On File Is wrong, appears {hashFromFile}, need to be {hashTotal}{Environment.NewLine}");
                             }
                             mainShulter = false;
                             break;

@@ -26,9 +26,6 @@ namespace AlisBatchReporter
         {
             var message = $@"Sorry, Something went wrong:{Environment.NewLine}{((Exception)e.ExceptionObject).Message}";
             Console.WriteLine($@"Error {DateTimeOffset.Now}: {e.ExceptionObject}");
-            Logger.OpenLogger();
-            Logger.LogThisLine(e.ExceptionObject.ToString());
-            Logger.CloseLogger();
             MessageBox.Show(message, @"Unexpected Error");
         }
 
@@ -36,11 +33,6 @@ namespace AlisBatchReporter
         {
             var message = $@"Sorry, Something went wrong:{Environment.NewLine}{e.Exception.Message}";
             Console.WriteLine($@"Error {DateTimeOffset.Now}: {e.Exception}");
-            Logger.OpenLogger();
-            Logger.LogThisLine(e.Exception.Message);
-            Logger.LogThisLine(e.Exception.StackTrace);
-            Logger.LogThisLine(e.Exception.InnerException?.Message);
-            Logger.CloseLogger();
             MessageBox.Show(message, @"Unexpected Error");
         }
     }

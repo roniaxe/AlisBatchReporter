@@ -45,6 +45,7 @@
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.label1 = new System.Windows.Forms.Label();
             this.currentRunningLabel = new System.Windows.Forms.Label();
+            this.lexisNexisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -84,7 +85,8 @@
             this.validateExportsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.unallocatedSuspenseToolStripMenuItem,
             this.eftExportToolStripMenuItem,
-            this.dMFIOutboundValidationsToolStripMenuItem});
+            this.dMFIOutboundValidationsToolStripMenuItem,
+            this.lexisNexisToolStripMenuItem});
             this.validateExportsToolStripMenuItem.Name = "validateExportsToolStripMenuItem";
             this.validateExportsToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
             this.validateExportsToolStripMenuItem.Text = "Validate Exports";
@@ -152,20 +154,20 @@
             // updateToolStripMenuItem
             // 
             this.updateToolStripMenuItem.Name = "updateToolStripMenuItem";
-            this.updateToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.updateToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
             this.updateToolStripMenuItem.Text = "Update";
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(112, 22);
             this.toolStripMenuItem1.Text = "test";
             this.toolStripMenuItem1.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
             // 
@@ -191,6 +193,13 @@
             this.currentRunningLabel.Name = "currentRunningLabel";
             this.currentRunningLabel.Size = new System.Drawing.Size(0, 24);
             this.currentRunningLabel.TabIndex = 2;
+            // 
+            // lexisNexisToolStripMenuItem
+            // 
+            this.lexisNexisToolStripMenuItem.Name = "lexisNexisToolStripMenuItem";
+            this.lexisNexisToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
+            this.lexisNexisToolStripMenuItem.Text = "LexisNexis";
+            this.lexisNexisToolStripMenuItem.Click += new System.EventHandler(this.lexisNexisToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -233,6 +242,7 @@
         private System.Windows.Forms.ToolStripMenuItem dMFIOutboundValidationsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem findObjectToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem lexisNexisToolStripMenuItem;
     }
 }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using AlisBatchReporter.Classes;
+using AlisBatchReporter.Presentors;
 using AlisBatchReporter.Views.MVPTest;
 
 namespace AlisBatchReporter.Forms
@@ -106,6 +107,14 @@ namespace AlisBatchReporter.Forms
             EnvRepository repository = new EnvRepository();
             ConfigPresenter unused = new ConfigPresenter(confForm, repository);
             confForm.Show();
+        }
+
+        private void lexisNexisToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            LexisNexisForm lexisNexisForm = new LexisNexisForm();
+            LexisNexisPresentor lexisNexisPresentor = new LexisNexisPresentor(lexisNexisForm);
+
+            lexisNexisForm.Show();
         }
     }
 }
