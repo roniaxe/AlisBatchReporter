@@ -29,20 +29,28 @@ namespace AlisBatchReporter.Presentors
 
             // Reading & Splitting
             _view.LogProcess("Reading Files...", false);
-            await Task.Run(() => ReadFiles());
+            await ReadFiles();
             _view.LogProcess("Done!", true);
 
             // Validing
             _view.LogProcess("Validating...", false);
-            await Task.Run(() => Validating());
+            Validating();
             _view.LogProcess("Done!", true);
 
             // Writing File
             _view.LogProcess("Writing File...", false);
-            await Task.Run(() => WritingFile());
+            WritingFile();
             _view.LogProcess("Done!", true);
+
+            // Deleting Source/Outbound Files
+            DeleteFiles();
         }
 
+        private void DeleteFiles()
+        {
+            File.Delete(Directory.GetCurrentDirectory() + @"\LN_Source.txt");
+            File.Delete(Directory.GetCurrentDirectory() + @"\LN_Outbound.txt");
+        }
 
         private async Task CopyFiles()
         {
@@ -60,7 +68,7 @@ namespace AlisBatchReporter.Presentors
             _view.LogProcess("Done!", true);
         }
 
-        private async void ReadFiles()
+        private async Task ReadFiles()
         {
             //Read Source File And Split
             _sourceDictionary = new Dictionary<string, string[]>();
@@ -72,11 +80,11 @@ namespace AlisBatchReporter.Presentors
                 var trimmed = splitted.Select(d => d.Trim()).ToArray();
                 try
                 {
-                    _sourceDictionary.Add(trimmed[1], trimmed);
+                    _sourceDictionary.Add($@"{trimmed[1]}-{trimmed[2]}-{trimmed[6]}", trimmed);
                 }
                 catch (ArgumentException e)
                 {
-                    Console.WriteLine($@"Error {DateTimeOffset.Now}: {e.Message}, Value: {trimmed[1]}");
+                    Console.WriteLine($@"Error {DateTimeOffset.Now}: {e.Message}, Value: {trimmed[1]}-{trimmed[2]}-{trimmed[6]}");
                     throw;
                 }
             }
@@ -89,7 +97,7 @@ namespace AlisBatchReporter.Presentors
             {
                 var splitted = outboundRow.Split(',');
                 var trimmed = splitted.Select(d => d.Trim()).ToArray();
-                _outboundDictionary.Add(trimmed[1], trimmed);
+                _outboundDictionary.Add($@"{trimmed[1]}-{trimmed[2]}-{trimmed[6]}", trimmed);
             }
         }
 
@@ -97,7 +105,8 @@ namespace AlisBatchReporter.Presentors
         {
             foreach (var sourceKey in _sourceDictionary.Keys)
             {
-                var outboundEntry = _outboundDictionary[sourceKey];
+                string[] outboundEntry;
+                _outboundDictionary.TryGetValue(sourceKey, out outboundEntry);
                 if (outboundEntry == null)
                 {
                     if (_diffDictionary.ContainsKey("[InSourceNotInOutbound]"))
@@ -137,12 +146,12 @@ namespace AlisBatchReporter.Presentors
             }
         }
 
-        private async void WritingFile()
+        private void WritingFile()
         {
             using (StreamWriter file = new StreamWriter("LexisNexis_Diffs.txt"))
                 foreach (var entry in _diffDictionary)
                 {
-                    await file.WriteLineAsync($@"[{entry.Key}]");
+                    file.WriteLineAsync($@"[{entry.Key}]");
                     entry.Value.ForEach(policy => file.WriteLine(policy));
                 }
         }

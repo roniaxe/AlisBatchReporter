@@ -201,9 +201,13 @@ namespace AlisBatchReporter.Forms
                     {
                         3, 13, 23, 33, 35, 36, 38, 48, 58
                     };
+                    processTextBox.AppendText(@"Validating...");
                     SplitAndCompare(sourceDic, outboundDic, indexArr);
+                    processTextBox.AppendText($@"Done!{Environment.NewLine}");
                     // Create Output
+                    processTextBox.AppendText(@"Writing To File...");
                     CreateOutputFile();
+                    processTextBox.AppendText($@"Done!{Environment.NewLine}");
                 }
             }
         }
