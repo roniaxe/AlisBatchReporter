@@ -27,7 +27,7 @@ namespace AlisBatchReporter.Forms
                 new ComboboxItem
                 {
                     Text = "i_unallocated_suspense_report".ToUpper(),
-                    Value = "UnallocatedSuspenseReport.SQL"
+                    Value = @"\Resources\SQL\UnallocatedSuspenseReport.SQL"
                 }
             };
             exportTablesComboBox.Items.AddRange(exportTableList.ToArray());
@@ -45,7 +45,7 @@ namespace AlisBatchReporter.Forms
             var sqlFileName = ((ComboboxItem) exportTablesComboBox.SelectedItem).Value;
             var keyType = internalRadioButton.Checked ? "Internal" : "External";
             SimpleExportQuery query =
-                new SimpleExportQuery(@"..\..\Resources\SQL\" + sqlFileName, keyTextBox.Text, keyType);
+                new SimpleExportQuery(System.IO.Path.GetDirectoryName(Application.ExecutablePath) + sqlFileName, keyTextBox.Text, keyType);
 
             TriggerBgWorkerForQuery(query);
         }

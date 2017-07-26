@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
 using AlisBatchReporter.Classes;
+using System.Reflection;
 
 namespace AlisBatchReporter.Forms
 {
@@ -36,12 +37,12 @@ namespace AlisBatchReporter.Forms
                 new ComboboxItem
                 {
                     Text = "Report",
-                    Value = "BatchAudit.sql"
+                    Value = @"\Resources\SQL\BatchAudit.sql"
                 },
                 new ComboboxItem
                 {
                     Text = "Task List",
-                    Value = "TaskList.sql"
+                    Value = @"\Resources\SQL\TaskList.sql"
                 }
             };
             comboBoxFunc.Items.AddRange(funcItems.ToArray());
@@ -54,7 +55,7 @@ namespace AlisBatchReporter.Forms
             var taskId = dataGridView1.CurrentCell.Value.ToString();
 
             // Create query
-            SimpleQuery timeingQuery = new SimpleQuery(@"..\..\Resources\SQL\RunningTime.sql", GetBatchRunNumber(dataGridView1), taskId);
+            SimpleQuery timeingQuery = new SimpleQuery(System.IO.Path.GetDirectoryName(Application.ExecutablePath) + @"\Resources\SQL\RunningTime.sql", GetBatchRunNumber(dataGridView1), taskId);
 
             BackgroundWorker backgroundWorker = new BackgroundWorker
             {
@@ -91,7 +92,7 @@ namespace AlisBatchReporter.Forms
             var batchRunNum = dataGridView1.CurrentCell.Value.ToString();
            
             // Create query, and send it to form
-            SimpleQuery gbaQuery = new SimpleQuery(@"..\..\Resources\SQL\SimpleGBA.sql", batchRunNum, GetTaskId(dataGridView1));
+            SimpleQuery gbaQuery = new SimpleQuery(System.IO.Path.GetDirectoryName(Application.ExecutablePath) + @"\Resources\SQL\SimpleGBA.sql", batchRunNum, GetTaskId(dataGridView1));
             SingleBatchRunForm singleForm = new SingleBatchRunForm(gbaQuery);
             singleForm.Show();
         }
@@ -178,7 +179,7 @@ namespace AlisBatchReporter.Forms
             // Create query
             ResetComps();
             ReportQuery newQuery = new ReportQuery(
-                @"..\..\Resources\SQL\" + selectedFunc,
+                System.IO.Path.GetDirectoryName(Application.ExecutablePath) + selectedFunc,
                 fromDate.Value.ToShortDateString(),
                 toDate.Value.ToShortDateString(),
                 polFilterTextBox.Text,

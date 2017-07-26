@@ -23,8 +23,14 @@ namespace AlisBatchReporter.Presentors
         private async void ValidateLexisNexis()
         {
             //Copy Files
-            _view.LogProcess("Copy Files...", true);
-            await CopyFiles();
+            _view.LogProcess("Copy Files Asynch (!)...", false);
+            //await CopyFiles();
+            var copyTasks = new Task[2];
+            copyTasks[0] = CopyFileAsync(@"\\dmfdwh001pr\X\Deploy\Prod\FTP\Validation\Lexis_Nexis\SSN_LEXIS_NEXIS_JULY9.TXT",
+                Path.Combine(Directory.GetCurrentDirectory(), "LN_Source.txt"));
+            copyTasks[1] = CopyFileAsync(@"\\dmfdwh001pr\X\Deploy\Prod\FTP\Outbound\SSN_Feed\SSN_Feed.txt",
+                Path.Combine(Directory.GetCurrentDirectory(), "LN_Outbound.txt"));
+            await Task.WhenAll(copyTasks);
             _view.LogProcess("Done!", true);
 
             // Reading & Splitting
@@ -34,16 +40,17 @@ namespace AlisBatchReporter.Presentors
 
             // Validing
             _view.LogProcess("Validating...", false);
-            Validating();
+            //Validating();
+            await Validating();
             _view.LogProcess("Done!", true);
 
             // Writing File
             _view.LogProcess("Writing File...", false);
-            WritingFile();
+            await WritingFile();
             _view.LogProcess("Done!", true);
 
             // Deleting Source/Outbound Files
-            DeleteFiles();
+            //DeleteFiles();
         }
 
         private void DeleteFiles()
@@ -68,6 +75,17 @@ namespace AlisBatchReporter.Presentors
             _view.LogProcess("Done!", true);
         }
 
+        public async Task CopyFileAsync(string sourcePath, string destinationPath)
+        {
+            using (Stream source = File.Open(sourcePath,FileMode.Open,FileAccess.Read))
+            {
+                using (Stream destination = File.Create(destinationPath))
+                {
+                    await source.CopyToAsync(destination);
+                }
+            }
+        }
+
         private async Task ReadFiles()
         {
             //Read Source File And Split
@@ -80,11 +98,13 @@ namespace AlisBatchReporter.Presentors
                 var trimmed = splitted.Select(d => d.Trim()).ToArray();
                 try
                 {
-                    _sourceDictionary.Add($@"{trimmed[1]}-{trimmed[2]}-{trimmed[6]}", trimmed);
+                    // Creating Dic with Uniqe Key
+                    _sourceDictionary.Add($@"{trimmed[1]}-{trimmed[2]}-{trimmed[4]}-{trimmed[6]}", trimmed);
                 }
                 catch (ArgumentException e)
                 {
-                    Console.WriteLine($@"Error {DateTimeOffset.Now}: {e.Message}, Value: {trimmed[1]}-{trimmed[2]}-{trimmed[6]}");
+                    Console.WriteLine(
+                        $@"Error {DateTimeOffset.Now}: {e.Message}, Value: {trimmed[1]}-{trimmed[2]}-{trimmed[4]}-{trimmed[6]}");
                     throw;
                 }
             }
@@ -97,62 +117,81 @@ namespace AlisBatchReporter.Presentors
             {
                 var splitted = outboundRow.Split(',');
                 var trimmed = splitted.Select(d => d.Trim()).ToArray();
-                _outboundDictionary.Add($@"{trimmed[1]}-{trimmed[2]}-{trimmed[6]}", trimmed);
+                _outboundDictionary.Add($@"{trimmed[1]}-{trimmed[2]}-{trimmed[4]}-{trimmed[6]}", trimmed);
             }
         }
 
-        private void Validating()
+        private async Task Validating()
         {
-            foreach (var sourceKey in _sourceDictionary.Keys)
+            await Task.Run(() =>
             {
-                string[] outboundEntry;
-                _outboundDictionary.TryGetValue(sourceKey, out outboundEntry);
-                if (outboundEntry == null)
+                foreach (var sourceKey in _sourceDictionary.Keys)
                 {
-                    if (_diffDictionary.ContainsKey("[InSourceNotInOutbound]"))
+                    string[] outboundEntry;
+                    _outboundDictionary.TryGetValue(sourceKey, out outboundEntry);
+                    if (outboundEntry == null)
                     {
-                        _diffDictionary["[InSourceNotInOutbound]"].Add(sourceKey);
+                        if (_diffDictionary.ContainsKey("[InSourceNotInOutbound]"))
+                        {
+                            _diffDictionary["[InSourceNotInOutbound]"].Add(sourceKey);
+                        }
+                        else
+                        {
+                            _diffDictionary.Add("[InSourceNotInOutbound]", new List<string> {sourceKey});
+                        }
                     }
                     else
                     {
-                        _diffDictionary.Add("[InSourceNotInOutbound]", new List<string> {sourceKey});
-                    }
-                }
-                else
-                {
-                    var sourceEntry = _sourceDictionary[sourceKey];
-                    for (int i = 0; i < sourceEntry.Length; i++)
-                    {
-                        var idxName = (LexisNexisEnum) i;
-                        if (!sourceEntry[i].Equals(outboundEntry[i]))
+                        var sourceEntry = _sourceDictionary[sourceKey];
+                        for (int i = 0; i < sourceEntry.Length; i++)
                         {
-                            if (_diffDictionary.ContainsKey($@"[{idxName}]"))
+                            if (i >= 2 && i <= 13)
                             {
-                                _diffDictionary[$@"[{idxName}]"].Add(sourceKey +
-                                                                     $@"  LifeComm Value: {sourceEntry[i]}" +
-                                                                     $@"  DMFI Value: {outboundEntry[i]}");
+                                continue;
                             }
-                            else
+                            var idxName = (LexisNexisEnum) i;
+                            if (i == 15)
                             {
-                                _diffDictionary.Add($@"[{idxName}]", new List<string>
+                                long intSource;
+                                long.TryParse(sourceEntry[i], out intSource);
+                                long intOutbound;
+                                long.TryParse(outboundEntry[i], out intOutbound);
+                                sourceEntry[i] = intSource.ToString();
+                                outboundEntry[i] = intOutbound.ToString();
+                            }
+                            if (!sourceEntry[i].Equals(outboundEntry[i]))
+                            {
+                                if (_diffDictionary.ContainsKey($@"[{idxName}]"))
                                 {
-                                    sourceKey + $@"  LifeComm Value: {sourceEntry[i]}" +
-                                    $@"  DMFI Value: {outboundEntry[i]}"
-                                });
+                                    _diffDictionary[$@"[{idxName}]"].Add(sourceKey +
+                                                                         $@"  LifeComm Value: {sourceEntry[i]}" +
+                                                                         $@"  DMFI Value: {outboundEntry[i]}");
+                                }
+                                else
+                                {
+                                    _diffDictionary.Add($@"[{idxName}]", new List<string>
+                                    {
+                                        sourceKey + $@"  LifeComm Value: {sourceEntry[i]}" +
+                                        $@"  DMFI Value: {outboundEntry[i]}"
+                                    });
+                                }
                             }
                         }
                     }
                 }
-            }
+            });
         }
 
-        private void WritingFile()
+        private async Task WritingFile()
         {
             using (StreamWriter file = new StreamWriter("LexisNexis_Diffs.txt"))
                 foreach (var entry in _diffDictionary)
                 {
-                    file.WriteLineAsync($@"[{entry.Key}]");
-                    entry.Value.ForEach(policy => file.WriteLine(policy));
+                    file.WriteLine($@"[{entry.Key}]");
+                    foreach (var val in entry.Value)
+                    {
+                        await file.WriteLineAsync(val);
+                    }
                 }
         }
     }

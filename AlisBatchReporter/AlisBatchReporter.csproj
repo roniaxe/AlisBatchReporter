@@ -206,16 +206,32 @@
     <Folder Include="bin\Debug\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\SQL\CmaByBatchRunNo.sql" />
-    <Content Include="Resources\SQL\IEftExport.sql" />
-    <Content Include="Resources\SQL\FindObject.sql" />
-    <Content Include="Resources\SQL\TaskList.sql" />
-    <Content Include="Resources\SQL\UnallocatedSuspenseReport.sql" />
+    <Content Include="Resources\SQL\CmaByBatchRunNo.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\SQL\IEftExport.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\SQL\FindObject.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\SQL\TaskList.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\SQL\UnallocatedSuspenseReport.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="Resources\excel_export_icon.ico" />
     <None Include="Resources\Button-Refresh-icon.png" />
-    <Content Include="Resources\SQL\BatchAudit.sql" />
-    <Content Include="Resources\SQL\RunningTime.sql" />
-    <Content Include="Resources\SQL\SimpleGBA.sql" />
+    <Content Include="Resources\SQL\BatchAudit.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\SQL\RunningTime.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\SQL\SimpleGBA.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

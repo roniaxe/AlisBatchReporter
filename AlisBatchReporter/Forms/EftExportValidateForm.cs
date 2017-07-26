@@ -24,7 +24,7 @@ namespace AlisBatchReporter.Forms
         {
             ResetComps();
             EftExportQuery query =
-                new EftExportQuery(@"..\..\Resources\SQL\IEftExport.sql");
+                new EftExportQuery(Path.GetDirectoryName(Application.ExecutablePath) + @"\Resources\SQL\IEftExport.sql");
             string[] eftFileContent;
             try
             {
@@ -50,7 +50,7 @@ namespace AlisBatchReporter.Forms
                 if (row.StartsWith("6"))
                 {
                     int intData;
-                    int.TryParse(row.Substring(48, 6), out intData);
+                    int.TryParse(row.Substring(39, 15), out intData);
                     _idNums.Add(intData);
                 }
             }
@@ -125,13 +125,13 @@ namespace AlisBatchReporter.Forms
                                 errorTextBox.AppendText(
                                     $@"Entry Outside of a batch. Line {i + 1}{Environment.NewLine}");
                             }
-                            if (eftFileContent[i].Substring(1, 2).Equals("27"))
+                            if (IsDebitCredit(eftFileContent[i]).Equals("Debit"))
                             {
                                 int debitIntValue;
                                 int.TryParse(eftFileContent[i].Substring(29, 10), out debitIntValue);
                                 debitSum += debitIntValue;
                             }
-                            if (eftFileContent[i].Substring(1, 2).Equals("22"))
+                            if (IsDebitCredit(eftFileContent[i]).Equals("Credit"))
                             {
                                 int creditIntValue;
                                 int.TryParse(eftFileContent[i].Substring(29, 10), out creditIntValue);
@@ -227,6 +227,21 @@ namespace AlisBatchReporter.Forms
                 errorTextBox.AppendText(
                     $@"Missing Company End. {Environment.NewLine}");
             }
+        }
+
+        private string IsDebitCredit(string type)
+        {
+            string results = null;
+            string isType = type.Substring(1, 2);
+            if (isType.Equals("27") || isType.Equals("37"))
+            {
+                results = "Debit";
+            }
+            if (isType.Equals("22") || isType.Equals("32"))
+            {
+                results = "Credit";
+            }
+            return results;
         }
 
         private void TriggerBgWorkerForQuery(EftExportQuery query)

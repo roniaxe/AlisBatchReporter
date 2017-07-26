@@ -19,7 +19,7 @@ namespace AlisBatchReporter.Forms
         private void searchButton_Click(object sender, EventArgs e)
         {
             FindObjectQuery query =
-                new FindObjectQuery(@"..\..\Resources\SQL\FindObject.sql", 
+                new FindObjectQuery(System.IO.Path.GetDirectoryName(Application.ExecutablePath) + @"\Resources\SQL\FindObject.sql", 
                 fromDate.Text, 
                 toDate.Text, 
                 entityTextBox1.Text, 
@@ -42,7 +42,7 @@ namespace AlisBatchReporter.Forms
             string queryToUse = GetQueryName(GetTaskId(dataGridView1));
 
             // Create query, and send it to form
-            RefQuery refQuery = new RefQuery($@"..\..\Resources\SQL\{queryToUse}", 
+            RefQuery refQuery = new RefQuery(System.IO.Path.GetDirectoryName(Application.ExecutablePath)+$@"\Resources\SQL\{queryToUse}", 
                 currentValue);
 
             // Run Query
