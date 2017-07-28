@@ -7,7 +7,7 @@ using AlisBatchReporter.Views;
 
 namespace AlisBatchReporter.Presentors
 {
-    class LexisNexisPresentor
+    internal class LexisNexisPresentor
     {
         private readonly ILexisNexisView _view;
         private Dictionary<string, string[]> _sourceDictionary;
@@ -26,7 +26,7 @@ namespace AlisBatchReporter.Presentors
             _view.LogProcess("Copy Files Asynch (!)...", false);
             //await CopyFiles();
             var copyTasks = new Task[2];
-            copyTasks[0] = CopyFileAsync(@"\\dmfdwh001pr\X\Deploy\Prod\FTP\Validation\Lexis_Nexis\SSN_LEXIS_NEXIS_JULY9.TXT",
+            copyTasks[0] = CopyFileAsync(@"\\dmfdwh001pr\X\Deploy\Prod\FTP\Validation\Lexis_Nexis\SSN_LEXIS_NEXIS.TXT",
                 Path.Combine(Directory.GetCurrentDirectory(), "LN_Source.txt"));
             copyTasks[1] = CopyFileAsync(@"\\dmfdwh001pr\X\Deploy\Prod\FTP\Outbound\SSN_Feed\SSN_Feed.txt",
                 Path.Combine(Directory.GetCurrentDirectory(), "LN_Outbound.txt"));
@@ -50,7 +50,7 @@ namespace AlisBatchReporter.Presentors
             _view.LogProcess("Done!", true);
 
             // Deleting Source/Outbound Files
-            //DeleteFiles();
+            DeleteFiles();
         }
 
         private void DeleteFiles()

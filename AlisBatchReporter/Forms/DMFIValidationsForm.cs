@@ -40,6 +40,7 @@ namespace AlisBatchReporter.Forms
             _onChange += Copier_ProgressChanged;
             _onError += Copier_Error;
             ChangeUi(false);
+            
         }
 
         private void validateButton_Click(object sender, EventArgs e)
@@ -294,29 +295,46 @@ namespace AlisBatchReporter.Forms
 
             if (validationTypesCombobox.Text.Equals("IRF2 File Comparison"))
             {
-                var idxName = (IRF2) idx;
-                if ((idx > 18 && idx < 23) || idx == 8)
+                //var idxName = (IRF2) idx;
+                Irf2Values irf2Value = null;
+                string irf2ValueName;
+                foreach (var value in Irf2Values.Values)
                 {
-                    double castedToDoubleSource, castedToDoubleOutbound;
-                    if (Double.TryParse(source[idx], out castedToDoubleSource) &&
-                        Double.TryParse(outbound[idx], out castedToDoubleOutbound))
+                    if (value.IdxValue == idx)
                     {
-                        var diff = Math.Abs(castedToDoubleSource - castedToDoubleOutbound);
-                        if ((idx != 20 && diff > 0) || (idx == 20 && diff > 2))
+                        irf2Value = value;                       
+                    }
+                }
+                if (irf2Value != null)
+                {
+                    irf2ValueName = irf2Value.Name;
+                    if (irf2Value.Intable)
+                    {
+
+                        double castedToDoubleSource, castedToDoubleOutbound;
+                        if (double.TryParse(source[irf2Value.IdxValue], out castedToDoubleSource) &&
+                            double.TryParse(outbound[irf2Value.IdxValue], out castedToDoubleOutbound))
                         {
-                            Task.Run(()=> AddDiffrence(idxName, source[1] + " - " + source[6],
-                                castedToDoubleSource.ToString(CultureInfo.InvariantCulture),
-                                castedToDoubleOutbound.ToString(CultureInfo.InvariantCulture)));
+                            var diff = Math.Abs(castedToDoubleSource - castedToDoubleOutbound);
+                            if ((!irf2ValueName.Equals("ModalPremium") && diff > 0) || (irf2ValueName.Equals("ModalPremium") && diff > 2))
+                            {
+                                Task.Run(() => AddDiffrence(irf2ValueName, source[1] + " - " + source[6],
+                                    castedToDoubleSource.ToString(CultureInfo.InvariantCulture),
+                                    castedToDoubleOutbound.ToString(CultureInfo.InvariantCulture)));
+                            }
                         }
                     }
-                }
-                else
-                {
-                    if (!source[idx].Equals(outbound[idx]))
+                    else
                     {
-                        Task.Run(() => AddDiffrence(idxName, source[1] + "-" + source[6], source[idx], outbound[idx]));
+                        if (!source[irf2Value.IdxValue].Equals(outbound[irf2Value.IdxValue]))
+                        {
+                            Task.Run(() => AddDiffrence(irf2ValueName, 
+                                source[1] + "-" + source[6], 
+                                source[irf2Value.IdxValue], 
+                                outbound[irf2Value.IdxValue]));
+                        }
                     }
-                }
+                }                
             }
         }
 

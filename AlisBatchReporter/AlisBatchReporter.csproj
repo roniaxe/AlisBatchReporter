@@ -57,6 +57,7 @@
     <Compile Include="Classes\EftExportQuery.cs" />
     <Compile Include="Classes\FindObjectQuery.cs" />
     <Compile Include="Classes\Global.cs" />
+    <Compile Include="Classes\IRF2Values.cs" />
     <Compile Include="Classes\RefQuery.cs" />
     <Compile Include="Classes\SimpleExportQuery.cs" />
     <Compile Include="Classes\UIError.cs" />
