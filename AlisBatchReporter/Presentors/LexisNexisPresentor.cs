@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using AlisBatchReporter.Classes;
 using AlisBatchReporter.Views;
+using System.Windows.Forms;
 
 namespace AlisBatchReporter.Presentors
 {
@@ -77,7 +79,7 @@ namespace AlisBatchReporter.Presentors
 
         public async Task CopyFileAsync(string sourcePath, string destinationPath)
         {
-            using (Stream source = File.Open(sourcePath,FileMode.Open,FileAccess.Read))
+            using (Stream source = File.Open(sourcePath, FileMode.Open, FileAccess.Read))
             {
                 using (Stream destination = File.Create(destinationPath))
                 {
@@ -104,7 +106,9 @@ namespace AlisBatchReporter.Presentors
                 catch (ArgumentException e)
                 {
                     Console.WriteLine(
-                        $@"Error {DateTimeOffset.Now}: {e.Message}, Value: {trimmed[1]}-{trimmed[2]}-{trimmed[4]}-{trimmed[6]}");
+                        $@"Error {DateTimeOffset.Now}: {e.Message}, Value: {trimmed[1]}-{trimmed[2]}-{trimmed[4]}-{
+                                trimmed[6]
+                            }");
                     throw;
                 }
             }
@@ -145,34 +149,40 @@ namespace AlisBatchReporter.Presentors
                         var sourceEntry = _sourceDictionary[sourceKey];
                         for (int i = 0; i < sourceEntry.Length; i++)
                         {
-                            if (i >= 2 && i <= 13)
+                            var fieldValue = LexisNexisValues.GetValue(i);
+                            if (fieldValue.ToIgnore)
                             {
                                 continue;
                             }
-                            var idxName = (LexisNexisEnum) i;
-                            if (i == 15)
+                            if (fieldValue.Intable)
                             {
                                 long intSource;
-                                long.TryParse(sourceEntry[i], out intSource);
+                                long.TryParse(sourceEntry[fieldValue.IdxValue], out intSource);
                                 long intOutbound;
-                                long.TryParse(outboundEntry[i], out intOutbound);
-                                sourceEntry[i] = intSource.ToString();
-                                outboundEntry[i] = intOutbound.ToString();
+                                long.TryParse(outboundEntry[fieldValue.IdxValue], out intOutbound);
+                                sourceEntry[fieldValue.IdxValue] = intSource.ToString();
+                                outboundEntry[fieldValue.IdxValue] = intOutbound.ToString();
                             }
-                            if (!sourceEntry[i].Equals(outboundEntry[i]))
+                            if (!sourceEntry[fieldValue.IdxValue].Equals(outboundEntry[fieldValue.IdxValue]))
                             {
-                                if (_diffDictionary.ContainsKey($@"[{idxName}]"))
+                                if (_diffDictionary.ContainsKey($@"[{fieldValue.Name}]"))
                                 {
-                                    _diffDictionary[$@"[{idxName}]"].Add(sourceKey +
-                                                                         $@"  LifeComm Value: {sourceEntry[i]}" +
-                                                                         $@"  DMFI Value: {outboundEntry[i]}");
+                                    _diffDictionary[$@"[{fieldValue.Name}]"].Add(sourceKey +
+                                                                                 $@"  LifeComm Value: {
+                                                                                         sourceEntry[
+                                                                                             fieldValue.IdxValue]
+                                                                                     }" +
+                                                                                 $@"  DMFI Value: {
+                                                                                         outboundEntry[
+                                                                                             fieldValue.IdxValue]
+                                                                                     }");
                                 }
                                 else
                                 {
-                                    _diffDictionary.Add($@"[{idxName}]", new List<string>
+                                    _diffDictionary.Add($@"[{fieldValue.Name}]", new List<string>
                                     {
-                                        sourceKey + $@"  LifeComm Value: {sourceEntry[i]}" +
-                                        $@"  DMFI Value: {outboundEntry[i]}"
+                                        sourceKey + $@"  LifeComm Value: {sourceEntry[fieldValue.IdxValue]}" +
+                                        $@"  DMFI Value: {outboundEntry[fieldValue.IdxValue]}"
                                     });
                                 }
                             }
@@ -184,7 +194,14 @@ namespace AlisBatchReporter.Presentors
 
         private async Task WritingFile()
         {
-            using (StreamWriter file = new StreamWriter("LexisNexis_Diffs.txt"))
+            if (!Directory.Exists(Path.GetDirectoryName(Application.ExecutablePath)
+                                 + @"\Output\LexisNexis"))
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(Application.ExecutablePath)
+                                          + @"\Output\LexisNexis");
+            }           
+            using (StreamWriter file = new StreamWriter(Path.GetDirectoryName(Application.ExecutablePath)
+                + $@"\Output\LexisNexis\LexisNexis_Diffs_{DateTime.Now:yyyy-dd-M--HH-mm-ss}.txt"))
                 foreach (var entry in _diffDictionary)
                 {
                     file.WriteLine($@"[{entry.Key}]");
@@ -194,27 +211,5 @@ namespace AlisBatchReporter.Presentors
                     }
                 }
         }
-    }
-
-    public enum LexisNexisEnum
-    {
-        SSN = 0,
-        PolicyNumber = 1,
-        FirstName = 2,
-        MiddleInitial = 3,
-        LastName = 4,
-        NameSuffix = 5,
-        DOB = 6,
-        StreetAddress1 = 7,
-        StreetAddress2 = 8,
-        StreetAddress3 = 9,
-        StreetAddress4 = 10,
-        City = 11,
-        State = 12,
-        Zip = 13,
-        PolicyStatus = 14,
-        ServicingAgentNumber = 15,
-        PolicyIssueDate = 16,
-        PolicyTerminationDate = 17
     }
 }

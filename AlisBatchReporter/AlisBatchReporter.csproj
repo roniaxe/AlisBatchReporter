@@ -58,6 +58,7 @@
     <Compile Include="Classes\FindObjectQuery.cs" />
     <Compile Include="Classes\Global.cs" />
     <Compile Include="Classes\IRF2Values.cs" />
+    <Compile Include="Classes\LexisNexisValues.cs" />
     <Compile Include="Classes\RefQuery.cs" />
     <Compile Include="Classes\SimpleExportQuery.cs" />
     <Compile Include="Classes\UIError.cs" />
@@ -205,6 +206,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="bin\Debug\" />
+    <Folder Include="Output\LexisNexis\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\SQL\CmaByBatchRunNo.sql">
@@ -235,6 +237,10 @@
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

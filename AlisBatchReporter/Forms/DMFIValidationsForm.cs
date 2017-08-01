@@ -215,7 +215,14 @@ namespace AlisBatchReporter.Forms
 
         private void CreateOutputFile()
         {
-            using (StreamWriter file = new StreamWriter("myfile.txt"))
+            if (!Directory.Exists(Path.GetDirectoryName(Application.ExecutablePath)
+                                  + @"\Output\IRF"))
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(Application.ExecutablePath)
+                                          + @"\Output\IRF");
+            }
+            using (StreamWriter file = new StreamWriter(Path.GetDirectoryName(Application.ExecutablePath)
+                                                        + $@"\Output\IRF\IRF_Diffs_{DateTime.Now:yyyy-dd-M--HH-mm-ss}.txt"))
                 foreach (var entry in _differencesCount)
                 {
                     if (!entry.Key.Equals(IRF2.PlanCode.ToString()) && !entry.Key.Equals(IRF2.PlanName.ToString()))
@@ -296,15 +303,8 @@ namespace AlisBatchReporter.Forms
             if (validationTypesCombobox.Text.Equals("IRF2 File Comparison"))
             {
                 //var idxName = (IRF2) idx;
-                Irf2Values irf2Value = null;
-                string irf2ValueName;
-                foreach (var value in Irf2Values.Values)
-                {
-                    if (value.IdxValue == idx)
-                    {
-                        irf2Value = value;                       
-                    }
-                }
+                Irf2Values irf2Value = Irf2Values.GetValue(idx);
+                string irf2ValueName;               
                 if (irf2Value != null)
                 {
                     irf2ValueName = irf2Value.Name;

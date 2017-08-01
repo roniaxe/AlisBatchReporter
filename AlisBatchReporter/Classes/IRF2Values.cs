@@ -1,7 +1,25 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace AlisBatchReporter.Classes
 {
+    abstract class IrfValues
+    {
+        public int IdxValue { get; }
+        public bool Intable { get; }
+        public string Name { get; }
+
+        protected IrfValues(int idxValue, bool intable, string name)
+        {
+            IdxValue = idxValue;
+            Intable = intable;
+            Name = name;
+        }
+
+        public abstract IEnumerable<IrfValues> Values();
+
+        public IrfValues GetValue(int key) => Values().First(v => v.IdxValue == key);
+    }
     class Irf2Values
     {
         public static readonly Irf2Values CompanyCd = new Irf2Values(0, false, "Company Cd");
@@ -76,5 +94,7 @@ namespace AlisBatchReporter.Classes
         public int IdxValue { get; }
         public bool Intable { get; }
         public string Name { get; }
+
+        public static Irf2Values GetValue(int key) => Values.First(v => v.IdxValue == key);
     }
 }
