@@ -25,7 +25,7 @@ namespace AlisBatchReporter.Forms
 
             // Create the context menu items
             _batchRunNumberContextMenu.MenuItems.Add("Load GBA", LoadGbaData);
-            _taskIdContextMenu.MenuItems.Add("Running Time", RunningTime);
+            _taskIdContextMenu.MenuItems.Add("Running Time", RunningTime);          
             fromDate.Value = DateTime.Today.AddDays(-1);
             PopulateFuncCombobox();
         }
@@ -180,8 +180,8 @@ namespace AlisBatchReporter.Forms
             ResetComps();
             ReportQuery newQuery = new ReportQuery(
                 System.IO.Path.GetDirectoryName(Application.ExecutablePath) + selectedFunc,
-                fromDate.Value.ToShortDateString(),
-                toDate.Value.ToShortDateString(),
+                fromDate.Value.ToString("MM/dd/yyyy"),
+                toDate.Value.ToString("MM/dd/yyyy"),
                 polFilterTextBox.Text,
                 typeRadioButton
             );

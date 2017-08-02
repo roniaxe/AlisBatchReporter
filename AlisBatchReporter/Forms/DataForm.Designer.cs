@@ -67,10 +67,11 @@
             this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridView1.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCellsExceptHeaders;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(18, 217);
+            this.dataGridView1.Location = new System.Drawing.Point(27, 334);
+            this.dataGridView1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.ReadOnly = true;
-            this.dataGridView1.Size = new System.Drawing.Size(1049, 178);
+            this.dataGridView1.Size = new System.Drawing.Size(1574, 274);
             this.dataGridView1.TabIndex = 0;
             this.dataGridView1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.dataGridView1_MouseUp);
             // 
@@ -78,9 +79,10 @@
             // 
             this.toDate.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.toDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.toDate.Location = new System.Drawing.Point(273, 106);
+            this.toDate.Location = new System.Drawing.Point(410, 163);
+            this.toDate.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.toDate.Name = "toDate";
-            this.toDate.Size = new System.Drawing.Size(133, 24);
+            this.toDate.Size = new System.Drawing.Size(198, 33);
             this.toDate.TabIndex = 10;
             // 
             // label2
@@ -89,9 +91,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(65, 106);
+            this.label2.Location = new System.Drawing.Point(98, 163);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(65, 18);
+            this.label2.Size = new System.Drawing.Size(105, 29);
             this.label2.TabIndex = 9;
             this.label2.Text = "To Date:";
             // 
@@ -100,9 +103,10 @@
             this.fromDate.Checked = false;
             this.fromDate.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.fromDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.fromDate.Location = new System.Drawing.Point(273, 61);
+            this.fromDate.Location = new System.Drawing.Point(410, 94);
+            this.fromDate.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.fromDate.Name = "fromDate";
-            this.fromDate.Size = new System.Drawing.Size(133, 24);
+            this.fromDate.Size = new System.Drawing.Size(198, 33);
             this.fromDate.TabIndex = 8;
             this.fromDate.ValueChanged += new System.EventHandler(this.fromDate_ValueChanged);
             // 
@@ -112,17 +116,19 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(65, 67);
+            this.label1.Location = new System.Drawing.Point(98, 103);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(83, 18);
+            this.label1.Size = new System.Drawing.Size(132, 29);
             this.label1.TabIndex = 7;
             this.label1.Text = "From Date:";
             // 
             // createButton
             // 
-            this.createButton.Location = new System.Drawing.Point(68, 161);
+            this.createButton.Location = new System.Drawing.Point(102, 248);
+            this.createButton.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.createButton.Name = "createButton";
-            this.createButton.Size = new System.Drawing.Size(75, 23);
+            this.createButton.Size = new System.Drawing.Size(112, 35);
             this.createButton.TabIndex = 6;
             this.createButton.Text = "Create";
             this.createButton.UseVisualStyleBackColor = true;
@@ -138,17 +144,19 @@
             this.panel1.Controls.Add(this.dataGridView1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1125, 539);
+            this.panel1.Size = new System.Drawing.Size(1688, 829);
             this.panel1.TabIndex = 11;
             // 
             // exportButton
             // 
             this.exportButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.exportButton.Image = ((System.Drawing.Image)(resources.GetObject("exportButton.Image")));
-            this.exportButton.Location = new System.Drawing.Point(1041, 173);
+            this.exportButton.Location = new System.Drawing.Point(1562, 266);
+            this.exportButton.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.exportButton.Name = "exportButton";
-            this.exportButton.Size = new System.Drawing.Size(26, 29);
+            this.exportButton.Size = new System.Drawing.Size(39, 45);
             this.exportButton.TabIndex = 14;
             this.exportButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.exportButton.UseVisualStyleBackColor = true;
@@ -157,9 +165,10 @@
             // 
             // progressBar1
             // 
-            this.progressBar1.Location = new System.Drawing.Point(848, 173);
+            this.progressBar1.Location = new System.Drawing.Point(1272, 266);
+            this.progressBar1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(162, 29);
+            this.progressBar1.Size = new System.Drawing.Size(243, 45);
             this.progressBar1.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
             this.progressBar1.TabIndex = 12;
             this.progressBar1.Visible = false;
@@ -177,9 +186,11 @@
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.toDate);
             this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Location = new System.Drawing.Point(18, 12);
+            this.groupBox1.Location = new System.Drawing.Point(27, 18);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(689, 190);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.groupBox1.Size = new System.Drawing.Size(1034, 292);
             this.groupBox1.TabIndex = 13;
             this.groupBox1.TabStop = false;
             // 
@@ -187,9 +198,11 @@
             // 
             this.groupBox2.Controls.Add(this.onlyErrorsRadioButton);
             this.groupBox2.Controls.Add(this.allTypesRadioButton);
-            this.groupBox2.Location = new System.Drawing.Point(449, 46);
+            this.groupBox2.Location = new System.Drawing.Point(674, 71);
+            this.groupBox2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(210, 58);
+            this.groupBox2.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.groupBox2.Size = new System.Drawing.Size(315, 89);
             this.groupBox2.TabIndex = 18;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Record Type Filter";
@@ -198,9 +211,10 @@
             // 
             this.onlyErrorsRadioButton.AutoSize = true;
             this.onlyErrorsRadioButton.Checked = true;
-            this.onlyErrorsRadioButton.Location = new System.Drawing.Point(19, 23);
+            this.onlyErrorsRadioButton.Location = new System.Drawing.Point(28, 35);
+            this.onlyErrorsRadioButton.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.onlyErrorsRadioButton.Name = "onlyErrorsRadioButton";
-            this.onlyErrorsRadioButton.Size = new System.Drawing.Size(76, 17);
+            this.onlyErrorsRadioButton.Size = new System.Drawing.Size(112, 24);
             this.onlyErrorsRadioButton.TabIndex = 20;
             this.onlyErrorsRadioButton.TabStop = true;
             this.onlyErrorsRadioButton.Text = "Only Errors";
@@ -209,9 +223,10 @@
             // allTypesRadioButton
             // 
             this.allTypesRadioButton.AutoSize = true;
-            this.allTypesRadioButton.Location = new System.Drawing.Point(110, 23);
+            this.allTypesRadioButton.Location = new System.Drawing.Point(165, 35);
+            this.allTypesRadioButton.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.allTypesRadioButton.Name = "allTypesRadioButton";
-            this.allTypesRadioButton.Size = new System.Drawing.Size(68, 17);
+            this.allTypesRadioButton.Size = new System.Drawing.Size(97, 24);
             this.allTypesRadioButton.TabIndex = 19;
             this.allTypesRadioButton.TabStop = true;
             this.allTypesRadioButton.Text = "All Types";
@@ -221,18 +236,20 @@
             // 
             this.polFilterLabel.AutoSize = true;
             this.polFilterLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.polFilterLabel.Location = new System.Drawing.Point(446, 22);
+            this.polFilterLabel.Location = new System.Drawing.Point(669, 34);
+            this.polFilterLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.polFilterLabel.Name = "polFilterLabel";
-            this.polFilterLabel.Size = new System.Drawing.Size(88, 18);
+            this.polFilterLabel.Size = new System.Drawing.Size(145, 29);
             this.polFilterLabel.TabIndex = 17;
             this.polFilterLabel.Text = "Policy Filter:";
             this.polFilterLabel.Visible = false;
             // 
             // polFilterTextBox
             // 
-            this.polFilterTextBox.Location = new System.Drawing.Point(559, 20);
+            this.polFilterTextBox.Location = new System.Drawing.Point(838, 31);
+            this.polFilterTextBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.polFilterTextBox.Name = "polFilterTextBox";
-            this.polFilterTextBox.Size = new System.Drawing.Size(100, 20);
+            this.polFilterTextBox.Size = new System.Drawing.Size(148, 26);
             this.polFilterTextBox.TabIndex = 16;
             this.polFilterTextBox.WordWrap = false;
             // 
@@ -240,17 +257,19 @@
             // 
             this.labelReportType.AutoSize = true;
             this.labelReportType.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelReportType.Location = new System.Drawing.Point(65, 19);
+            this.labelReportType.Location = new System.Drawing.Point(98, 29);
+            this.labelReportType.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelReportType.Name = "labelReportType";
-            this.labelReportType.Size = new System.Drawing.Size(93, 18);
+            this.labelReportType.Size = new System.Drawing.Size(153, 29);
             this.labelReportType.TabIndex = 15;
             this.labelReportType.Text = "Report Type:";
             // 
             // closeButton
             // 
-            this.closeButton.Location = new System.Drawing.Point(331, 161);
+            this.closeButton.Location = new System.Drawing.Point(496, 248);
+            this.closeButton.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.closeButton.Name = "closeButton";
-            this.closeButton.Size = new System.Drawing.Size(75, 23);
+            this.closeButton.Size = new System.Drawing.Size(112, 35);
             this.closeButton.TabIndex = 12;
             this.closeButton.Text = "Close";
             this.closeButton.UseVisualStyleBackColor = true;
@@ -259,9 +278,10 @@
             // comboBoxFunc
             // 
             this.comboBoxFunc.FormattingEnabled = true;
-            this.comboBoxFunc.Location = new System.Drawing.Point(273, 19);
+            this.comboBoxFunc.Location = new System.Drawing.Point(410, 29);
+            this.comboBoxFunc.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.comboBoxFunc.Name = "comboBoxFunc";
-            this.comboBoxFunc.Size = new System.Drawing.Size(133, 21);
+            this.comboBoxFunc.Size = new System.Drawing.Size(198, 28);
             this.comboBoxFunc.TabIndex = 13;
             this.comboBoxFunc.SelectedIndexChanged += new System.EventHandler(this.comboBoxFunc_SelectedIndexChanged);
             // 
@@ -274,10 +294,11 @@
             // 
             // DataForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1125, 539);
+            this.ClientSize = new System.Drawing.Size(1688, 829);
             this.Controls.Add(this.panel1);
+            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "DataForm";
             this.Text = "DataForm";
             this.Load += new System.EventHandler(this.DataForm_Load);
