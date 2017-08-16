@@ -16,7 +16,7 @@ namespace AlisBatchReporter.Classes
         public static readonly LexisNexisValues StreetAddress2 = new LexisNexisValues(8, false, "Street Address2");
         public static readonly LexisNexisValues StreetAddress3 = new LexisNexisValues(9, false, "Street Address3");
         public static readonly LexisNexisValues StreetAddress4 = new LexisNexisValues(10, false, "Street Address4");
-        public static readonly LexisNexisValues City = new LexisNexisValues(11, false, "City");
+        public static readonly LexisNexisValues City = new LexisNexisValues(11, false, "State");
         public static readonly LexisNexisValues State = new LexisNexisValues(12, false, "State");
         public static readonly LexisNexisValues Zip = new LexisNexisValues(13, false, "Zip Code");
         public static readonly LexisNexisValues PolicyStatus = new LexisNexisValues(14, false, "Policy Status", false);

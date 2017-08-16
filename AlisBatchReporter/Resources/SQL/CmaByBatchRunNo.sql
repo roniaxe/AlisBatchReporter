@@ -10,5 +10,5 @@ WHERE
       FROM
          C_EXTERNAL_PAYMENT 
       WHERE
-         SCREEN_BATCH_NUMBER = {value}
+         SCREEN_BATCH_NUMBER = {Param1}
    )

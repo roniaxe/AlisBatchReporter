@@ -1,11 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using AlisBatchReporter.Classes;
-using System.Reflection;
+using Microsoft.Office.Interop.Excel;
+using Application = Microsoft.Office.Interop.Excel.Application;
+using DataTable = System.Data.DataTable;
+using MenuItem = System.Windows.Forms.MenuItem;
+using Point = System.Drawing.Point;
 
 namespace AlisBatchReporter.Forms
 {
@@ -24,76 +26,63 @@ namespace AlisBatchReporter.Forms
             dataGridView1.Hide();
 
             // Create the context menu items
-            _batchRunNumberContextMenu.MenuItems.Add("Load GBA", LoadGbaData);
-            _taskIdContextMenu.MenuItems.Add("Running Time", RunningTime);          
+            _batchRunNumberContextMenu.MenuItems.Add("Load GBA - Errors only", LoadGbaData);
+            _batchRunNumberContextMenu.MenuItems.Add("Load GBA - All", LoadGbaData);
+            _taskIdContextMenu.MenuItems.Add("Running Time", RunningTime);
             fromDate.Value = DateTime.Today.AddDays(-1);
             PopulateFuncCombobox();
         }
 
         private void PopulateFuncCombobox()
         {
-            List<ComboboxItem> funcItems = new List<ComboboxItem>
+            ComboboxItem[] funcItems =
             {
                 new ComboboxItem
                 {
-                    Text = "Report",
+                    Text = @"Report",
                     Value = @"\Resources\SQL\BatchAudit.sql"
                 },
                 new ComboboxItem
                 {
-                    Text = "Task List",
+                    Text = @"Task List",
+                    Value = @"\Resources\SQL\TaskList.sql"
+                },
+                new ComboboxItem
+                {
+                    Text = @"Processing Rate",
                     Value = @"\Resources\SQL\TaskList.sql"
                 }
             };
-            comboBoxFunc.Items.AddRange(funcItems.ToArray());
+            comboBoxFunc.DisplayMember = "Text";
+            comboBoxFunc.ValueMember = "Value";
+            comboBoxFunc.Items.AddRange(funcItems.ToArray<object>());
             comboBoxFunc.SelectedIndex = 0;
         }
 
-        private void RunningTime(object sender, EventArgs e)
+        private async void RunningTime(object sender, EventArgs e)
         {
             // Get the right click batch run number
             var taskId = dataGridView1.CurrentCell.Value.ToString();
 
-            // Create query
-            SimpleQuery timeingQuery = new SimpleQuery(System.IO.Path.GetDirectoryName(Application.ExecutablePath) + @"\Resources\SQL\RunningTime.sql", GetBatchRunNumber(dataGridView1), taskId);
-
-            BackgroundWorker backgroundWorker = new BackgroundWorker
-            {
-                WorkerSupportsCancellation = true,
-                WorkerReportsProgress = true
-            };
+            var query = QueryRepo.TaskRunningTime;
+            query.Params = new ParamObject(GetBatchRunNumber(dataGridView1), taskId, "false");
             progressBar1.Visible = true;
-            backgroundWorker.DoWork += (o, args) =>
-            {
-                SimpleQuery report = args.Argument as SimpleQuery;
-                try
-                {
-                    args.Result = report?.DoQuery();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
-            };
-            backgroundWorker.RunWorkerCompleted += (o, args) =>
-            {
-                DataTable workerResult = (DataTable) args.Result;
-                TimeSpan time = TimeSpan.FromSeconds((int) workerResult.Rows[0].ItemArray[0]);
-                string str = time.ToString(@"hh\:mm\:ss\:fff");
-                progressBar1.Visible = false;
-                MessageBox.Show($@"Seconds Ran: {str}");
-            };
-            backgroundWorker.RunWorkerAsync(timeingQuery);
+            var result = await QueryManager.Query(query.QueryDynamication());
+            var time = TimeSpan.FromSeconds((int) result.Rows[0].ItemArray[0]);
+            var str = time.ToString(@"hh\:mm\:ss\:fff");
+            progressBar1.Visible = false;
+            MessageBox.Show($@"Seconds Ran: {str}");
         }
 
         private void LoadGbaData(object sender, EventArgs e)
         {
-            // Get the right click batch run number
+            var errorsOnly = ((MenuItem) sender).Text.Equals("Load GBA - Errors only")
+                ? "AND GBA.ENTRY_TYPE IN (5,6)"
+                : "";
             var batchRunNum = dataGridView1.CurrentCell.Value.ToString();
-           
-            // Create query, and send it to form
-            SimpleQuery gbaQuery = new SimpleQuery(System.IO.Path.GetDirectoryName(Application.ExecutablePath) + @"\Resources\SQL\SimpleGBA.sql", batchRunNum, GetTaskId(dataGridView1));
-            SingleBatchRunForm singleForm = new SingleBatchRunForm(gbaQuery);
+            var query = QueryRepo.SimpleGba;
+            query.Params = new ParamObject(batchRunNum, GetTaskId(dataGridView1), errorsOnly);
+            var singleForm = new SingleBatchRunForm(query);
             singleForm.Show();
         }
 
@@ -108,9 +97,7 @@ namespace AlisBatchReporter.Forms
             var row = grid.CurrentCell.RowIndex;
             var column = grid.Columns["Task Id"]?.Index;
             if (column != null)
-            {
-                taskId = grid.Rows[row].Cells[(int)column].Value.ToString();
-            }
+                taskId = grid.Rows[row].Cells[(int) column].Value.ToString();
             return taskId;
         }
 
@@ -120,9 +107,7 @@ namespace AlisBatchReporter.Forms
             var row = grid.CurrentCell.RowIndex;
             var column = grid.Columns["Batch Run Number"]?.Index;
             if (column != null)
-            {
-                batchRunNumber = grid.Rows[row].Cells[(int)column].Value.ToString();
-            }
+                batchRunNumber = grid.Rows[row].Cells[(int) column].Value.ToString();
             return batchRunNumber;
         }
 
@@ -130,7 +115,6 @@ namespace AlisBatchReporter.Forms
         {
             var hitTestInfo = dataGridView1.HitTest(e.X, e.Y);
             if (e.Button == MouseButtons.Right && hitTestInfo.RowIndex != -1 && hitTestInfo.ColumnIndex != -1)
-            {              
                 if (hitTestInfo.Type == DataGridViewHitTestType.Cell)
                 {
                     var cellHeaderText = dataGridView1.Columns[hitTestInfo.ColumnIndex].HeaderText;
@@ -149,7 +133,7 @@ namespace AlisBatchReporter.Forms
                         // Show context menu items
                         _batchRunNumberContextMenu.Show(dataGridView1, new Point(e.X, e.Y));
                     }
-                    if (cellHeaderText.Equals("Task ID"))
+                    if (cellHeaderText.Equals("Task Id"))
                     {
                         // Set pressed cell as active
                         dataGridView1.CurrentCell = dataGridView1.Rows[hitTestInfo.RowIndex]
@@ -165,32 +149,57 @@ namespace AlisBatchReporter.Forms
                         _taskIdContextMenu.Show(dataGridView1, new Point(e.X, e.Y));
                     }
                 }
-            }
         }
 
-        private void createButton_Click(object sender, EventArgs e)
+        private async void createButton_Click(object sender, EventArgs e)
         {
-            string selectedFunc = ((ComboboxItem) comboBoxFunc.SelectedItem).Value.ToString();
-            bool typeRadioButton = false;
-            if (groupBox2.Visible)
-            {
-                typeRadioButton = onlyErrorsRadioButton.Checked;
-            }
-            // Create query
-            ResetComps();
-            ReportQuery newQuery = new ReportQuery(
-                System.IO.Path.GetDirectoryName(Application.ExecutablePath) + selectedFunc,
-                fromDate.Value.ToString("MM/dd/yyyy"),
-                toDate.Value.ToString("MM/dd/yyyy"),
-                polFilterTextBox.Text,
-                typeRadioButton
-            );
+            // Create Query
+            var selectedQuery = ((ComboboxItem) comboBoxFunc.SelectedItem).Text.Equals("Task List")
+                ? QueryRepo.TaskList
+                : QueryRepo.ErrorReport;
 
-            // Set the datasource, run query (populate grid in backgroundWorker1_RunWorkerCompleted)   
+            if (((ComboboxItem) comboBoxFunc.SelectedItem).Text.Equals("Processing Rate"))
+            {
+                selectedQuery = QueryRepo.ProcessingRateReport;
+            }
+
+            // Create Query Params
+            var typeRadioButton = !string.IsNullOrEmpty(polFilterTextBox.Text)
+                ? $@"AND gba.primary_key LIKE '{polFilterTextBox.Text}'"
+                : "";
+            string onlyErrors = "AND gba.entry_type in (5,6)";
+            if (!string.IsNullOrEmpty(polFilterTextBox.Text) && allTypesRadioButton.Checked)
+                onlyErrors = "";
+
+            // Adding Params to Query
+            selectedQuery.Params = new ParamObject(
+                $@"'{fromDate.Value:MM/dd/yyyy}'",
+                $@"'{toDate.Value:MM/dd/yyyy}'",
+                typeRadioButton,
+                onlyErrors);
+
+            ResetComps();
             dataGridView1.DataSource = bindingSource1;
+            dataGridView1.Hide();
             progressBar1.Visible = true;
+            var result = await QueryManager.Query(selectedQuery.QueryDynamication());
+            bindingSource1.DataSource = result;
+            progressBar1.Visible = false;
             dataGridView1.Show();
-            backgroundWorker1.RunWorkerAsync(newQuery);
+            exportButton.Visible = dataGridView1.Rows.Count != 0;
+
+            //var newQuery = new ReportQuery(
+            //    Path.GetDirectoryName(Application.ExecutablePath) + selectedFunc,
+            //    fromDate.Value.ToString("MM/dd/yyyy"),
+            //    toDate.Value.ToString("MM/dd/yyyy"),
+            //    polFilterTextBox.Text,
+            //    typeRadioButton
+            //);
+            //// Set the datasource, run query (populate grid in backgroundWorker1_RunWorkerCompleted)   
+            //dataGridView1.DataSource = bindingSource1;
+            //progressBar1.Visible = true;
+            //dataGridView1.Show();
+            //backgroundWorker1.RunWorkerAsync(newQuery);
         }
 
         private void ResetComps()
@@ -201,7 +210,7 @@ namespace AlisBatchReporter.Forms
 
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
-            ReportQuery report = e.Argument as ReportQuery;
+            var report = e.Argument as ReportQuery;
             try
             {
                 e.Result = report?.DoQuery();
@@ -215,45 +224,41 @@ namespace AlisBatchReporter.Forms
         private void backgroundWorker1_RunWorkerCompleted(object sender,
             RunWorkerCompletedEventArgs e)
         {
-            DataTable workerResult = (DataTable) e.Result;
+            var workerResult = (DataTable) e.Result;
             bindingSource1.DataSource = workerResult;
             progressBar1.Visible = false;
             exportButton.Visible = dataGridView1.Rows.Count != 0;
         }
 
-        /// <summary> 
-        /// Exports the datagridview values to Excel. 
-        /// </summary> 
+        /// <summary>
+        ///     Exports the datagridview values to Excel.
+        /// </summary>
         private void ExportToExcel()
         {
             // Creating a Excel object. 
-            Microsoft.Office.Interop.Excel._Application excel = new Microsoft.Office.Interop.Excel.Application();
-            Microsoft.Office.Interop.Excel._Workbook workbook = excel.Workbooks.Add(Type.Missing);
+            _Application excel = new Application();
+            _Workbook workbook = excel.Workbooks.Add(Type.Missing);
 
             try
             {
-                Microsoft.Office.Interop.Excel._Worksheet worksheet = workbook.ActiveSheet;
+                _Worksheet worksheet = workbook.ActiveSheet;
 
                 worksheet.Name = "ExportedFromDatGrid";
 
-                int cellRowIndex = 1;
-                int cellColumnIndex = 1;
+                var cellRowIndex = 1;
+                var cellColumnIndex = 1;
 
                 //Loop through each row and read value from each column. 
-                for (int i = 0; i < dataGridView1.Rows.Count - 1; i++)
+                for (var i = 0; i < dataGridView1.Rows.Count; i++)
                 {
-                    for (int j = 0; j < dataGridView1.Columns.Count; j++)
+                    for (var j = 0; j < dataGridView1.Columns.Count; j++)
                     {
                         // Excel index starts from 1,1. As first Row would have the Column headers, adding a condition check. 
                         if (cellRowIndex == 1)
-                        {
                             worksheet.Cells[cellRowIndex, cellColumnIndex] = dataGridView1.Columns[j].HeaderText;
-                        }
                         else
-                        {
                             worksheet.Cells[cellRowIndex, cellColumnIndex] =
-                                dataGridView1.Rows[i].Cells[j].Value.ToString();
-                        }
+                                dataGridView1.Rows[i-1].Cells[j].Value.ToString();
                         cellColumnIndex++;
                     }
                     cellColumnIndex = 1;
@@ -261,7 +266,7 @@ namespace AlisBatchReporter.Forms
                 }
 
                 //Getting the location and file name of the excel to save from user. 
-                SaveFileDialog saveDialog =
+                var saveDialog =
                     new SaveFileDialog
                     {
                         Filter = @"Excel files (*.xlsx)|*.xlsx|All files (*.*)|*.*",

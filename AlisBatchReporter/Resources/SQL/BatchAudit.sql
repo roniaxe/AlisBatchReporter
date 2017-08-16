@@ -29,14 +29,10 @@ FROM
    ON gba.task_id = tt.task_id
 WHERE
    1=1
-   AND gba.entry_time > {fromDate}
-   AND gba.entry_time - 1 <= {toDate}
-   AND gba.entry_type IN 
-   (
-      5,
-      6
-   )
-   AND gba.primary_key LIKE '{polFilter}'
+   AND gba.entry_time > {Param1}
+   AND gba.entry_time - 1 <= {Param2}
+   {Param4}
+   {Param3}
 GROUP BY
    REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (gba.description, '0', ''), '1', ''), '2', ''), '3', ''), '4', ''), '5', ''), '6', ''), '7', ''), '8', ''), '9', ''),
    gba.task_id,

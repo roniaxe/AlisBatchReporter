@@ -26,6 +26,16 @@ namespace AlisBatchReporter.Forms
                 entityTextBox2.Text, 
                 entityTextBox3.Text);
 
+
+
+            var quer = QueryRepo.FindObject;
+            quer.Params = new ParamObject(
+                $@"'{fromDate.Value:MM/dd/yyyy}'",
+                $@"'{toDate.Value:MM/dd/yyyy}'",
+                entityTextBox1.Text,
+                entityTextBox2.Text,
+                entityTextBox3.Text);
+
             TriggerBgWorkerForQuery(query);
         }
 

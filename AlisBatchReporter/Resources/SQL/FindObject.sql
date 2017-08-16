@@ -14,9 +14,9 @@ FROM
    T_TASK TT 
 WHERE
    1=1
-   AND {entities} 
-   AND GBA.ENTRY_TIME > {fromDate} 
-   AND GBA.ENTRY_TIME - 1 <= {toDate} 
+   AND (GBA.PRIMARY_KEY LIKE {Param3} OR PRIMARY_KEY LIKE {Param4} OR PRIMARY_KEY LIKE {Param5})
+   AND GBA.ENTRY_TIME > {Param1} 
+   AND GBA.ENTRY_TIME - 1 <= {Param2} 
    AND TT.TASK_ID = GBA.TASK_ID 
 ORDER BY
    PK DESC;

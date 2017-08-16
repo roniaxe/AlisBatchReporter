@@ -61,22 +61,6 @@ namespace AlisBatchReporter.Presentors
             File.Delete(Directory.GetCurrentDirectory() + @"\LN_Outbound.txt");
         }
 
-        private async Task CopyFiles()
-        {
-            //Copy Source
-            _view.LogProcess("Copy File: SSN_LEXIS_NEXIS_JULY9.TXT...", false);
-            await Task.Run(() => File.Copy(
-                @"\\dmfdwh001pr\X\Deploy\Prod\FTP\Validation\Lexis_Nexis\SSN_LEXIS_NEXIS_JULY9.TXT",
-                Path.Combine(Directory.GetCurrentDirectory(), "LN_Source.txt"), true));
-            _view.LogProcess("Done!", true);
-
-            //Copy Outbound
-            _view.LogProcess("Copy File: SSN_Feed.txt", false);
-            await Task.Run(() => File.Copy(@"\\dmfdwh001pr\X\Deploy\Prod\FTP\Outbound\SSN_Feed\SSN_Feed.txt",
-                Path.Combine(Directory.GetCurrentDirectory(), "LN_Outbound.txt"), true));
-            _view.LogProcess("Done!", true);
-        }
-
         public async Task CopyFileAsync(string sourcePath, string destinationPath)
         {
             using (Stream source = File.Open(sourcePath, FileMode.Open, FileAccess.Read))

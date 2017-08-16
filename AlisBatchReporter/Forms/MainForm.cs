@@ -116,5 +116,13 @@ namespace AlisBatchReporter.Forms
 
             lexisNexisForm.Show();
         }
+
+        private void arcvalToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ArcvalCompareForm arcvalCompareForm = new ArcvalCompareForm();
+            ArcvalPresentor arcvalPresentor = new ArcvalPresentor(arcvalCompareForm);
+
+            arcvalCompareForm.Show();
+        }
     }
 }

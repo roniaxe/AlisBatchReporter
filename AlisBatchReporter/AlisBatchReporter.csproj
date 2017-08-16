@@ -52,21 +52,34 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\ArcvalValues.cs" />
+    <Compile Include="Classes\ArcvalValuesType5.cs" />
+    <Compile Include="Classes\ArcvalValuesType6a.cs" />
+    <Compile Include="Classes\ArcvalValuesType7.cs" />
     <Compile Include="Classes\ComboboxItem.cs" />
     <Compile Include="Classes\ConnectionString.cs" />
     <Compile Include="Classes\EftExportQuery.cs" />
+    <Compile Include="Classes\ErrorManager.cs" />
     <Compile Include="Classes\FindObjectQuery.cs" />
     <Compile Include="Classes\Global.cs" />
     <Compile Include="Classes\IRF2Values.cs" />
     <Compile Include="Classes\LexisNexisValues.cs" />
+    <Compile Include="Classes\ParamObject.cs" />
     <Compile Include="Classes\RefQuery.cs" />
     <Compile Include="Classes\SimpleExportQuery.cs" />
     <Compile Include="Classes\UIError.cs" />
     <Compile Include="Classes\UIProgress.cs" />
+    <Compile Include="Classes\Values.cs" />
     <Compile Include="DALs\GenericQueryDaoImpl.cs" />
     <Compile Include="Classes\ReportQuery.cs" />
     <Compile Include="Classes\SimpleQuery.cs" />
     <Compile Include="DALs\IGenericQueryDao.cs" />
+    <Compile Include="Forms\ArcvalCompareForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ArcvalCompareForm.Designer.cs">
+      <DependentUpon>ArcvalCompareForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ConfigForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -123,6 +136,7 @@
     </Compile>
     <Compile Include="Infra\DataProtectionExtensions.cs" />
     <Compile Include="Models\LexisNexis.cs" />
+    <Compile Include="Presentors\ArcvalPresentor.cs" />
     <Compile Include="Presentors\LexisNexisPresentor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -133,6 +147,7 @@
     <Compile Include="Views\ConfigView.Designer.cs">
       <DependentUpon>ConfigView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\IArcvalView.cs" />
     <Compile Include="Views\ILexisNexisView.cs" />
     <Compile Include="Views\MVPTest\ConfForm.cs">
       <SubType>Form</SubType>
@@ -144,6 +159,9 @@
     <Compile Include="Views\MVPTest\ConfigPresenter.cs" />
     <Compile Include="Views\MVPTest\Env.cs" />
     <Compile Include="Views\MVPTest\IConfigView.cs" />
+    <EmbeddedResource Include="Forms\ArcvalCompareForm.resx">
+      <DependentUpon>ArcvalCompareForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\ConfigForm.resx">
       <DependentUpon>ConfigForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -216,6 +234,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\SQL\FindObject.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\SQL\ProcessingRate.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\SQL\TaskList.sql">

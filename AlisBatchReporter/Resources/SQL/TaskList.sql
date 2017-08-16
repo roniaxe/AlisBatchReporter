@@ -13,8 +13,8 @@ FROM
       t_batch tb 
       ON gba.batch_id = tb.batch_id 
 WHERE
-   gba.ENTRY_TIME > {fromDate} 
-   AND gba.ENTRY_TIME - 1 <= {toDate} 
+   gba.ENTRY_TIME > {Param1} 
+   AND gba.ENTRY_TIME - 1 <= {Param2} 
 GROUP BY
    tb.batch_name,
    tt.task_name,

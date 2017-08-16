@@ -139,7 +139,6 @@
             this.panel1.AutoScroll = true;
             this.panel1.AutoSize = true;
             this.panel1.Controls.Add(this.exportButton);
-            this.panel1.Controls.Add(this.progressBar1);
             this.panel1.Controls.Add(this.groupBox1);
             this.panel1.Controls.Add(this.dataGridView1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -165,10 +164,10 @@
             // 
             // progressBar1
             // 
-            this.progressBar1.Location = new System.Drawing.Point(1272, 266);
+            this.progressBar1.Location = new System.Drawing.Point(674, 237);
             this.progressBar1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(243, 45);
+            this.progressBar1.Size = new System.Drawing.Size(315, 45);
             this.progressBar1.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
             this.progressBar1.TabIndex = 12;
             this.progressBar1.Visible = false;
@@ -176,6 +175,7 @@
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.groupBox2);
+            this.groupBox1.Controls.Add(this.progressBar1);
             this.groupBox1.Controls.Add(this.polFilterLabel);
             this.groupBox1.Controls.Add(this.polFilterTextBox);
             this.groupBox1.Controls.Add(this.labelReportType);
@@ -249,7 +249,7 @@
             this.polFilterTextBox.Location = new System.Drawing.Point(838, 31);
             this.polFilterTextBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.polFilterTextBox.Name = "polFilterTextBox";
-            this.polFilterTextBox.Size = new System.Drawing.Size(148, 26);
+            this.polFilterTextBox.Size = new System.Drawing.Size(151, 26);
             this.polFilterTextBox.TabIndex = 16;
             this.polFilterTextBox.WordWrap = false;
             // 

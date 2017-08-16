@@ -1,4 +1,6 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using AlisBatchReporter.Classes;
 
@@ -6,35 +8,29 @@ namespace AlisBatchReporter.Forms
 {
     public partial class SingleBatchRunForm : Form
     {
-        private readonly SimpleQuery _gbaQuery;
+        private readonly QueryRepo _gbaQuery;
 
-        public SingleBatchRunForm(SimpleQuery gbaQuery)
+        public SingleBatchRunForm(QueryRepo gbaQuery)
         {           
             InitializeComponent();
             _gbaQuery = gbaQuery;
             dataGridView1.Hide();
         }
 
-        private void SingleBatchRunForm_Load(object sender, System.EventArgs e)
+        private async void SingleBatchRunForm_Load(object sender, System.EventArgs e)
         {
             // Show progress and populate data
+            await RunQuery();                     
+        }
+
+        private async Task RunQuery()
+        {
             dataGridView1.DataSource = bindingSource1;
             progressBar1.Visible = true;
-            backgroundWorker1.RunWorkerAsync(_gbaQuery);
-            dataGridView1.Show();
-        }
-
-        private void backgroundWorker1_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
-        {
-            SimpleQuery report = e.Argument as SimpleQuery;
-            e.Result = report?.DoQuery();
-        }
-
-        private void backgroundWorker1_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
-        {
-            DataTable workerResult = (DataTable)e.Result;
-            bindingSource1.DataSource = workerResult;
+            DataTable result = await QueryManager.Query(_gbaQuery.QueryDynamication());
+            bindingSource1.DataSource = result;
             progressBar1.Visible = false;
-        }
+            dataGridView1.Show();
+        }    
     }
 }
