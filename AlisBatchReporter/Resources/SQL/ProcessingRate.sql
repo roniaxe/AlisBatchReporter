@@ -1,9 +1,9 @@
 SELECT
-   BATCH_RUN_NUM,
+   BATCH_RUN_NUM as "Batch Run Number",
    BATCH_NAME,
    BATCH_ID,
    TASK_NAME,
-   TASK_ID,
+   TASK_ID as "Task Id",
    MIN(ENTRY_TIME) START,
    MAX(ENTRY_TIME) FINISH,
    COUNT(*) LINES,
@@ -39,7 +39,7 @@ FROM
          PROCESSED, 
          CASE
             WHEN
-               ENTRY_TYPE = 6 
+               ENTRY_TYPE IN (5,6)
             THEN
                1 
             ELSE
@@ -60,11 +60,11 @@ FROM
 		 AND G.TASK_ID != 0
       UNION ALL
       SELECT
-         BATCH_RUN_NUM,
+         BATCH_RUN_NUM as "Batch Run Number",
          BATCH_NAME,
          G.BATCH_ID,
          SUBSTRING(DESCRIPTION, 7, CHARINDEX('''', SUBSTRING(DESCRIPTION, 7, 100)) - 1) TASK_NAME,
-         T.TASK_ID,
+         T.TASK_ID as "Task Id",
          CHUNK_FLAG,
          ENTRY_TIME,
          CHUNK_ID,
@@ -79,7 +79,7 @@ FROM
          PROCESSED, 
          CASE
             WHEN
-               ENTRY_TYPE = 6 
+               ENTRY_TYPE IN (5,6)
             THEN
                1 
             ELSE

@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 using AlisBatchReporter.Classes;
 
@@ -16,7 +17,7 @@ namespace AlisBatchReporter.Forms
             InitializeComponent();
         }
 
-        private void searchButton_Click(object sender, EventArgs e)
+        private async void searchButton_Click(object sender, EventArgs e)
         {
             FindObjectQuery query =
                 new FindObjectQuery(System.IO.Path.GetDirectoryName(Application.ExecutablePath) + @"\Resources\SQL\FindObject.sql", 
@@ -32,11 +33,17 @@ namespace AlisBatchReporter.Forms
             quer.Params = new ParamObject(
                 $@"'{fromDate.Value:MM/dd/yyyy}'",
                 $@"'{toDate.Value:MM/dd/yyyy}'",
-                entityTextBox1.Text,
-                entityTextBox2.Text,
-                entityTextBox3.Text);
+                $@"'{entityTextBox1.Text}'",
+                string.IsNullOrEmpty(entityTextBox2.Text) ? "" : $@"OR PRIMARY_KEY LIKE '{entityTextBox2.Text}'",
+                string.IsNullOrEmpty(entityTextBox3.Text) ? "" : $@"OR PRIMARY_KEY LIKE '{entityTextBox3.Text}'");
 
-            TriggerBgWorkerForQuery(query);
+            dataGridView1.DataSource = bindingSource1;
+            dataGridView1.Hide();
+            progressBar1.Visible = true;
+            var result = await QueryManager.Query(quer.QueryDynamication());
+            bindingSource1.DataSource = result;
+            progressBar1.Visible = false;
+            dataGridView1.Show();
         }
 
         private void FindObjectForm_Load(object sender, EventArgs e)
@@ -52,7 +59,7 @@ namespace AlisBatchReporter.Forms
             string queryToUse = GetQueryName(GetTaskId(dataGridView1));
 
             // Create query, and send it to form
-            RefQuery refQuery = new RefQuery(System.IO.Path.GetDirectoryName(Application.ExecutablePath)+$@"\Resources\SQL\{queryToUse}", 
+            RefQuery refQuery = new RefQuery(Path.GetDirectoryName(Application.ExecutablePath)+$@"\Resources\SQL\{queryToUse}", 
                 currentValue);
 
             // Run Query

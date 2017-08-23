@@ -14,7 +14,7 @@ namespace AlisBatchReporter.Classes
             {
                 SqlCommand sqlCommand = new SqlCommand(command, conn);
                 await conn.OpenAsync();
-                sqlCommand.CommandTimeout = 150;
+                sqlCommand.CommandTimeout = 300;
                 int result = await sqlCommand.ExecuteNonQueryAsync();
                 SqlDataReader reader = await sqlCommand.ExecuteReaderAsync();
                 var dataTable = new DataTable();
@@ -51,7 +51,7 @@ namespace AlisBatchReporter.Classes
         public static readonly QueryRepo FindObject = new QueryRepo(
             "Find Object",
             Path.GetDirectoryName(Application.ExecutablePath) + @"\Resources\SQL\FindObject.sql",
-            3);
+            5);
 
         public static readonly QueryRepo EftExport = new QueryRepo(
             "Eft Export",

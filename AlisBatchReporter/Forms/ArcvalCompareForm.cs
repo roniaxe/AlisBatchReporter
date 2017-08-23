@@ -7,7 +7,7 @@ namespace AlisBatchReporter.Forms
     public partial class ArcvalCompareForm : Form, IArcvalView
     {
         public event Action Compared;
-        public string ProcessTextBox => progressTextBox.Text;
+        public TextBox ProcessTextBox => progressTextBox;
         public bool CopyFiles => copyCheckBox.Checked;
         public ArcvalCompareForm()
         {
@@ -33,10 +33,10 @@ namespace AlisBatchReporter.Forms
         
         public void LogProcess(string text, bool newLine)
         {
-            progressTextBox.AppendText(text);
+            ProcessTextBox.AppendText(text);
             if (newLine)
             {
-                progressTextBox.AppendText(Environment.NewLine);
+                ProcessTextBox.AppendText(Environment.NewLine);
             }
         }
     }

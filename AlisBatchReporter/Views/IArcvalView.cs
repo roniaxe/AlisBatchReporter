@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows.Forms;
 
 namespace AlisBatchReporter.Views
 {
@@ -6,7 +7,7 @@ namespace AlisBatchReporter.Views
     {
         event Action Compared;
 
-        string ProcessTextBox { get; }
+        TextBox ProcessTextBox { get; }
 
         bool CopyFiles { get; }
 
