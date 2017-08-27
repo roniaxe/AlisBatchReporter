@@ -272,8 +272,16 @@ namespace AlisBatchReporter.Presentors
             }
             for (var i = 0; i < sourceSplitted.Count - 1; i++)
             {
-                var idxName = values?.GetValue(i);
-
+                Values idxName;
+                try
+                {
+                    idxName = values?.GetValue(i);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
+                }               
                 if (idxName != null && !sourceSplitted[i].Equals(outboundSplitted[i]) && !idxName.ToIgnore)
                     if (_diffDictionary.ContainsKey(idxName.Name))
                         _diffDictionary[idxName.Name]

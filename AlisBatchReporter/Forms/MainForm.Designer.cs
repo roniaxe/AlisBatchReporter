@@ -36,6 +36,7 @@
             this.eftExportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dMFIOutboundValidationsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lexisNexisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.arcvalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.findObjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -43,10 +44,8 @@
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.updateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.label1 = new System.Windows.Forms.Label();
             this.currentRunningLabel = new System.Windows.Forms.Label();
-            this.arcvalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -60,7 +59,7 @@
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(9, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(667, 33);
+            this.menuStrip1.Size = new System.Drawing.Size(667, 28);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -72,13 +71,13 @@
             this.findObjectToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(50, 29);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(44, 24);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // newToolStripMenuItem
             // 
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(222, 30);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(191, 26);
             this.newToolStripMenuItem.Text = "New Report";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
             // 
@@ -91,48 +90,55 @@
             this.lexisNexisToolStripMenuItem,
             this.arcvalToolStripMenuItem});
             this.validateExportsToolStripMenuItem.Name = "validateExportsToolStripMenuItem";
-            this.validateExportsToolStripMenuItem.Size = new System.Drawing.Size(222, 30);
+            this.validateExportsToolStripMenuItem.Size = new System.Drawing.Size(191, 26);
             this.validateExportsToolStripMenuItem.Text = "Validate Exports";
             // 
             // unallocatedSuspenseToolStripMenuItem
             // 
             this.unallocatedSuspenseToolStripMenuItem.Name = "unallocatedSuspenseToolStripMenuItem";
-            this.unallocatedSuspenseToolStripMenuItem.Size = new System.Drawing.Size(318, 30);
+            this.unallocatedSuspenseToolStripMenuItem.Size = new System.Drawing.Size(267, 26);
             this.unallocatedSuspenseToolStripMenuItem.Text = "Unallocated Suspense";
             this.unallocatedSuspenseToolStripMenuItem.Click += new System.EventHandler(this.unallocatedSuspenseToolStripMenuItem_Click);
             // 
             // eftExportToolStripMenuItem
             // 
             this.eftExportToolStripMenuItem.Name = "eftExportToolStripMenuItem";
-            this.eftExportToolStripMenuItem.Size = new System.Drawing.Size(318, 30);
+            this.eftExportToolStripMenuItem.Size = new System.Drawing.Size(267, 26);
             this.eftExportToolStripMenuItem.Text = "Eft Export";
             this.eftExportToolStripMenuItem.Click += new System.EventHandler(this.eftExportToolStripMenuItem_Click);
             // 
             // dMFIOutboundValidationsToolStripMenuItem
             // 
             this.dMFIOutboundValidationsToolStripMenuItem.Name = "dMFIOutboundValidationsToolStripMenuItem";
-            this.dMFIOutboundValidationsToolStripMenuItem.Size = new System.Drawing.Size(318, 30);
+            this.dMFIOutboundValidationsToolStripMenuItem.Size = new System.Drawing.Size(267, 26);
             this.dMFIOutboundValidationsToolStripMenuItem.Text = "DMFI Outbound Validations";
             this.dMFIOutboundValidationsToolStripMenuItem.Click += new System.EventHandler(this.dMFIOutboundValidationsToolStripMenuItem_Click);
             // 
             // lexisNexisToolStripMenuItem
             // 
             this.lexisNexisToolStripMenuItem.Name = "lexisNexisToolStripMenuItem";
-            this.lexisNexisToolStripMenuItem.Size = new System.Drawing.Size(318, 30);
+            this.lexisNexisToolStripMenuItem.Size = new System.Drawing.Size(267, 26);
             this.lexisNexisToolStripMenuItem.Text = "LexisNexis";
             this.lexisNexisToolStripMenuItem.Click += new System.EventHandler(this.lexisNexisToolStripMenuItem_Click);
+            // 
+            // arcvalToolStripMenuItem
+            // 
+            this.arcvalToolStripMenuItem.Name = "arcvalToolStripMenuItem";
+            this.arcvalToolStripMenuItem.Size = new System.Drawing.Size(267, 26);
+            this.arcvalToolStripMenuItem.Text = "Arcval";
+            this.arcvalToolStripMenuItem.Click += new System.EventHandler(this.arcvalToolStripMenuItem_Click);
             // 
             // findObjectToolStripMenuItem
             // 
             this.findObjectToolStripMenuItem.Name = "findObjectToolStripMenuItem";
-            this.findObjectToolStripMenuItem.Size = new System.Drawing.Size(222, 30);
+            this.findObjectToolStripMenuItem.Size = new System.Drawing.Size(191, 26);
             this.findObjectToolStripMenuItem.Text = "Find Object";
             this.findObjectToolStripMenuItem.Click += new System.EventHandler(this.findObjectToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(222, 30);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(191, 26);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -141,13 +147,13 @@
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.settingsToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(65, 29);
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(56, 24);
             this.toolsToolStripMenuItem.Text = "Tools";
             // 
             // settingsToolStripMenuItem
             // 
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(160, 30);
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(137, 26);
             this.settingsToolStripMenuItem.Text = "Settings";
             this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
             // 
@@ -155,31 +161,23 @@
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.updateToolStripMenuItem,
-            this.aboutToolStripMenuItem,
-            this.toolStripMenuItem1});
+            this.aboutToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(61, 29);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(53, 24);
             this.helpToolStripMenuItem.Text = "Help";
             // 
             // updateToolStripMenuItem
             // 
             this.updateToolStripMenuItem.Name = "updateToolStripMenuItem";
-            this.updateToolStripMenuItem.Size = new System.Drawing.Size(154, 30);
+            this.updateToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
             this.updateToolStripMenuItem.Text = "Update";
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(154, 30);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
-            // 
-            // toolStripMenuItem1
-            // 
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(154, 30);
-            this.toolStripMenuItem1.Text = "test";
-            this.toolStripMenuItem1.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
             // 
             // label1
             // 
@@ -189,7 +187,7 @@
             this.label1.Location = new System.Drawing.Point(13, 57);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(408, 33);
+            this.label1.Size = new System.Drawing.Size(333, 29);
             this.label1.TabIndex = 1;
             this.label1.Text = "Current Running Environment:";
             // 
@@ -201,19 +199,12 @@
             this.currentRunningLabel.Location = new System.Drawing.Point(303, 57);
             this.currentRunningLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.currentRunningLabel.Name = "currentRunningLabel";
-            this.currentRunningLabel.Size = new System.Drawing.Size(0, 33);
+            this.currentRunningLabel.Size = new System.Drawing.Size(0, 29);
             this.currentRunningLabel.TabIndex = 2;
-            // 
-            // arcvalToolStripMenuItem
-            // 
-            this.arcvalToolStripMenuItem.Name = "arcvalToolStripMenuItem";
-            this.arcvalToolStripMenuItem.Size = new System.Drawing.Size(318, 30);
-            this.arcvalToolStripMenuItem.Text = "Arcval";
-            this.arcvalToolStripMenuItem.Click += new System.EventHandler(this.arcvalToolStripMenuItem_Click);
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 23F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(667, 297);
             this.Controls.Add(this.currentRunningLabel);
@@ -251,7 +242,6 @@
         private System.Windows.Forms.ToolStripMenuItem eftExportToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem dMFIOutboundValidationsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem findObjectToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem lexisNexisToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem arcvalToolStripMenuItem;
     }

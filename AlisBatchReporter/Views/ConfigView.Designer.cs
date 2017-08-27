@@ -55,9 +55,10 @@
             // 
             this.labelReset.AutoSize = true;
             this.labelReset.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelReset.Location = new System.Drawing.Point(81, 47);
+            this.labelReset.Location = new System.Drawing.Point(108, 58);
+            this.labelReset.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelReset.Name = "labelReset";
-            this.labelReset.Size = new System.Drawing.Size(161, 17);
+            this.labelReset.Size = new System.Drawing.Size(206, 22);
             this.labelReset.TabIndex = 22;
             this.labelReset.Text = "Reset Saved Passwords";
             // 
@@ -73,35 +74,40 @@
             this.groupBoxDbCred.Controls.Add(this.labelUsername);
             this.groupBoxDbCred.Controls.Add(this.textBoxPassword);
             this.groupBoxDbCred.Controls.Add(this.textBoxUser);
-            this.groupBoxDbCred.Location = new System.Drawing.Point(36, 70);
+            this.groupBoxDbCred.Location = new System.Drawing.Point(48, 86);
+            this.groupBoxDbCred.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.groupBoxDbCred.Name = "groupBoxDbCred";
-            this.groupBoxDbCred.Size = new System.Drawing.Size(355, 188);
+            this.groupBoxDbCred.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBoxDbCred.Size = new System.Drawing.Size(473, 231);
             this.groupBoxDbCred.TabIndex = 21;
             this.groupBoxDbCred.TabStop = false;
             // 
             // textBoxServerAddress
             // 
-            this.textBoxServerAddress.Location = new System.Drawing.Point(149, 49);
+            this.textBoxServerAddress.Location = new System.Drawing.Point(199, 60);
+            this.textBoxServerAddress.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.textBoxServerAddress.Name = "textBoxServerAddress";
-            this.textBoxServerAddress.Size = new System.Drawing.Size(128, 20);
-            this.textBoxServerAddress.TabIndex = 18;
+            this.textBoxServerAddress.Size = new System.Drawing.Size(169, 22);
+            this.textBoxServerAddress.TabIndex = 2;
             // 
             // labelEvnAddress
             // 
             this.labelEvnAddress.AutoSize = true;
             this.labelEvnAddress.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelEvnAddress.Location = new System.Drawing.Point(20, 47);
+            this.labelEvnAddress.Location = new System.Drawing.Point(27, 58);
+            this.labelEvnAddress.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelEvnAddress.Name = "labelEvnAddress";
-            this.labelEvnAddress.Size = new System.Drawing.Size(125, 20);
+            this.labelEvnAddress.Size = new System.Drawing.Size(160, 25);
             this.labelEvnAddress.TabIndex = 17;
             this.labelEvnAddress.Text = "Server Address";
             // 
             // buttonGetDb
             // 
-            this.buttonGetDb.Location = new System.Drawing.Point(202, 145);
+            this.buttonGetDb.Location = new System.Drawing.Point(269, 178);
+            this.buttonGetDb.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.buttonGetDb.Name = "buttonGetDb";
-            this.buttonGetDb.Size = new System.Drawing.Size(75, 23);
-            this.buttonGetDb.TabIndex = 15;
+            this.buttonGetDb.Size = new System.Drawing.Size(100, 28);
+            this.buttonGetDb.TabIndex = 6;
             this.buttonGetDb.Text = "Retrieve DB";
             this.buttonGetDb.UseVisualStyleBackColor = true;
             this.buttonGetDb.Click += new System.EventHandler(this.buttonGetDb_Click);
@@ -109,10 +115,11 @@
             // checkBoxSave
             // 
             this.checkBoxSave.AutoSize = true;
-            this.checkBoxSave.Location = new System.Drawing.Point(24, 149);
+            this.checkBoxSave.Location = new System.Drawing.Point(32, 183);
+            this.checkBoxSave.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBoxSave.Name = "checkBoxSave";
-            this.checkBoxSave.Size = new System.Drawing.Size(51, 17);
-            this.checkBoxSave.TabIndex = 15;
+            this.checkBoxSave.Size = new System.Drawing.Size(62, 21);
+            this.checkBoxSave.TabIndex = 5;
             this.checkBoxSave.Text = "Save";
             this.checkBoxSave.UseVisualStyleBackColor = true;
             // 
@@ -120,9 +127,10 @@
             // 
             this.labelEnv.AutoSize = true;
             this.labelEnv.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelEnv.Location = new System.Drawing.Point(20, 16);
+            this.labelEnv.Location = new System.Drawing.Point(27, 20);
+            this.labelEnv.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelEnv.Name = "labelEnv";
-            this.labelEnv.Size = new System.Drawing.Size(102, 20);
+            this.labelEnv.Size = new System.Drawing.Size(132, 25);
             this.labelEnv.TabIndex = 10;
             this.labelEnv.Text = "Environment";
             // 
@@ -130,9 +138,10 @@
             // 
             this.labelPass.AutoSize = true;
             this.labelPass.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelPass.Location = new System.Drawing.Point(20, 113);
+            this.labelPass.Location = new System.Drawing.Point(27, 139);
+            this.labelPass.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelPass.Name = "labelPass";
-            this.labelPass.Size = new System.Drawing.Size(83, 20);
+            this.labelPass.Size = new System.Drawing.Size(106, 25);
             this.labelPass.TabIndex = 13;
             this.labelPass.Text = "Password";
             // 
@@ -140,43 +149,48 @@
             // 
             this.comboBoxEnv.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxEnv.FormattingEnabled = true;
-            this.comboBoxEnv.Location = new System.Drawing.Point(149, 15);
+            this.comboBoxEnv.Location = new System.Drawing.Point(199, 18);
+            this.comboBoxEnv.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.comboBoxEnv.Name = "comboBoxEnv";
-            this.comboBoxEnv.Size = new System.Drawing.Size(128, 21);
-            this.comboBoxEnv.TabIndex = 6;
+            this.comboBoxEnv.Size = new System.Drawing.Size(169, 24);
+            this.comboBoxEnv.TabIndex = 1;
             this.comboBoxEnv.SelectedIndexChanged += new System.EventHandler(this.comboBoxEnv_SelectedIndexChanged);
             // 
             // labelUsername
             // 
             this.labelUsername.AutoSize = true;
             this.labelUsername.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelUsername.Location = new System.Drawing.Point(20, 80);
+            this.labelUsername.Location = new System.Drawing.Point(27, 98);
+            this.labelUsername.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelUsername.Name = "labelUsername";
-            this.labelUsername.Size = new System.Drawing.Size(86, 20);
+            this.labelUsername.Size = new System.Drawing.Size(110, 25);
             this.labelUsername.TabIndex = 12;
             this.labelUsername.Text = "Username";
             // 
             // textBoxPassword
             // 
-            this.textBoxPassword.Location = new System.Drawing.Point(149, 113);
+            this.textBoxPassword.Location = new System.Drawing.Point(199, 139);
+            this.textBoxPassword.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.textBoxPassword.Name = "textBoxPassword";
             this.textBoxPassword.PasswordChar = '*';
-            this.textBoxPassword.Size = new System.Drawing.Size(128, 20);
-            this.textBoxPassword.TabIndex = 9;
+            this.textBoxPassword.Size = new System.Drawing.Size(169, 22);
+            this.textBoxPassword.TabIndex = 4;
             // 
             // textBoxUser
             // 
-            this.textBoxUser.Location = new System.Drawing.Point(149, 80);
+            this.textBoxUser.Location = new System.Drawing.Point(199, 98);
+            this.textBoxUser.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.textBoxUser.Name = "textBoxUser";
-            this.textBoxUser.Size = new System.Drawing.Size(128, 20);
-            this.textBoxUser.TabIndex = 8;
+            this.textBoxUser.Size = new System.Drawing.Size(169, 22);
+            this.textBoxUser.TabIndex = 3;
             // 
             // cancelButton
             // 
             this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.cancelButton.Location = new System.Drawing.Point(316, 366);
+            this.cancelButton.Location = new System.Drawing.Point(421, 450);
+            this.cancelButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.cancelButton.Name = "cancelButton";
-            this.cancelButton.Size = new System.Drawing.Size(75, 23);
+            this.cancelButton.Size = new System.Drawing.Size(100, 28);
             this.cancelButton.TabIndex = 17;
             this.cancelButton.Text = "Cancel";
             this.cancelButton.UseVisualStyleBackColor = true;
@@ -184,9 +198,10 @@
             // 
             // saveButton
             // 
-            this.saveButton.Location = new System.Drawing.Point(36, 366);
+            this.saveButton.Location = new System.Drawing.Point(48, 450);
+            this.saveButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.saveButton.Name = "saveButton";
-            this.saveButton.Size = new System.Drawing.Size(75, 23);
+            this.saveButton.Size = new System.Drawing.Size(100, 28);
             this.saveButton.TabIndex = 16;
             this.saveButton.Text = "Save";
             this.saveButton.UseVisualStyleBackColor = true;
@@ -196,27 +211,30 @@
             // 
             this.labelDb.AutoSize = true;
             this.labelDb.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelDb.Location = new System.Drawing.Point(56, 297);
+            this.labelDb.Location = new System.Drawing.Point(75, 366);
+            this.labelDb.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelDb.Name = "labelDb";
-            this.labelDb.Size = new System.Drawing.Size(81, 20);
+            this.labelDb.Size = new System.Drawing.Size(104, 25);
             this.labelDb.TabIndex = 20;
             this.labelDb.Text = "Database";
             // 
             // comboBoxDb
             // 
             this.comboBoxDb.FormattingEnabled = true;
-            this.comboBoxDb.Location = new System.Drawing.Point(168, 296);
+            this.comboBoxDb.Location = new System.Drawing.Point(224, 364);
+            this.comboBoxDb.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.comboBoxDb.Name = "comboBoxDb";
-            this.comboBoxDb.Size = new System.Drawing.Size(145, 21);
-            this.comboBoxDb.TabIndex = 19;
+            this.comboBoxDb.Size = new System.Drawing.Size(192, 24);
+            this.comboBoxDb.TabIndex = 7;
             this.comboBoxDb.SelectedIndexChanged += new System.EventHandler(this.comboBoxDb_SelectedIndexChanged);
             // 
             // refreshButton
             // 
             this.refreshButton.Image = global::AlisBatchReporter.Properties.Resources.Button_Refresh_icon;
-            this.refreshButton.Location = new System.Drawing.Point(36, 29);
+            this.refreshButton.Location = new System.Drawing.Point(48, 36);
+            this.refreshButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.refreshButton.Name = "refreshButton";
-            this.refreshButton.Size = new System.Drawing.Size(39, 35);
+            this.refreshButton.Size = new System.Drawing.Size(52, 43);
             this.refreshButton.TabIndex = 18;
             this.refreshButton.UseVisualStyleBackColor = true;
             this.refreshButton.Click += new System.EventHandler(this.refreshButton_Click);
@@ -227,7 +245,7 @@
             // 
             // ConfigView
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.labelReset);
             this.Controls.Add(this.groupBoxDbCred);
@@ -236,8 +254,9 @@
             this.Controls.Add(this.saveButton);
             this.Controls.Add(this.labelDb);
             this.Controls.Add(this.comboBoxDb);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "ConfigView";
-            this.Size = new System.Drawing.Size(460, 452);
+            this.Size = new System.Drawing.Size(613, 556);
             this.Load += new System.EventHandler(this.ConfigView_Load);
             this.groupBoxDbCred.ResumeLayout(false);
             this.groupBoxDbCred.PerformLayout();

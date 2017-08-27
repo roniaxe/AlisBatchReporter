@@ -16,16 +16,17 @@ namespace AlisBatchReporter.Classes
         public static readonly Values ConNum = new ArcvalValuesType6A(9, "CON-NUM");
         public static readonly Values RecType = new ArcvalValuesType6A(10, "REC-TYPE");
         public static readonly Values RecInfo = new ArcvalValuesType6A(11, "REC-INFO");
-        public static readonly Values RdrWp = new ArcvalValuesType6A(12, "RDR-WP");
-        public static readonly Values CovPlancode = new ArcvalValuesType6A(13, "COV-PLANCODE");
-        public static readonly Values CovId = new ArcvalValuesType6A(14, "COV-ID");
-        public static readonly Values RdrGender = new ArcvalValuesType6A(15, "RDR-GENDER");
-        public static readonly Values RdrInfo = new ArcvalValuesType6A(16, "RDR-INFO");
-        public static readonly Values RdrEff = new ArcvalValuesType6A(17, "RDR-EFF");
-        public static readonly Values RdrExp = new ArcvalValuesType6A(18, "RDR-EXP");
-        public static readonly Values RdrGrossPrem = new ArcvalValuesType6A(19, "RDR-GROSS-PREM");
-        public static readonly Values RdrModePrem = new ArcvalValuesType6A(20, "RDR-MODE-PREMIUM");
-        public static readonly Values Extra = new ArcvalValuesType6A(21, "EXTRA");
+        public static readonly Values RdrPlancode = new ArcvalValuesType6A(12, "RDR-PLANCODE");
+        public static readonly Values RdrWp = new ArcvalValuesType6A(13, "RDR-WP");
+        public static readonly Values CovPlancode = new ArcvalValuesType6A(14, "COV-PLANCODE");
+        public static readonly Values CovId = new ArcvalValuesType6A(15, "COV-ID");
+        public static readonly Values RdrGender = new ArcvalValuesType6A(16, "RDR-GENDER");
+        public static readonly Values RdrInfo = new ArcvalValuesType6A(17, "RDR-INFO");
+        public static readonly Values RdrEff = new ArcvalValuesType6A(18, "RDR-EFF");
+        public static readonly Values RdrExp = new ArcvalValuesType6A(19, "RDR-EXP");
+        public static readonly Values RdrGrossPrem = new ArcvalValuesType6A(20, "RDR-GROSS-PREM");
+        public static readonly Values RdrModePrem = new ArcvalValuesType6A(21, "RDR-MODE-PREMIUM");
+        public static readonly Values Extra = new ArcvalValuesType6A(22, "EXTRA");
 
 
         private ArcvalValuesType6A(int idxValue, string name, bool toIgnore = false) : base(idxValue, name, toIgnore)
@@ -48,6 +49,7 @@ namespace AlisBatchReporter.Classes
                 yield return ConNum;
                 yield return RecType;
                 yield return RecInfo;
+                yield return RdrPlancode;
                 yield return RdrWp;
                 yield return CovPlancode;
                 yield return CovId;

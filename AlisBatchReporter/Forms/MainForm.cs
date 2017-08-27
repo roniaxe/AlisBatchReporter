@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Data;
+using System.Data.SqlServerCe;
 using System.Windows.Forms;
 using AlisBatchReporter.Classes;
 using AlisBatchReporter.Presentors;
-using AlisBatchReporter.Views.MVPTest;
 
 namespace AlisBatchReporter.Forms
 {
@@ -15,34 +16,30 @@ namespace AlisBatchReporter.Forms
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(Global.Env) || string.IsNullOrEmpty(Global.ChosenConnection))
+            if (string.IsNullOrEmpty(Global.Name) || string.IsNullOrEmpty(Global.ConnString))
             {
                 MessageBox.Show(@"Please Choose Environment In Settings", @"No Database Selected");
             }
 
             else
             {
-                DataForm dataForm = new DataForm();
+                var dataForm = new DataForm();
                 dataForm.Show();
             }
         }
 
         private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ConfigForm configForm = new ConfigForm();
+            var configForm = new ConfigForm();
             configForm.Show();
         }
 
         private void MainForm_Activated(object sender, EventArgs e)
         {
-            if (!string.IsNullOrEmpty(Global.Env) && !string.IsNullOrEmpty(Global.Db))
-            {
-                currentRunningLabel.Text = Global.Env + @" - " + Global.Db;
-            }
+            if (!string.IsNullOrEmpty(Global.Name) && !string.IsNullOrEmpty(Global.Db))
+                currentRunningLabel.Text = Global.Name + @" - " + Global.Db;
             else
-            {
                 currentRunningLabel.Text = "";
-            }
         }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
@@ -58,69 +55,75 @@ namespace AlisBatchReporter.Forms
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            Global.Env = !string.IsNullOrEmpty(Properties.Settings.Default.LastSaveEnv)
-                ? Properties.Settings.Default.LastSaveEnv
-                : "";
-            Global.Db = !string.IsNullOrEmpty(Properties.Settings.Default.LastSaveDb)
-                ? Properties.Settings.Default.LastSaveDb
-                : "";
-            Global.ChosenConnection = !string.IsNullOrEmpty(Properties.Settings.Default.LastSaveConnStr)
-                ? Properties.Settings.Default.LastSaveConnStr
-                : "";
-            Global.SavedCheckBox = Properties.Settings.Default.SaveCredentialsSelected;
+            using (var conn =
+                new SqlCeConnection("DataSource=\"alisReporter.sdf\"; Password=\"12345\";"))
+            {
+                conn.Open();
+                var command = new SqlCeCommand(
+                    @"SELECT * FROM saved_credentials WHERE CHOSE_LAST='1' AND SAVED = '1'",
+                    conn);
+                var da = new SqlCeDataAdapter(command);
+                var dt = new DataTable();
+                da.Fill(dt);
+                command.ExecuteNonQuery();
+                if (dt.Rows.Count <= 0) return;
+                foreach (DataRow r in dt.Rows)
+                    Global.PropSetter(
+                        (int) r[0],
+                        r[1].ToString(),
+                        r[2].ToString(),
+                        r[3].ToString(),
+                        r[4].ToString(),
+                        r[5].ToString(),
+                        r[6].ToString(),
+                        r[7].ToString(),
+                        "1");
+            }
         }
 
         private void unallocatedSuspenseToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ExportValidationForm exportValidationForm = new ExportValidationForm();
+            var exportValidationForm = new ExportValidationForm();
             exportValidationForm.Show();
         }
 
         private void eftExportToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(Global.Env) || string.IsNullOrEmpty(Global.ChosenConnection))
+            if (string.IsNullOrEmpty(Global.Name) || string.IsNullOrEmpty(Global.ConnString))
             {
                 MessageBox.Show(@"Please Choose Environment In Settings", @"No Database Selected");
             }
             else
             {
-                EftExportValidateForm eftExportValidateForm = new EftExportValidateForm();
+                var eftExportValidateForm = new EftExportValidateForm();
                 eftExportValidateForm.Show();
-            }            
+            }
         }
 
         private void dMFIOutboundValidationsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DmfiValidationsForm dmfiValidationsForm = new DmfiValidationsForm();
+            var dmfiValidationsForm = new DmfiValidationsForm();
             dmfiValidationsForm.Show();
         }
 
         private void findObjectToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FindObjectForm findObjectForm = new FindObjectForm();
+            var findObjectForm = new FindObjectForm();
             findObjectForm.Show();
-        }
-
-        private void toolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            ConfForm confForm = new ConfForm();
-            EnvRepository repository = new EnvRepository();
-            ConfigPresenter unused = new ConfigPresenter(confForm, repository);
-            confForm.Show();
         }
 
         private void lexisNexisToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            LexisNexisForm lexisNexisForm = new LexisNexisForm();
-            LexisNexisPresentor lexisNexisPresentor = new LexisNexisPresentor(lexisNexisForm);
+            var lexisNexisForm = new LexisNexisForm();
+            var lexisNexisPresentor = new LexisNexisPresentor(lexisNexisForm);
 
             lexisNexisForm.Show();
         }
 
         private void arcvalToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ArcvalCompareForm arcvalCompareForm = new ArcvalCompareForm();
-            ArcvalPresentor arcvalPresentor = new ArcvalPresentor(arcvalCompareForm);
+            var arcvalCompareForm = new ArcvalCompareForm();
+            var arcvalPresentor = new ArcvalPresentor(arcvalCompareForm);
 
             arcvalCompareForm.Show();
         }

@@ -10,7 +10,7 @@ namespace AlisBatchReporter.Classes
     {
         public static async Task<DataTable> Query(string command)
         {
-            using (SqlConnection conn = new SqlConnection(Global.ChosenConnection))
+            using (SqlConnection conn = new SqlConnection(Global.ConnString))
             {
                 SqlCommand sqlCommand = new SqlCommand(command, conn);
                 await conn.OpenAsync();

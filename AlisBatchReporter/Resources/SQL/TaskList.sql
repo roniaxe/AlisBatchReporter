@@ -1,4 +1,5 @@
-SELECT  
+SELECT
+   gba.batch_id as "Batch Id",	
    tt.task_id AS "Task Id",
    tt.task_name AS "Task",
    min(gba.entry_time) AS "Time",
@@ -16,6 +17,7 @@ WHERE
    gba.ENTRY_TIME > {Param1} 
    AND gba.ENTRY_TIME - 1 <= {Param2} 
 GROUP BY
+   gba.batch_id,
    tb.batch_name,
    tt.task_name,
    tt.task_id,
