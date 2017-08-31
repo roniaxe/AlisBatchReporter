@@ -38,8 +38,11 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.Linq" />
     <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.SqlServer.Compact.4.0.8876.1\lib\net40\System.Data.SqlServerCe.dll</HintPath>
       <Private>True</Private>
@@ -56,6 +59,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\alisReporterContext.cs" />
     <Compile Include="Classes\ArcvalValues.cs" />
     <Compile Include="Classes\ArcvalValuesType5.cs" />
     <Compile Include="Classes\ArcvalValuesType6a.cs" />
@@ -139,7 +143,6 @@
       <DependentUpon>SingleBatchRunForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Infra\DataProtectionExtensions.cs" />
-    <Compile Include="Models\LexisNexis.cs" />
     <Compile Include="Presentors\ArcvalPresentor.cs" />
     <Compile Include="Presentors\LexisNexisPresentor.cs" />
     <Compile Include="Program.cs" />
@@ -218,6 +221,9 @@
     <Folder Include="Output\LexisNexis\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\SQL\ChunkProcess.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\SQL\CmaByBatchRunNo.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -247,6 +253,9 @@
     <Content Include="Resources\SQL\SimpleGBA.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

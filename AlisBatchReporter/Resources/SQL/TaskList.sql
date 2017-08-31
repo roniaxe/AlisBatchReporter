@@ -3,8 +3,18 @@ SELECT
    tt.task_id AS "Task Id",
    tt.task_name AS "Task",
    min(gba.entry_time) AS "Time",
+   CASE WHEN (SELECT count(gba2.entry_type) 
+			   FROM g_batch_audit gba2 
+			   WHERE gba2.batch_run_num = gba.batch_run_num 
+			   AND ((gba2.entry_type = 4 AND gba2.description LIKE '%terminated%')
+			   OR (gba2.entry_type = 2 and gba2.description LIKE '%End of batch run%'))) > 0 
+			   THEN 'Finished' 
+			   ELSE 'Did Not Finish' end as "Status",
    tb.batch_name AS "Batch",
-   gba.batch_run_num AS "Batch Run Number"
+   gba.batch_run_num AS "Batch Run Number",
+   (SELECT max(gba3.chunk_id) 
+   FROM g_batch_audit gba3 
+   WHERE gba3.batch_run_num = gba.batch_run_num) AS "Num Of Chunks"
 FROM
    g_batch_audit gba 
    JOIN
@@ -23,4 +33,5 @@ GROUP BY
    tt.task_id,
    gba.batch_run_num
 ORDER BY
-   min(gba.entry_time);
+   min(gba.entry_time)
+   option(fast 100);

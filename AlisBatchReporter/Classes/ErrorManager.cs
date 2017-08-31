@@ -38,6 +38,10 @@ namespace AlisBatchReporter.Classes
             ParamCount = paramCount;
         }
 
+        public static readonly QueryRepo ChunkProcess = new QueryRepo(
+            "Chunk Process",
+            Path.GetDirectoryName(Application.ExecutablePath) + @"\Resources\SQL\ChunkProcess.sql",
+            2);
         public static readonly QueryRepo ErrorReport = new QueryRepo(
             "Error Report",
             Path.GetDirectoryName(Application.ExecutablePath)+@"\Resources\SQL\BatchAudit.sql",

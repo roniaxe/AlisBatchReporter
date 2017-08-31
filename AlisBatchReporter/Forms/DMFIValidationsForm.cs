@@ -12,15 +12,11 @@ namespace AlisBatchReporter.Forms
 {
     public partial class DmfiValidationsForm : Form
     {
+        private readonly Dictionary<string, List<string>> _differencesCount = new Dictionary<string, List<string>>();
         private readonly BackgroundWorker _mCopier;
-
-        private delegate void ProgressChanged(UiProgress info);
-
-        private delegate void CopyError(UiError err);
 
         private readonly ProgressChanged _onChange;
         private readonly CopyError _onError;
-        private string[] _fileList;
 
         private readonly string[] _pathList =
         {
@@ -28,7 +24,7 @@ namespace AlisBatchReporter.Forms
             @"\\dmfdwh001pr\X\Deploy\Prod\FTP\Outbound\AnalyticFeed\"
         };
 
-        readonly Dictionary<string, List<string>> _differencesCount = new Dictionary<string, List<string>>();
+        private string[] _fileList;
 
         public DmfiValidationsForm()
         {
@@ -40,7 +36,6 @@ namespace AlisBatchReporter.Forms
             _onChange += Copier_ProgressChanged;
             _onError += Copier_Error;
             ChangeUi(false);
-            
         }
 
         private void validateButton_Click(object sender, EventArgs e)
@@ -51,46 +46,40 @@ namespace AlisBatchReporter.Forms
         private void Copier_DoWork(object sender, DoWorkEventArgs e)
         {
             // Create list of files to copy
-            string[] theExtensions = _fileList;
-            List<FileInfo> files = new List<FileInfo>();
+            var theExtensions = _fileList;
+            var files = new List<FileInfo>();
             //string path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
             long maxbytes = 0;
-            foreach (string ext in theExtensions)
+            foreach (var ext in theExtensions)
+            foreach (var path in _pathList)
             {
-                foreach (var path in _pathList)
+                var dir = new DirectoryInfo(path);
+                var folder = dir.GetFiles(ext, SearchOption.AllDirectories);
+                foreach (var file in folder)
                 {
-                    var dir = new DirectoryInfo(path);
-                    FileInfo[] folder = dir.GetFiles(ext, SearchOption.AllDirectories);
-                    foreach (FileInfo file in folder)
-                    {
-                        if ((file.Attributes & FileAttributes.Directory) != 0) continue;
-                        files.Add(file);
-                        maxbytes += file.Length;
-                    }
+                    if ((file.Attributes & FileAttributes.Directory) != 0) continue;
+                    files.Add(file);
+                    maxbytes += file.Length;
                 }
             }
             // Copy files
             long bytes = 0;
-            foreach (FileInfo file in files)
+            foreach (var file in files)
             {
                 try
                 {
                     string fileName;
                     if (file.Name.Equals("LFCM_IRF2.txt") || file.Name.Equals("LFCM_IRF1.txt"))
-                    {
                         fileName = "Source.txt";
-                    }
                     else
-                    {
                         fileName = "Outbound.txt";
-                    }
                     BeginInvoke(_onChange, new UiProgress(file.Name, bytes, maxbytes));
                     File.Copy(file.FullName, Path.Combine(Directory.GetCurrentDirectory(), fileName), true);
                 }
                 catch (Exception ex)
                 {
-                    UiError err = new UiError(ex, file.FullName);
+                    var err = new UiError(ex, file.FullName);
                     Invoke(_onError, err);
                     if (err.Result == DialogResult.Cancel) break;
                 }
@@ -108,7 +97,7 @@ namespace AlisBatchReporter.Forms
         private void Copier_Error(UiError err)
         {
             // Error handler
-            string msg =
+            var msg =
                 $"Error copying file {err.Path} {Environment.NewLine} {err.Msg}{Environment.NewLine}Click OK to continue copying files";
             err.Result = MessageBox.Show(msg, @"Copy error", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation);
         }
@@ -131,7 +120,7 @@ namespace AlisBatchReporter.Forms
 
         private void ValidateAnalytic(string selectedItem)
         {
-            bool docopy = validateButton.Text == @"Copy";
+            var docopy = validateButton.Text == @"Copy";
 
             if (selectedItem.Equals("IRF2 File Comparison"))
             {
@@ -146,9 +135,7 @@ namespace AlisBatchReporter.Forms
                     };
                     _mCopier.RunWorkerAsync();
                     while (_mCopier.IsBusy)
-                    {
                         Application.DoEvents();
-                    }
                     //Read New Files
                     var sourceFileRead = File.ReadAllLines(Directory.GetCurrentDirectory() + @"\Source.txt");
                     var outboundFileRead = File.ReadAllLines(Directory.GetCurrentDirectory() + @"\Outbound.txt");
@@ -188,9 +175,7 @@ namespace AlisBatchReporter.Forms
                     };
                     _mCopier.RunWorkerAsync();
                     while (_mCopier.IsBusy)
-                    {
                         Application.DoEvents();
-                    }
                     //Read New Files
                     var sourceFileRead = File.ReadAllLines(Directory.GetCurrentDirectory() + @"\Source.txt");
                     var outboundFileRead = File.ReadAllLines(Directory.GetCurrentDirectory() + @"\Outbound.txt");
@@ -217,26 +202,23 @@ namespace AlisBatchReporter.Forms
         {
             if (!Directory.Exists(Path.GetDirectoryName(Application.ExecutablePath)
                                   + @"\Output\IRF"))
-            {
                 Directory.CreateDirectory(Path.GetDirectoryName(Application.ExecutablePath)
                                           + @"\Output\IRF");
-            }
-            using (StreamWriter file = new StreamWriter(Path.GetDirectoryName(Application.ExecutablePath)
-                                                        + $@"\Output\IRF\IRF_Diffs_{DateTime.Now:yyyy-dd-M--HH-mm-ss}.txt"))
+            using (var file = new StreamWriter(Path.GetDirectoryName(Application.ExecutablePath)
+                                               + $@"\Output\IRF\IRF_Diffs_{DateTime.Now:yyyy-dd-M--HH-mm-ss}.txt"))
+            {
                 foreach (var entry in _differencesCount)
                 {
-                    if (!entry.Key.Equals(IRF2.PlanCode.ToString()) && !entry.Key.Equals(IRF2.PlanName.ToString()))
-                    {
-                        file.WriteLine("[{0}]", entry.Key);
-                        entry.Value.ForEach(policy => file.WriteLine(policy));
-                    }
+                    file.WriteLine("[{0}]", entry.Key);
+                    entry.Value.ForEach(policy => file.WriteLine(policy));
                 }
+            }
         }
 
         private void SplitAndCompare(Dictionary<string, string> sourceDic, Dictionary<string, string> outboundDic,
             int[] indexCuts)
         {
-            foreach (string key in sourceDic.Keys)
+            foreach (var key in sourceDic.Keys)
             {
                 string outboundValue;
                 if (outboundDic.TryGetValue(key, out outboundValue))
@@ -259,11 +241,9 @@ namespace AlisBatchReporter.Forms
             var dic = new Dictionary<string, string>();
             foreach (var row in fileRows)
             {
-                string key = "";
+                var key = "";
                 foreach (var pair in keyIndexes)
-                {
                     key += row.Substring(pair.Item1, pair.Item2);
-                }
                 dic[key] = row;
             }
             return dic;
@@ -280,13 +260,9 @@ namespace AlisBatchReporter.Forms
 
         private void CompareRows(List<string> source, List<string> outbound)
         {
-            for (int i = 0; i < source.Count - 1; i++)
-            {
+            for (var i = 0; i < source.Count - 1; i++)
                 if (!source[i].Equals(outbound[i]))
-                {
                     Compare(source, outbound, i);
-                }
-            }
         }
 
         private void Compare(List<string> source, List<string> outbound, int idx)
@@ -295,76 +271,72 @@ namespace AlisBatchReporter.Forms
             {
                 var idxName = (IRF1) idx;
                 if (!source[idx].Equals(outbound[idx]))
-                {
-                    Task.Run(()=> AddDiffrence(idxName, source[1], source[idx], outbound[idx]));
-                }
+                    Task.Run(() => AddDiffrence(idxName, source[1], source[idx], outbound[idx]));
             }
 
             if (validationTypesCombobox.Text.Equals("IRF2 File Comparison"))
             {
                 //var idxName = (IRF2) idx;
-                Irf2Values irf2Value = Irf2Values.GetValue(idx);
-                string irf2ValueName;               
-                if (irf2Value != null)
+                var irf2Value = new Irf2Values();
+                var entitiy = irf2Value.GetValue(idx);
+                string irf2ValueName;
+                if (entitiy != null && !entitiy.Ignore)
                 {
-                    irf2ValueName = irf2Value.Name;
-                    if (irf2Value.Intable)
+                    irf2ValueName = entitiy.Name;
+                    if (entitiy.Intable)
                     {
-
                         double castedToDoubleSource, castedToDoubleOutbound;
-                        if (double.TryParse(source[irf2Value.IdxValue], out castedToDoubleSource) &&
-                            double.TryParse(outbound[irf2Value.IdxValue], out castedToDoubleOutbound))
+                        if (double.TryParse(source[entitiy.IdxValue], out castedToDoubleSource) &&
+                            double.TryParse(outbound[entitiy.IdxValue], out castedToDoubleOutbound))
                         {
                             var diff = Math.Abs(castedToDoubleSource - castedToDoubleOutbound);
-                            if ((!irf2ValueName.Equals("ModalPremium") && diff > 0) || (irf2ValueName.Equals("ModalPremium") && diff > 2))
-                            {
+                            if (!irf2ValueName.Equals("Modal Premium") && diff > 0 ||
+                                irf2ValueName.Equals("Modal Premium") && diff > 2)
                                 Task.Run(() => AddDiffrence(irf2ValueName, source[1] + " - " + source[6],
                                     castedToDoubleSource.ToString(CultureInfo.InvariantCulture),
                                     castedToDoubleOutbound.ToString(CultureInfo.InvariantCulture)));
-                            }
                         }
                     }
                     else
                     {
-                        if (!source[irf2Value.IdxValue].Equals(outbound[irf2Value.IdxValue]))
-                        {
-                            Task.Run(() => AddDiffrence(irf2ValueName, 
-                                source[1] + "-" + source[6], 
-                                source[irf2Value.IdxValue], 
-                                outbound[irf2Value.IdxValue]));
-                        }
+                        if (!source[entitiy.IdxValue].Equals(outbound[entitiy.IdxValue]))
+                            Task.Run(() => AddDiffrence(irf2ValueName,
+                                source[1] + "-" + source[6],
+                                source[entitiy.IdxValue],
+                                outbound[entitiy.IdxValue]));
                     }
-                }                
+                }
             }
         }
 
         private void AddDiffrence(object idxName, string polNo, string souceValue, string outboundValue)
         {
             if (_differencesCount.ContainsKey(idxName.ToString()))
-            {
-                _differencesCount[idxName.ToString()].Add(polNo + $@"  LifeCom Value: {souceValue}, DMFI Value: {outboundValue}");
-            }
+                _differencesCount[idxName.ToString()]
+                    .Add(polNo + $@"  LifeCom Value: {souceValue}, DMFI Value: {outboundValue}");
             else
-            {
                 _differencesCount.Add(idxName.ToString(), new List<string>
                 {
                     polNo + $@"  LifeCom Value: {souceValue}, DMFI Value: {outboundValue}"
                 });
-            }
         }
 
         public string[] SplitAt(string source, params int[] index)
         {
             index = index.Distinct().OrderBy(x => x).ToArray();
-            string[] output = new string[index.Length + 1];
-            int pos = 0;
+            var output = new string[index.Length + 1];
+            var pos = 0;
 
-            for (int i = 0; i < index.Length; pos = index[i++])
+            for (var i = 0; i < index.Length; pos = index[i++])
                 output[i] = source.Substring(pos, index[i] - pos);
 
             output[index.Length] = source.Substring(pos);
             return output;
         }
+
+        private delegate void ProgressChanged(UiProgress info);
+
+        private delegate void CopyError(UiError err);
     }
 
     public enum IRF1
@@ -378,36 +350,5 @@ namespace AlisBatchReporter.Forms
         PolicyStatus = 6,
         MembershipNo = 7,
         PolicyIssueDate = 8
-    }
-
-    public enum IRF2
-    {
-        CompanyCd = 0,
-        PolNo = 1,
-        MembershipNo = 2,
-        LOB = 3,
-        Region = 4,
-        WritingAgency = 5,
-        WritingAgent = 6,
-        PrimaryAgentFlag = 7,
-        Commission = 8,
-        Servicing = 9,
-        PlanCode = 10,
-        PlanName = 11,
-        IssuedAge = 12,
-        IssuedGender = 13,
-        LastName = 14,
-        FirstName = 15,
-        MiddleName = 16,
-        PolicyIssueDate = 17,
-        PaidToPaid = 18,
-        CurrentCashValue = 19,
-        ModalPremium = 20,
-        FaceValue = 21,
-        SpouseFaceValue = 22,
-        ActiveFlag = 23,
-        PolicyStatus = 24,
-        PaymentMode = 25,
-        PaymentForm = 26
     }
 }

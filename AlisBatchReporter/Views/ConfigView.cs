@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using System.Xml.Linq;
 using AlisBatchReporter.Classes;
 using AlisBatchReporter.Infra;
-using AlisBatchReporter.Properties;
+using AlisBatchReporter.Models;
 
 namespace AlisBatchReporter.Views
 {
@@ -258,37 +258,30 @@ namespace AlisBatchReporter.Views
         private void comboBoxEnv_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!_envNoise)
-            {
                 return;
-            }
             ReadFromAppSettings();
         }
 
         private void ReadFromAppSettings()
         {
             InitComponents();
-            using (var conn =
-                new SqlCeConnection("DataSource=\"alisReporter.sdf\"; Password=\"12345\";"))
+            using (var db =
+                new alisReporterContext(new SqlCeConnection("DataSource=\"alisReporter.sdf\"; Password=\"12345\";")))
             {
-                conn.Open();
-                var command = new SqlCeCommand(
-                    $@"SELECT * FROM saved_credentials 
-                                WHERE ID = {((ComboboxItem) comboBoxEnv.SelectedItem).Value}
-                                AND SAVED = '1'",
-                    conn);
-                var da = new SqlCeDataAdapter(command);
-                var dt = new DataTable();
-                da.Fill(dt);
-                command.ExecuteNonQuery();
-                if (dt.Rows.Count <= 0) return;
-                foreach (DataRow r in dt.Rows)
-                {                  
-                    textBoxServerAddress.Text = r[3].ToString();
-                    checkBoxSave.Checked = !string.IsNullOrEmpty(r[8].ToString());
-                    textBoxPassword.Text = string.IsNullOrEmpty(r[2].ToString()) ? "" : r[2].ToString().Unprotect();
-                    textBoxUser.Text = string.IsNullOrEmpty(r[1].ToString()) ? "" : r[1].ToString();
+                var envId = ((ComboboxItem) comboBoxEnv.SelectedItem).Value;
+                var queryResult = db.Saved_credentials
+                    .Where(item => item.ID == (int) envId &&
+                                   item.SAVED.Equals("1")).ToList();
+                if (queryResult.Count == 1)
+                {
+                    textBoxServerAddress.Text = queryResult[0].HOST;
+                    checkBoxSave.Checked = !string.IsNullOrEmpty(queryResult[0].SAVED);
+                    textBoxPassword.Text = string.IsNullOrEmpty(queryResult[0].PASSWORD)
+                        ? ""
+                        : queryResult[0].PASSWORD.Unprotect();
+                    textBoxUser.Text = string.IsNullOrEmpty(queryResult[0].USERNAME) ? "" : queryResult[0].USERNAME;
                 }
-            }          
+            }
         }
     }
 }

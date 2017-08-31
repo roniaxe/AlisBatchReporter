@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlServerCe;
+using System.Linq;
 using System.Windows.Forms;
 using AlisBatchReporter.Classes;
+using AlisBatchReporter.Models;
 using AlisBatchReporter.Presentors;
 
 namespace AlisBatchReporter.Forms
@@ -58,26 +60,21 @@ namespace AlisBatchReporter.Forms
             using (var conn =
                 new SqlCeConnection("DataSource=\"alisReporter.sdf\"; Password=\"12345\";"))
             {
-                conn.Open();
-                var command = new SqlCeCommand(
-                    @"SELECT * FROM saved_credentials WHERE CHOSE_LAST='1' AND SAVED = '1'",
-                    conn);
-                var da = new SqlCeDataAdapter(command);
-                var dt = new DataTable();
-                da.Fill(dt);
-                command.ExecuteNonQuery();
-                if (dt.Rows.Count <= 0) return;
-                foreach (DataRow r in dt.Rows)
+                using (var db = new alisReporterContext(conn))
+                {
+                    var res = db.Saved_credentials
+                        .Where(i => i.CHOSE_LAST.Equals("1") && i.SAVED.Equals("1")).ToList();
                     Global.PropSetter(
-                        (int) r[0],
-                        r[1].ToString(),
-                        r[2].ToString(),
-                        r[3].ToString(),
-                        r[4].ToString(),
-                        r[5].ToString(),
-                        r[6].ToString(),
-                        r[7].ToString(),
-                        "1");
+                        res[0].ID,
+                        res[0].USERNAME, 
+                        res[0].PASSWORD, 
+                        res[0].HOST,
+                        res[0].DB, 
+                        res[0].NAME, 
+                        res[0].CONN_STRING, 
+                        res[0].CHOSE_LAST,
+                        res[0].SAVED);
+                }
             }
         }
 

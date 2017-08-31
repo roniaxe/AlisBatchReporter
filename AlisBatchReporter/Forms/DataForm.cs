@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using AlisBatchReporter.Classes;
 using Microsoft.Office.Interop.Excel;
@@ -28,10 +29,11 @@ namespace AlisBatchReporter.Forms
             // Create the context menu items
             _batchRunNumberContextMenu.MenuItems.Add("Load GBA - Errors only", LoadGbaData);
             _batchRunNumberContextMenu.MenuItems.Add("Load GBA - All", LoadGbaData);
+            _batchRunNumberContextMenu.MenuItems.Add("Chunk Process", ChunkProcess);
             _taskIdContextMenu.MenuItems.Add("Running Time", RunningTime);
             fromDate.Value = DateTime.Today.AddDays(-1);
             PopulateFuncCombobox();
-        }
+        }     
 
         private void PopulateFuncCombobox()
         {
@@ -84,6 +86,22 @@ namespace AlisBatchReporter.Forms
             query.Params = new ParamObject(batchRunNum, GetTaskId(dataGridView1), errorsOnly);
             var singleForm = new SingleBatchRunForm(query);
             singleForm.Show();
+        }
+
+        private async void ChunkProcess(object sender, EventArgs e)
+        {
+            Form dialogForm = new Form();
+            ProgressBar pb = new ProgressBar {Style = ProgressBarStyle.Marquee};
+            BindingSource bs = new BindingSource();
+            DataGridView dg = new DataGridView { DataSource = bs };
+            dialogForm.Controls.AddRange(new Control[] {pb, dg});
+            var query = QueryRepo.ChunkProcess;         
+            query.Params = new ParamObject(dataGridView1.CurrentCell.Value.ToString(), GetTaskId(dataGridView1));
+            dialogForm.Show();
+            DataTable result = await QueryManager.Query(query.QueryDynamication());
+            dg.Dock = DockStyle.Fill;
+            bs.DataSource = result;
+            pb.Hide();
         }
 
         private void closeButton_Click(object sender, EventArgs e)
