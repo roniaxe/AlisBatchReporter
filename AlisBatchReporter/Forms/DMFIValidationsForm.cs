@@ -220,18 +220,14 @@ namespace AlisBatchReporter.Forms
         {
             foreach (var key in sourceDic.Keys)
             {
-                string outboundValue;
-                if (outboundDic.TryGetValue(key, out outboundValue))
+                if (outboundDic.TryGetValue(key, out var outboundValue))
                 {
-                    string sourceValue;
-                    if (sourceDic.TryGetValue(key, out sourceValue))
-                    {
-                        var splittedSourceRow = SplitAt(sourceValue, indexCuts)
-                            .ToList();
-                        var splittedOutboundRow = SplitAt(outboundValue, indexCuts)
-                            .ToList();
-                        CompareRows(splittedSourceRow, splittedOutboundRow);
-                    }
+                    if (!sourceDic.TryGetValue(key, out var sourceValue)) continue;
+                    var splittedSourceRow = SplitAt(sourceValue, indexCuts)
+                        .ToList();
+                    var splittedOutboundRow = SplitAt(outboundValue, indexCuts)
+                        .ToList();
+                    CompareRows(splittedSourceRow, splittedOutboundRow);
                 }
             }
         }
@@ -269,14 +265,15 @@ namespace AlisBatchReporter.Forms
         {
             if (validationTypesCombobox.Text.Equals("IRF1 File Comparison"))
             {
-                var idxName = (IRF1) idx;
-                if (!source[idx].Equals(outbound[idx]))
-                    Task.Run(() => AddDiffrence(idxName, source[1], source[idx], outbound[idx]));
+                var irf1Value = new Irf1Values();
+                var entity = irf1Value.GetValue(idx);
+                var idxName = entity.Name;
+                if (!source[entity.IdxValue].Equals(outbound[entity.IdxValue]))
+                    Task.Run(() => AddDiffrence(idxName, source[1], source[entity.IdxValue], outbound[entity.IdxValue]));
             }
 
             if (validationTypesCombobox.Text.Equals("IRF2 File Comparison"))
             {
-                //var idxName = (IRF2) idx;
                 var irf2Value = new Irf2Values();
                 var entitiy = irf2Value.GetValue(idx);
                 string irf2ValueName;
@@ -285,9 +282,8 @@ namespace AlisBatchReporter.Forms
                     irf2ValueName = entitiy.Name;
                     if (entitiy.Intable)
                     {
-                        double castedToDoubleSource, castedToDoubleOutbound;
-                        if (double.TryParse(source[entitiy.IdxValue], out castedToDoubleSource) &&
-                            double.TryParse(outbound[entitiy.IdxValue], out castedToDoubleOutbound))
+                        if (double.TryParse(source[entitiy.IdxValue], out var castedToDoubleSource) &&
+                            double.TryParse(outbound[entitiy.IdxValue], out var castedToDoubleOutbound))
                         {
                             var diff = Math.Abs(castedToDoubleSource - castedToDoubleOutbound);
                             if (!irf2ValueName.Equals("Modal Premium") && diff > 0 ||

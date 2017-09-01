@@ -59,6 +59,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\ArcvalEntityTypeFactory.cs" />
     <Compile Include="Models\alisReporterContext.cs" />
     <Compile Include="Classes\ArcvalValues.cs" />
     <Compile Include="Classes\ArcvalValuesType5.cs" />

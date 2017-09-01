@@ -189,8 +189,7 @@ namespace AlisBatchReporter.Presentors
             {
                 foreach (var sourceKey in _sourceDictionary.Keys)
                 {
-                    string outboundEntry;
-                    _outboundDictionary.TryGetValue(sourceKey, out outboundEntry);
+                    _outboundDictionary.TryGetValue(sourceKey, out var outboundEntry);
                     if (outboundEntry == null)
                     {
                         if (_diffDictionary.ContainsKey("[InSourceNotInOutbound]"))
@@ -229,7 +228,7 @@ namespace AlisBatchReporter.Presentors
                             {
                                 cuts = new[]
                                 {
-                                    2, 14, 15, 16, 18, 19, 20, 28, 30, 42, 43, 44, 56, 57, 69, 71, 77, 85, 93,
+                                    2, 14, 15, 16, 18, 19, 20, 28, 30, 42, 43, 44, 56, 57, 69, 71, 72, 73, 75, 77, 85, 93,
                                     101, 110, 119
                                 };
                                 type = "Type6A";
@@ -252,24 +251,14 @@ namespace AlisBatchReporter.Presentors
             });
         }
 
-        private void Compare(IReadOnlyList<string> sourceSplitted, IReadOnlyList<string> outboundSplitted, string type, string key)
+        private void Compare(
+            IReadOnlyList<string> sourceSplitted, 
+            IReadOnlyList<string> outboundSplitted, 
+            string type, 
+            string key)
         {
-            Values values = null;
-            switch (type)
-            {
-                case "Type1":
-                    values = new ArcvalValues();
-                    break;
-                case "Type7":
-                    values = new ArcvalValuesType7();
-                    break;
-                case "Type6A":
-                    values = new ArcvalValuesType6A();
-                    break;
-                case "Type5":
-                    values = new ArcvalValuesType5();
-                    break;
-            }
+            Values values = ArcvalEntityTypeFactory.GetArcvalType(type);
+            
             for (var i = 0; i < sourceSplitted.Count - 1; i++)
             {
                 Values idxName;
@@ -281,17 +270,30 @@ namespace AlisBatchReporter.Presentors
                 {
                     Console.WriteLine(e);
                     throw;
-                }               
-                if (idxName != null && !sourceSplitted[i].Equals(outboundSplitted[i]) && !idxName.ToIgnore)
-                    if (_diffDictionary.ContainsKey(idxName.Name))
-                        _diffDictionary[idxName.Name]
-                            .Add(key + $@" - Source Val: {sourceSplitted[i]}, Outbound Val: {outboundSplitted[i]}");
-                    else
-                        _diffDictionary.Add(idxName.Name,
-                            new List<string>
-                            {
-                                key + $@" - Source Val: {sourceSplitted[i]}, Outbound Val: {outboundSplitted[i]}"
-                            });
+                }
+                if (idxName != null)
+                {
+                    if (idxName.Name.Equals("GROSS-PREM"))
+                    {
+                        Int32.TryParse(sourceSplitted[i], out var x);
+                        Int32.TryParse(outboundSplitted[i], out var y);
+                        if (Math.Abs(x-y) <= 5) continue;
+                    }
+                    if (!sourceSplitted[i].Equals(outboundSplitted[i]) && !idxName.ToIgnore)
+                        if (_diffDictionary.ContainsKey(idxName.Name))
+                            _diffDictionary[idxName.Name]
+                                .Add(key + $@" - Source Val: {sourceSplitted[i]}, Outbound Val: {outboundSplitted[i]}");
+                        else
+                            _diffDictionary.Add(idxName.Name,
+                                new List<string>
+                                {
+                                    key + $@" - Source Val: {sourceSplitted[i]}, Outbound Val: {outboundSplitted[i]}"
+                                });
+                }
+                else
+                {
+                    throw new NullReferenceException("Null IdxName: "+nameof(idxName)+ ", "+values?.GetType()+", pos:"+i);
+                }
             }
         }
 
