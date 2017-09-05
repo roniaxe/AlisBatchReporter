@@ -334,17 +334,4 @@ namespace AlisBatchReporter.Forms
 
         private delegate void CopyError(UiError err);
     }
-
-    public enum IRF1
-    {
-        CompanyCd = 0,
-        PolNo = 1,
-        WritingAgency = 2,
-        WritingAgent = 3,
-        LOB = 4,
-        ActiveFlag = 5,
-        PolicyStatus = 6,
-        MembershipNo = 7,
-        PolicyIssueDate = 8
-    }
 }

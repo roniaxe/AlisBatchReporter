@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Data.Entity;
 using System.Data.SqlServerCe;
 using System.Linq;
 using System.Windows.Forms;
@@ -11,14 +12,17 @@ namespace AlisBatchReporter.Forms
 {
     public partial class MainForm : Form
     {
-        public MainForm()
+        private readonly AlisDbContext _db;
+        public MainForm(DbContext dbContext)
         {
+            _db = (AlisDbContext) dbContext;
+            _db.Database.Initialize(true);
             InitializeComponent();
         }
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(Global.Name) || string.IsNullOrEmpty(Global.ConnString))
+            if (string.IsNullOrEmpty(Global.SavedCredentials.Name) || string.IsNullOrEmpty(Global.SavedCredentials.ConnString))
             {
                 MessageBox.Show(@"Please Choose Environment In Settings", @"No Database Selected");
             }
@@ -32,14 +36,14 @@ namespace AlisBatchReporter.Forms
 
         private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var configForm = new ConfigForm();
+            var configForm = new ConfigForm(_db);
             configForm.Show();
         }
 
         private void MainForm_Activated(object sender, EventArgs e)
         {
-            if (!string.IsNullOrEmpty(Global.Name) && !string.IsNullOrEmpty(Global.Db))
-                currentRunningLabel.Text = Global.Name + @" - " + Global.Db;
+            if (Global.SavedCredentials != null)
+                currentRunningLabel.Text = Global.SavedCredentials.Name + @" - " + Global.SavedCredentials.Db;
             else
                 currentRunningLabel.Text = "";
         }
@@ -57,25 +61,27 @@ namespace AlisBatchReporter.Forms
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            using (var conn =
-                new SqlCeConnection("DataSource=\"alisReporter.sdf\"; Password=\"12345\";"))
-            {
-                using (var db = new alisReporterContext(conn))
-                {
-                    var res = db.Saved_credentials
-                        .Where(i => i.CHOSE_LAST.Equals("1") && i.SAVED.Equals("1")).ToList();
-                    Global.PropSetter(
-                        res[0].ID,
-                        res[0].USERNAME, 
-                        res[0].PASSWORD, 
-                        res[0].HOST,
-                        res[0].DB, 
-                        res[0].NAME, 
-                        res[0].CONN_STRING, 
-                        res[0].CHOSE_LAST,
-                        res[0].SAVED);
-                }
-            }
+            //using (var conn =
+            //    new SqlCeConnection("DataSource=\"alisReporter.sdf\"; Password=\"12345\";"))
+            //{
+            //    using (var db = new alisReporterContext(conn))
+            //    {
+            //        var res = db.Saved_credentials
+            //            .Where(i => i.CHOSE_LAST.Equals("1") && i.SAVED.Equals("1")).ToList();
+            //        Global.PropSetter(
+            //            res[0].ID,
+            //            res[0].USERNAME, 
+            //            res[0].PASSWORD, 
+            //            res[0].HOST,
+            //            res[0].DB, 
+            //            res[0].NAME, 
+            //            res[0].CONN_STRING, 
+            //            res[0].CHOSE_LAST,
+            //            res[0].SAVED);
+            //    }
+            //}
+            SavedCredentials restoreFromDb = _db.SavedCredentialses.FirstOrDefault(i => i.ChoseLast && i.Saved);
+            Global.PropSetter(restoreFromDb);
         }
 
         private void unallocatedSuspenseToolStripMenuItem_Click(object sender, EventArgs e)
@@ -86,7 +92,7 @@ namespace AlisBatchReporter.Forms
 
         private void eftExportToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(Global.Name) || string.IsNullOrEmpty(Global.ConnString))
+            if (string.IsNullOrEmpty(Global.SavedCredentials.Name) || string.IsNullOrEmpty(Global.SavedCredentials.ConnString))
             {
                 MessageBox.Show(@"Please Choose Environment In Settings", @"No Database Selected");
             }

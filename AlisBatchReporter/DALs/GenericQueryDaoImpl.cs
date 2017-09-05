@@ -21,7 +21,7 @@ namespace AlisBatchReporter.DALs
             DataTable table = null;
             try
             {
-                var connectionString = Global.ConnString;
+                var connectionString = Global.SavedCredentials.ConnString;
                 var dataAdapter = new SqlDataAdapter(selectCommand, connectionString);
                 dataAdapter.SelectCommand.CommandTimeout = 120;
                 SqlCommandBuilder commandBuilder = new SqlCommandBuilder(dataAdapter);

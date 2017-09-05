@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Entity;
 using System.Data.SqlClient;
 using System.Data.SqlServerCe;
 using System.IO;
@@ -17,10 +18,12 @@ namespace AlisBatchReporter.Views
     public partial class ConfigView : UserControl
     {
         private readonly StringBuilder _connString = new StringBuilder();
+        private readonly AlisDbContext _db;
         private bool _envNoise;
 
-        public ConfigView()
+        public ConfigView(DbContext db)
         {
+            _db = (AlisDbContext) db;
             InitializeComponent();
         }
 
@@ -58,7 +61,7 @@ namespace AlisBatchReporter.Views
             _envNoise = false;
             comboBoxEnv.DataSource = envComboboxItems;
             _envNoise = true;
-            var selected = envComboboxItems.Find(item => item.Value.Equals(Global.Id)) ??
+            var selected = envComboboxItems.Find(item => item.Value.Equals(Global.SavedCredentials?.Id)) ??
                            envComboboxItems.FirstOrDefault();
             comboBoxEnv.SelectedItem = selected;
             ReadFromAppSettings();
@@ -106,23 +109,23 @@ namespace AlisBatchReporter.Views
             var serverAddress = textBoxServerAddress.Text;
             var db = (string) comboBoxDb.SelectedItem;
             UpdateConnString();
-            const string command1 = @"UPDATE saved_credentials SET CHOSE_LAST='0'";
-            DbQuery(command1);
-            var command2 =
-                $@"UPDATE saved_credentials 
-                    SET USERNAME='{(checkBoxSave.Checked ? user : "")}',
-                    PASSWORD='{(checkBoxSave.Checked ? pass : "")}',
-                    HOST='{(checkBoxSave.Checked ? serverAddress : "")}',
-                    DB='{(checkBoxSave.Checked ? db : "")}',
-                    NAME = '{envName}',
-                    CONN_STRING = '{_connString}',
-                    CHOSE_LAST='1',
-                    SAVED={(checkBoxSave.Checked ? '1' : '0')}                      
-                    WHERE ID = {envId}";
-            DbQuery(command2);
-
-            Global.PropSetter((int) envId, user, pass, serverAddress, db, envName, _connString.ToString(), "1",
-                checkBoxSave.Checked ? "1" : "0");
+            _db.SavedCredentialses.ToList().ForEach(c => c.ChoseLast = false);
+            _db.SaveChanges();
+            var toUpdate = _db.SavedCredentialses.FirstOrDefault(sc => sc.Id == (int) envId);
+            if (toUpdate != null)
+            {
+                toUpdate.Username = user;
+                toUpdate.Password = pass;
+                toUpdate.Host = serverAddress;
+                toUpdate.Db = db;
+                toUpdate.Name = envName;
+                toUpdate.ConnString = _connString.ToString();
+                toUpdate.ChoseLast = true;
+                toUpdate.Saved = checkBoxSave.Checked;
+                if (checkBoxSave.Checked)
+                    _db.SaveChanges();
+            }
+            Global.PropSetter(toUpdate);
             Close();
             FocusParent();
         }
@@ -265,21 +268,19 @@ namespace AlisBatchReporter.Views
         private void ReadFromAppSettings()
         {
             InitComponents();
-            using (var db =
-                new alisReporterContext(new SqlCeConnection("DataSource=\"alisReporter.sdf\"; Password=\"12345\";")))
+            var envId = ((ComboboxItem) comboBoxEnv.SelectedItem).Value;
+            var queryResult = _db.SavedCredentialses
+                .FirstOrDefault(item => item.Id == (int) envId);
+            if (queryResult != null)
             {
-                var envId = ((ComboboxItem) comboBoxEnv.SelectedItem).Value;
-                var queryResult = db.Saved_credentials
-                    .Where(item => item.ID == (int) envId &&
-                                   item.SAVED.Equals("1")).ToList();
-                if (queryResult.Count == 1)
+                textBoxServerAddress.Text = queryResult.Host;
+                if (queryResult.Saved)
                 {
-                    textBoxServerAddress.Text = queryResult[0].HOST;
-                    checkBoxSave.Checked = !string.IsNullOrEmpty(queryResult[0].SAVED);
-                    textBoxPassword.Text = string.IsNullOrEmpty(queryResult[0].PASSWORD)
+                    checkBoxSave.Checked = queryResult.Saved;
+                    textBoxPassword.Text = string.IsNullOrEmpty(queryResult.Password)
                         ? ""
-                        : queryResult[0].PASSWORD.Unprotect();
-                    textBoxUser.Text = string.IsNullOrEmpty(queryResult[0].USERNAME) ? "" : queryResult[0].USERNAME;
+                        : queryResult.Password.Unprotect();
+                    textBoxUser.Text = queryResult.Username;
                 }
             }
         }

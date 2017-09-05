@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -200,7 +201,18 @@ namespace AlisBatchReporter.Forms
             dataGridView1.DataSource = bindingSource1;
             dataGridView1.Hide();
             progressBar1.Visible = true;
-            var result = await QueryManager.Query(selectedQuery.QueryDynamication());
+            DataTable result;
+            try
+            {
+                result = await QueryManager.Query(selectedQuery.QueryDynamication());
+            }
+            catch (SqlException exception)
+            {
+                MessageBox.Show(exception.Message + "\n VPN Connected?");
+                Console.WriteLine(exception);
+                throw;
+            }
+            
             bindingSource1.DataSource = result;
             progressBar1.Visible = false;
             dataGridView1.Show();
