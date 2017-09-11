@@ -38,11 +38,11 @@
             this.createButton = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
             this.exportButton = new System.Windows.Forms.Button();
-            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.onlyErrorsRadioButton = new System.Windows.Forms.RadioButton();
             this.allTypesRadioButton = new System.Windows.Forms.RadioButton();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.polFilterLabel = new System.Windows.Forms.Label();
             this.polFilterTextBox = new System.Windows.Forms.TextBox();
             this.labelReportType = new System.Windows.Forms.Label();
@@ -67,22 +67,23 @@
             this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridView1.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCellsExceptHeaders;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(27, 334);
-            this.dataGridView1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.dataGridView1.Location = new System.Drawing.Point(24, 267);
+            this.dataGridView1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.ReadOnly = true;
-            this.dataGridView1.Size = new System.Drawing.Size(1574, 274);
+            this.dataGridView1.Size = new System.Drawing.Size(1399, 219);
             this.dataGridView1.TabIndex = 0;
+            this.dataGridView1.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dataGridView1_CellFormatting);
             this.dataGridView1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.dataGridView1_MouseUp);
             // 
             // toDate
             // 
             this.toDate.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.toDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.toDate.Location = new System.Drawing.Point(410, 163);
-            this.toDate.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.toDate.Location = new System.Drawing.Point(364, 130);
+            this.toDate.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.toDate.Name = "toDate";
-            this.toDate.Size = new System.Drawing.Size(198, 33);
+            this.toDate.Size = new System.Drawing.Size(176, 29);
             this.toDate.TabIndex = 10;
             // 
             // label2
@@ -91,10 +92,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(98, 163);
+            this.label2.Location = new System.Drawing.Point(87, 130);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(105, 29);
+            this.label2.Size = new System.Drawing.Size(81, 24);
             this.label2.TabIndex = 9;
             this.label2.Text = "To Date:";
             // 
@@ -103,10 +104,10 @@
             this.fromDate.Checked = false;
             this.fromDate.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.fromDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.fromDate.Location = new System.Drawing.Point(410, 94);
-            this.fromDate.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.fromDate.Location = new System.Drawing.Point(364, 75);
+            this.fromDate.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.fromDate.Name = "fromDate";
-            this.fromDate.Size = new System.Drawing.Size(198, 33);
+            this.fromDate.Size = new System.Drawing.Size(176, 29);
             this.fromDate.TabIndex = 8;
             this.fromDate.ValueChanged += new System.EventHandler(this.fromDate_ValueChanged);
             // 
@@ -116,19 +117,19 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(98, 103);
+            this.label1.Location = new System.Drawing.Point(87, 82);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(132, 29);
+            this.label1.Size = new System.Drawing.Size(103, 24);
             this.label1.TabIndex = 7;
             this.label1.Text = "From Date:";
             // 
             // createButton
             // 
-            this.createButton.Location = new System.Drawing.Point(102, 248);
-            this.createButton.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.createButton.Location = new System.Drawing.Point(91, 198);
+            this.createButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.createButton.Name = "createButton";
-            this.createButton.Size = new System.Drawing.Size(112, 35);
+            this.createButton.Size = new System.Drawing.Size(100, 28);
             this.createButton.TabIndex = 6;
             this.createButton.Text = "Create";
             this.createButton.UseVisualStyleBackColor = true;
@@ -143,34 +144,24 @@
             this.panel1.Controls.Add(this.dataGridView1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.panel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1688, 829);
+            this.panel1.Size = new System.Drawing.Size(1500, 663);
             this.panel1.TabIndex = 11;
             // 
             // exportButton
             // 
             this.exportButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.exportButton.Image = ((System.Drawing.Image)(resources.GetObject("exportButton.Image")));
-            this.exportButton.Location = new System.Drawing.Point(1562, 266);
-            this.exportButton.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.exportButton.Location = new System.Drawing.Point(1388, 213);
+            this.exportButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.exportButton.Name = "exportButton";
-            this.exportButton.Size = new System.Drawing.Size(39, 45);
+            this.exportButton.Size = new System.Drawing.Size(35, 36);
             this.exportButton.TabIndex = 14;
             this.exportButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.exportButton.UseVisualStyleBackColor = true;
             this.exportButton.Visible = false;
             this.exportButton.Click += new System.EventHandler(this.exportButton_Click);
-            // 
-            // progressBar1
-            // 
-            this.progressBar1.Location = new System.Drawing.Point(674, 237);
-            this.progressBar1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(315, 45);
-            this.progressBar1.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
-            this.progressBar1.TabIndex = 12;
-            this.progressBar1.Visible = false;
             // 
             // groupBox1
             // 
@@ -186,11 +177,11 @@
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.toDate);
             this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Location = new System.Drawing.Point(27, 18);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.groupBox1.Location = new System.Drawing.Point(24, 14);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.groupBox1.Size = new System.Drawing.Size(1034, 292);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox1.Size = new System.Drawing.Size(919, 234);
             this.groupBox1.TabIndex = 13;
             this.groupBox1.TabStop = false;
             // 
@@ -198,11 +189,11 @@
             // 
             this.groupBox2.Controls.Add(this.onlyErrorsRadioButton);
             this.groupBox2.Controls.Add(this.allTypesRadioButton);
-            this.groupBox2.Location = new System.Drawing.Point(674, 71);
-            this.groupBox2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.groupBox2.Location = new System.Drawing.Point(599, 57);
+            this.groupBox2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.groupBox2.Size = new System.Drawing.Size(315, 89);
+            this.groupBox2.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox2.Size = new System.Drawing.Size(280, 71);
             this.groupBox2.TabIndex = 18;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Record Type Filter";
@@ -211,10 +202,10 @@
             // 
             this.onlyErrorsRadioButton.AutoSize = true;
             this.onlyErrorsRadioButton.Checked = true;
-            this.onlyErrorsRadioButton.Location = new System.Drawing.Point(28, 35);
-            this.onlyErrorsRadioButton.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.onlyErrorsRadioButton.Location = new System.Drawing.Point(25, 28);
+            this.onlyErrorsRadioButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.onlyErrorsRadioButton.Name = "onlyErrorsRadioButton";
-            this.onlyErrorsRadioButton.Size = new System.Drawing.Size(112, 24);
+            this.onlyErrorsRadioButton.Size = new System.Drawing.Size(101, 21);
             this.onlyErrorsRadioButton.TabIndex = 20;
             this.onlyErrorsRadioButton.TabStop = true;
             this.onlyErrorsRadioButton.Text = "Only Errors";
@@ -223,33 +214,43 @@
             // allTypesRadioButton
             // 
             this.allTypesRadioButton.AutoSize = true;
-            this.allTypesRadioButton.Location = new System.Drawing.Point(165, 35);
-            this.allTypesRadioButton.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.allTypesRadioButton.Location = new System.Drawing.Point(147, 28);
+            this.allTypesRadioButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.allTypesRadioButton.Name = "allTypesRadioButton";
-            this.allTypesRadioButton.Size = new System.Drawing.Size(97, 24);
+            this.allTypesRadioButton.Size = new System.Drawing.Size(87, 21);
             this.allTypesRadioButton.TabIndex = 19;
             this.allTypesRadioButton.TabStop = true;
             this.allTypesRadioButton.Text = "All Types";
             this.allTypesRadioButton.UseVisualStyleBackColor = true;
             // 
+            // progressBar1
+            // 
+            this.progressBar1.Location = new System.Drawing.Point(599, 190);
+            this.progressBar1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(280, 36);
+            this.progressBar1.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
+            this.progressBar1.TabIndex = 12;
+            this.progressBar1.Visible = false;
+            // 
             // polFilterLabel
             // 
             this.polFilterLabel.AutoSize = true;
             this.polFilterLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.polFilterLabel.Location = new System.Drawing.Point(669, 34);
+            this.polFilterLabel.Location = new System.Drawing.Point(595, 27);
             this.polFilterLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.polFilterLabel.Name = "polFilterLabel";
-            this.polFilterLabel.Size = new System.Drawing.Size(145, 29);
+            this.polFilterLabel.Size = new System.Drawing.Size(111, 24);
             this.polFilterLabel.TabIndex = 17;
             this.polFilterLabel.Text = "Policy Filter:";
             this.polFilterLabel.Visible = false;
             // 
             // polFilterTextBox
             // 
-            this.polFilterTextBox.Location = new System.Drawing.Point(838, 31);
-            this.polFilterTextBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.polFilterTextBox.Location = new System.Drawing.Point(745, 25);
+            this.polFilterTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.polFilterTextBox.Name = "polFilterTextBox";
-            this.polFilterTextBox.Size = new System.Drawing.Size(151, 26);
+            this.polFilterTextBox.Size = new System.Drawing.Size(135, 22);
             this.polFilterTextBox.TabIndex = 16;
             this.polFilterTextBox.WordWrap = false;
             // 
@@ -257,19 +258,19 @@
             // 
             this.labelReportType.AutoSize = true;
             this.labelReportType.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelReportType.Location = new System.Drawing.Point(98, 29);
+            this.labelReportType.Location = new System.Drawing.Point(87, 23);
             this.labelReportType.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelReportType.Name = "labelReportType";
-            this.labelReportType.Size = new System.Drawing.Size(153, 29);
+            this.labelReportType.Size = new System.Drawing.Size(119, 24);
             this.labelReportType.TabIndex = 15;
             this.labelReportType.Text = "Report Type:";
             // 
             // closeButton
             // 
-            this.closeButton.Location = new System.Drawing.Point(496, 248);
-            this.closeButton.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.closeButton.Location = new System.Drawing.Point(441, 198);
+            this.closeButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.closeButton.Name = "closeButton";
-            this.closeButton.Size = new System.Drawing.Size(112, 35);
+            this.closeButton.Size = new System.Drawing.Size(100, 28);
             this.closeButton.TabIndex = 12;
             this.closeButton.Text = "Close";
             this.closeButton.UseVisualStyleBackColor = true;
@@ -278,10 +279,10 @@
             // comboBoxFunc
             // 
             this.comboBoxFunc.FormattingEnabled = true;
-            this.comboBoxFunc.Location = new System.Drawing.Point(410, 29);
-            this.comboBoxFunc.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.comboBoxFunc.Location = new System.Drawing.Point(364, 23);
+            this.comboBoxFunc.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.comboBoxFunc.Name = "comboBoxFunc";
-            this.comboBoxFunc.Size = new System.Drawing.Size(198, 28);
+            this.comboBoxFunc.Size = new System.Drawing.Size(176, 24);
             this.comboBoxFunc.TabIndex = 13;
             this.comboBoxFunc.SelectedIndexChanged += new System.EventHandler(this.comboBoxFunc_SelectedIndexChanged);
             // 
@@ -294,11 +295,11 @@
             // 
             // DataForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1688, 829);
+            this.ClientSize = new System.Drawing.Size(1500, 663);
             this.Controls.Add(this.panel1);
-            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "DataForm";
             this.Text = "DataForm";
             this.Load += new System.EventHandler(this.DataForm_Load);

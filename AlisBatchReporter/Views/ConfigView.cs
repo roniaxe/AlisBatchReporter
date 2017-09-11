@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Entity;
 using System.Data.SqlClient;
 using System.Data.SqlServerCe;
 using System.IO;
@@ -18,12 +17,10 @@ namespace AlisBatchReporter.Views
     public partial class ConfigView : UserControl
     {
         private readonly StringBuilder _connString = new StringBuilder();
-        private readonly AlisDbContext _db;
         private bool _envNoise;
 
-        public ConfigView(DbContext db)
+        public ConfigView()
         {
-            _db = (AlisDbContext) db;
             InitializeComponent();
         }
 
@@ -109,32 +106,27 @@ namespace AlisBatchReporter.Views
             var serverAddress = textBoxServerAddress.Text;
             var db = (string) comboBoxDb.SelectedItem;
             UpdateConnString();
-            _db.SavedCredentialses.ToList().ForEach(c => c.ChoseLast = false);
-            _db.SaveChanges();
-            var toUpdate = _db.SavedCredentialses.FirstOrDefault(sc => sc.Id == (int) envId);
-            if (toUpdate != null)
+            using (var dbContext = new AlisDbContext())
             {
-                toUpdate.Username = user;
-                toUpdate.Password = pass;
-                toUpdate.Host = serverAddress;
-                toUpdate.Db = db;
-                toUpdate.Name = envName;
-                toUpdate.ConnString = _connString.ToString();
-                toUpdate.ChoseLast = true;
-                toUpdate.Saved = checkBoxSave.Checked;
-                if (checkBoxSave.Checked)
-                    _db.SaveChanges();
-            }
-            Global.PropSetter(toUpdate);
+                dbContext.SavedCredentialses.ToList().ForEach(c => c.ChoseLast = false);
+                dbContext.SaveChanges();
+                var toUpdate = dbContext.SavedCredentialses.Find(envId);
+                if (toUpdate != null)
+                {
+                    toUpdate.Username = user;
+                    toUpdate.Password = pass;
+                    toUpdate.Host = serverAddress;
+                    toUpdate.Db = db;
+                    toUpdate.Name = envName;
+                    toUpdate.ConnString = _connString.ToString();
+                    toUpdate.ChoseLast = true;
+                    toUpdate.Saved = checkBoxSave.Checked;
+                    if (checkBoxSave.Checked)
+                        dbContext.SaveChanges();
+                }
+                Global.PropSetter(toUpdate);
+            }           
             Close();
-            FocusParent();
-        }
-
-        private void FocusParent()
-        {
-            var parentForm = Parent as Form;
-            parentForm?.BringToFront();
-            parentForm?.Activate();
         }
 
         private bool ValidateForm()
@@ -180,7 +172,6 @@ namespace AlisBatchReporter.Views
         {
             errorProvider1.Clear();
             Close();
-            FocusParent();
         }
 
         private void Close()
@@ -192,9 +183,18 @@ namespace AlisBatchReporter.Views
 
         private void refreshButton_Click(object sender, EventArgs e)
         {
-            const string command1 = @"UPDATE saved_credentials SET SAVED='0'";
-            DbQuery(command1);
-            InitComponents();
+            var confirmResult = MessageBox.Show(@"To Delete Saved Credentials??",
+                @"Confirm Delete!",
+                MessageBoxButtons.YesNo);
+            if (confirmResult == DialogResult.Yes)
+            {
+                using (var dbContext = new AlisDbContext())
+                {
+                    dbContext.SavedCredentialses.ToList().ForEach(cred => cred.Saved = false);
+                    dbContext.SaveChanges();
+                }
+                InitComponents();
+            }                 
         }
 
         private void InitComponents()
@@ -269,19 +269,21 @@ namespace AlisBatchReporter.Views
         {
             InitComponents();
             var envId = ((ComboboxItem) comboBoxEnv.SelectedItem).Value;
-            var queryResult = _db.SavedCredentialses
-                .FirstOrDefault(item => item.Id == (int) envId);
-            if (queryResult != null)
+            using (var dbContext = new AlisDbContext("CompactDBContext"))
             {
+                var queryResult = dbContext.SavedCredentialses.Find(envId);
+
+                if (queryResult == null) return;
+
                 textBoxServerAddress.Text = queryResult.Host;
-                if (queryResult.Saved)
-                {
-                    checkBoxSave.Checked = queryResult.Saved;
-                    textBoxPassword.Text = string.IsNullOrEmpty(queryResult.Password)
-                        ? ""
-                        : queryResult.Password.Unprotect();
-                    textBoxUser.Text = queryResult.Username;
-                }
+
+                if (!queryResult.Saved) return;
+
+                checkBoxSave.Checked = queryResult.Saved;
+                textBoxPassword.Text = string.IsNullOrEmpty(queryResult.Password)
+                    ? ""
+                    : queryResult.Password.Unprotect();
+                textBoxUser.Text = queryResult.Username;
             }
         }
     }

@@ -13,6 +13,12 @@ namespace AlisBatchReporter.Models
             }
         }
 
+        public AlisDbContext() : base("CompactDBContext")
+        {
+            //Database.SetInitializer(new AlisDbInitializer(this));
+            //Database.SetInitializer(new DropCreateDatabaseIfModelChanges<AlisDbContext>());
+        }
+
         public AlisDbContext(string nameOrConnectionString) : base(nameOrConnectionString)
         {
             Database.SetInitializer(new AlisDbInitializer(this));

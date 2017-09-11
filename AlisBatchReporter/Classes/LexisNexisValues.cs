@@ -20,14 +20,9 @@ namespace AlisBatchReporter.Classes
         public static readonly LexisNexisValues State = new LexisNexisValues(12, false, "State");
         public static readonly LexisNexisValues Zip = new LexisNexisValues(13, false, "Zip Code");
         public static readonly LexisNexisValues PolicyStatus = new LexisNexisValues(14, false, "Policy Status", false);
-
-        public static readonly LexisNexisValues ServicingAgentNumber =
-            new LexisNexisValues(15, true, "Servicing Agent Number", false);
-
+        public static readonly LexisNexisValues ServicingAgentNumber = new LexisNexisValues(15, true, "Servicing Agent Number", false);
         public static readonly LexisNexisValues PolicyIssueDate = new LexisNexisValues(16, false, "Policy Issue Date", false);
-
-        public static readonly LexisNexisValues PolicyTerminationDate =
-            new LexisNexisValues(17, false, "Policy Termination Date", false);
+        public static readonly LexisNexisValues PolicyTerminationDate = new LexisNexisValues(17, false, "Policy Termination Date", false);
 
         private LexisNexisValues(int idxValue, bool intable, string name, bool ignore = true)
         {

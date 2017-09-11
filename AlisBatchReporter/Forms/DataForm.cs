@@ -1,8 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Data.SqlClient;
+using System.Drawing;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using AlisBatchReporter.Classes;
 using Microsoft.Office.Interop.Excel;
@@ -43,17 +43,17 @@ namespace AlisBatchReporter.Forms
                 new ComboboxItem
                 {
                     Text = @"Report",
-                    Value = @"\Resources\SQL\BatchAudit.sql"
+                    Value = 1
                 },
                 new ComboboxItem
                 {
                     Text = @"Task List",
-                    Value = @"\Resources\SQL\TaskList.sql"
+                    Value = 2
                 },
                 new ComboboxItem
                 {
                     Text = @"Processing Rate",
-                    Value = @"\Resources\SQL\TaskList.sql"
+                    Value = 3
                 }
             };
             comboBoxFunc.DisplayMember = "Text";
@@ -173,18 +173,12 @@ namespace AlisBatchReporter.Forms
         private async void createButton_Click(object sender, EventArgs e)
         {
             // Create Query
-            var selectedQuery = ((ComboboxItem) comboBoxFunc.SelectedItem).Text.Equals("Task List")
-                ? QueryRepo.TaskList
-                : QueryRepo.ErrorReport;
-
-            if (((ComboboxItem) comboBoxFunc.SelectedItem).Text.Equals("Processing Rate"))
-            {
-                selectedQuery = QueryRepo.ProcessingRateReport;
-            }
+            var queryCode = ((ComboboxItem) comboBoxFunc.SelectedItem).Value;
+            var selectedQuery = QueryFactory.GetQuery((int) queryCode);
 
             // Create Query Params
             var typeRadioButton = !string.IsNullOrEmpty(polFilterTextBox.Text)
-                ? $@"AND gba.primary_key LIKE '{polFilterTextBox.Text}'"
+                ? $@"AND (gba.primary_key LIKE '{polFilterTextBox.Text}' OR gba.primary_key = (SELECT id FROM p_client_role where policy_no = {polFilterTextBox.Text} and closing_status = 0 and role = 91))"
                 : "";
             string onlyErrors = "AND gba.entry_type in (5,6)";
             if (!string.IsNullOrEmpty(polFilterTextBox.Text) && allTypesRadioButton.Checked)
@@ -208,7 +202,7 @@ namespace AlisBatchReporter.Forms
             }
             catch (SqlException exception)
             {
-                MessageBox.Show(exception.Message + "\n VPN Connected?");
+                MessageBox.Show(exception.Message + $@"{Environment.NewLine}VPN Connected?");
                 Console.WriteLine(exception);
                 throw;
             }
@@ -343,6 +337,20 @@ namespace AlisBatchReporter.Forms
                 polFilterTextBox.Text = "";
                 polFilterLabel.Visible = false;
                 polFilterTextBox.Visible = false;
+            }
+        }
+
+        private void dataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value != null 
+                && !string.IsNullOrWhiteSpace(dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString())
+                && dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString().Equals("Did Not Finish"))
+            {
+                dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Style = new DataGridViewCellStyle { ForeColor = Color.Red};
+            }
+            else
+            {
+                dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Style = dataGridView1.DefaultCellStyle;
             }
         }
     }

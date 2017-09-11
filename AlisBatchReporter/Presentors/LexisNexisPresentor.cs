@@ -28,9 +28,9 @@ namespace AlisBatchReporter.Presentors
             _view.LogProcess("Copy Files Asynch (!)...", false);
             //await CopyFiles();
             var copyTasks = new Task[2];
-            copyTasks[0] = CopyFileAsync(@"\\dmfdwh001pr\X\Deploy\Prod\FTP\Validation\Lexis_Nexis\SSN_LEXIS_NEXIS.TXT",
+            copyTasks[0] = CopyFileAsync(@"\\dmfdwh001ut\E\Deploy\Prod\FTP\Validation\Lexis_Nexis\SSN_LEXIS_NEXIS.TXT",
                 Path.Combine(Directory.GetCurrentDirectory(), "LN_Source.txt"));
-            copyTasks[1] = CopyFileAsync(@"\\dmfdwh001pr\X\Deploy\Prod\FTP\Outbound\SSN_Feed\SSN_Feed.txt",
+            copyTasks[1] = CopyFileAsync(@"\\dmfdwh001ut\E\Deploy\Prod\FTP\Outbound\SSN_Feed\SSN_Feed.txt",
                 Path.Combine(Directory.GetCurrentDirectory(), "LN_Outbound.txt"));
             await Task.WhenAll(copyTasks);
             _view.LogProcess("Done!", true);
@@ -105,7 +105,20 @@ namespace AlisBatchReporter.Presentors
             {
                 var splitted = outboundRow.Split(',');
                 var trimmed = splitted.Select(d => d.Trim()).ToArray();
-                _outboundDictionary.Add($@"{trimmed[1]}-{trimmed[2]}-{trimmed[4]}-{trimmed[6]}", trimmed);
+                var key = $@"{trimmed[1]}-{trimmed[2]}-{trimmed[4]}-{trimmed[6]}";
+                if (_outboundDictionary.ContainsKey(key))
+                {
+                    if (_diffDictionary.ContainsKey("Duplicate Rows - Outbound"))
+                    {
+                        _diffDictionary["Duplicate Rows - Outbound"].Add(key);
+                    }
+                    else
+                    {
+                        _diffDictionary.Add("Duplicate Rows - Outbound", new List<string> { key });
+                    }
+                    continue;
+                }
+                _outboundDictionary.Add(key, trimmed);               
             }
         }
 
@@ -115,8 +128,7 @@ namespace AlisBatchReporter.Presentors
             {
                 foreach (var sourceKey in _sourceDictionary.Keys)
                 {
-                    string[] outboundEntry;
-                    _outboundDictionary.TryGetValue(sourceKey, out outboundEntry);
+                    _outboundDictionary.TryGetValue(sourceKey, out var outboundEntry);
                     if (outboundEntry == null)
                     {
                         if (_diffDictionary.ContainsKey("[InSourceNotInOutbound]"))
@@ -127,23 +139,43 @@ namespace AlisBatchReporter.Presentors
                         {
                             _diffDictionary.Add("[InSourceNotInOutbound]", new List<string> {sourceKey});
                         }
-                    }
+                    }                 
                     else
                     {
                         var sourceEntry = _sourceDictionary[sourceKey];
+                        if (sourceEntry.Length > 18)
+                        {
+                            if (_diffDictionary.ContainsKey("Longer Rows"))
+                            {
+                                _diffDictionary["Longer Rows"].Add(sourceKey);
+                            }
+                            else
+                            {
+                                _diffDictionary.Add("Longer Rows", new List<string> { sourceKey });
+                            }
+                            continue;
+                        }
                         for (int i = 0; i < sourceEntry.Length; i++)
                         {
-                            var fieldValue = LexisNexisValues.GetValue(i);
+                            LexisNexisValues fieldValue;
+                            try
+                            {
+                                fieldValue = LexisNexisValues.GetValue(i);
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine(e);
+                                throw;
+                            }
+                            
                             if (fieldValue.ToIgnore)
                             {
                                 continue;
                             }
                             if (fieldValue.Intable)
                             {
-                                long intSource;
-                                long.TryParse(sourceEntry[fieldValue.IdxValue], out intSource);
-                                long intOutbound;
-                                long.TryParse(outboundEntry[fieldValue.IdxValue], out intOutbound);
+                                long.TryParse(sourceEntry[fieldValue.IdxValue], out var intSource);
+                                long.TryParse(outboundEntry[fieldValue.IdxValue], out var intOutbound);
                                 sourceEntry[fieldValue.IdxValue] = intSource.ToString();
                                 outboundEntry[fieldValue.IdxValue] = intOutbound.ToString();
                             }

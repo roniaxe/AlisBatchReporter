@@ -2,7 +2,13 @@ SELECT
    ROW_NUMBER() OVER (ORDER BY  COUNT(*) DESC) AS "Row#",
    REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (gba.description, '0', ''), '1', ''), '2', ''), '3', ''), '4', ''), '5', ''), '6', ''), '7', ''), '8', ''), '9', '') as "Error Message",
    MIN(gba.entry_time) AS "Err Time",
-   CASE WHEN ((SELECT count(gba2.entry_type) FROM g_batch_audit gba2 WHERE gba2.batch_run_num = gba.batch_run_num AND gba2.entry_type = 4 AND gba2.description LIKE '%terminated%')) > 0 THEN 'Finished' ELSE 'Did Not Finish' end as "Status",
+   CASE WHEN (SELECT count(gba2.entry_type) 
+			   FROM g_batch_audit gba2 
+			   WHERE gba2.batch_run_num = gba.batch_run_num 
+			   AND ((gba2.entry_type = 4 AND gba2.description LIKE '%terminated%')
+			   OR (gba2.entry_type = 2 and gba2.description LIKE '%End of batch run%'))) > 0 
+			   THEN 'Finished' 
+			   ELSE 'Did Not Finish' end as "Status",
    gba.task_id AS "Task ID",
    tt.task_name AS "Task",
    gba.batch_run_num AS "Batch Run Number",

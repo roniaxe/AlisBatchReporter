@@ -20,7 +20,7 @@ namespace AlisBatchReporter.Classes
         public static readonly Values NumFields = new ArcvalValuesType7(13, "NUM-FIELDS");
         public static readonly Values Extra = new ArcvalValuesType7(14, "EXTRA");
 
-        private ArcvalValuesType7(int idxValue, string name, bool toIgnore = false) : base(idxValue, name, toIgnore)
+        private ArcvalValuesType7(int idxValue, string name, bool toIgnore = false, bool toRound=false) : base(idxValue, name, toIgnore, toRound)
         {
         }
         public ArcvalValuesType7() { }

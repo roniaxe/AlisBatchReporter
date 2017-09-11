@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.SqlServerCe;
-using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using AlisBatchReporter.Forms;
-using AlisBatchReporter.Models;
 
 namespace AlisBatchReporter
 {
@@ -24,7 +19,7 @@ namespace AlisBatchReporter
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             //CreateDbIfNotExists();
-            Application.Run(new MainForm(new AlisDbContext("CompactDBContext")));
+            Application.Run(new MainForm());
             
         }
 

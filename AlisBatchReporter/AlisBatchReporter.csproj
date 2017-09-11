@@ -69,11 +69,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\ArcvalEntityTypeFactory.cs" />
-    <Compile Include="Migrations\201709050130054_Initial.cs" />
-    <Compile Include="Migrations\201709050130054_Initial.Designer.cs">
-      <DependentUpon>201709050130054_Initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Classes\QueryFactory.cs" />
     <Compile Include="Models\AlisDbContext.cs" />
     <Compile Include="Models\AlisDbInitializer.cs" />
     <Compile Include="Models\alisReporterContext.cs" />
@@ -160,6 +156,7 @@
       <DependentUpon>SingleBatchRunForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Infra\DataProtectionExtensions.cs" />
+    <Compile Include="Models\IEntity.cs" />
     <Compile Include="Models\SavedCredentials.cs" />
     <Compile Include="Presentors\ArcvalPresentor.cs" />
     <Compile Include="Presentors\LexisNexisPresentor.cs" />
@@ -214,9 +211,6 @@
     <EmbeddedResource Include="Forms\SingleBatchRunForm.resx">
       <DependentUpon>SingleBatchRunForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201709050130054_Initial.resx">
-      <DependentUpon>201709050130054_Initial.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -251,7 +245,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="bin\Debug\" />
-    <Folder Include="Output\LexisNexis\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\SQL\ChunkProcess.sql">

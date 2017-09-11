@@ -15,7 +15,7 @@ namespace AlisBatchReporter.Classes
         public static readonly Values IssAge = new ArcvalValuesType5(8, "ISS-AGE");
         public static readonly Values ConNum = new ArcvalValuesType5(9, "CON-NUM");
         public static readonly Values RecType = new ArcvalValuesType5(10, "REC-TYPE");
-        public static readonly Values CovPlancode = new ArcvalValuesType5(11, "COV-PLANCODE");
+        public static readonly Values CovPlancode = new ArcvalValuesType5(11, "COV-PLANCODE", true);
         public static readonly Values RdrWp = new ArcvalValuesType5(12, "RDR-WP");
         public static readonly Values RdrGender = new ArcvalValuesType5(13, "RDR-GENDER");
         public static readonly Values RdrRisk = new ArcvalValuesType5(14, "RDR-RISK");
@@ -23,16 +23,16 @@ namespace AlisBatchReporter.Classes
         public static readonly Values RdrSub = new ArcvalValuesType5(16, "RDR-SUB");
         public static readonly Values RdrEff = new ArcvalValuesType5(17, "RDR-EFF");
         public static readonly Values RdrExp = new ArcvalValuesType5(18, "RDR-EXP");
-        public static readonly Values RdrFace = new ArcvalValuesType5(19, "RDR-FACE");
+        public static readonly Values RdrFace = new ArcvalValuesType5(19, "RDR-FACE", false, true);
         public static readonly Values RdrStatRes = new ArcvalValuesType5(20, "RDR-STAT-RES");
         public static readonly Values RdrTaxRes = new ArcvalValuesType5(21, "RDR-TAX-RES");
-        public static readonly Values RdrGrossPrem = new ArcvalValuesType5(22, "RDR-GROSS-PREM");
-        public static readonly Values RdrModePrem = new ArcvalValuesType5(23, "RDR-MODE-PREMIUM");
-        public static readonly Values RdrCashValue = new ArcvalValuesType5(24, "RDR-CASH-VALUE");
+        public static readonly Values RdrGrossPrem = new ArcvalValuesType5(22, "RDR-GROSS-PREM", false, true);
+        public static readonly Values RdrModePrem = new ArcvalValuesType5(23, "RDR-MODE-PREMIUM", false, true);
+        public static readonly Values RdrCashValue = new ArcvalValuesType5(24, "RDR-CASH-VALUE", false, true);
         public static readonly Values Extra = new ArcvalValuesType5(25, "EXTRA");
 
 
-        private ArcvalValuesType5(int idxValue, string name, bool toIgnore = false) : base(idxValue, name, toIgnore)
+        private ArcvalValuesType5(int idxValue, string name, bool toIgnore = false, bool toRound = false) : base(idxValue, name, toIgnore, toRound)
         {
         }
         public ArcvalValuesType5() { }

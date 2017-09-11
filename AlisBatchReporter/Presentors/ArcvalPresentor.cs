@@ -21,6 +21,12 @@ namespace AlisBatchReporter.Presentors
         {
             _arcvalView = arcvalView;
             _arcvalView.Compared += CompareArcval;
+            _arcvalView.OverrideFilesChecked += OverrideFiles;
+        }
+
+        private void OverrideFiles()
+        {
+            _arcvalView.OverridePanel.Visible = _arcvalView.OverrideFiles;
         }
 
         private async void CompareArcval()
@@ -31,12 +37,22 @@ namespace AlisBatchReporter.Presentors
                 //await CopyFiles();
                 var copyTasks = new Task[2];
 
+                var sourceFileName = !string.IsNullOrEmpty(_arcvalView.SourceFileName)
+                    ? _arcvalView.SourceFileName
+                    : "ARCVAL.TXT";
+
+                var outboundFileName = !string.IsNullOrEmpty(_arcvalView.OutboundFileName)
+                    ? _arcvalView.OutboundFileName
+                    : "ARCVAL_Traditional.txt";
+
+                var envPath = _arcvalView.ProdRadioButton ? @"\\dmfdwh001pr\X" : @"\\dmfdwh001ut\E";
+
                 copyTasks[0] = CopyFileAsync(
-                    @"\\dmfdwh001pr\X\Deploy\Prod\FTP\Validation\ARCVAL\ARCVAL.TXT",
+                    $@"{envPath}\Deploy\Prod\FTP\Validation\ARCVAL\{sourceFileName}",
                     Path.Combine(Directory.GetCurrentDirectory(), "AV_Source.txt"));
 
                 copyTasks[1] = CopyFileAsync(
-                    @"\\dmfdwh001pr\X\Deploy\Prod\FTP\Outbound\ARCVAL\ARCVAL_Traditional.txt",
+                    $@"{envPath}\Deploy\Prod\FTP\Outbound\ARCVAL\{outboundFileName}",
                     Path.Combine(Directory.GetCurrentDirectory(), "AV_Outbound.txt"));
 
                 await Task.WhenAll(copyTasks);
@@ -261,38 +277,33 @@ namespace AlisBatchReporter.Presentors
             
             for (var i = 0; i < sourceSplitted.Count - 1; i++)
             {
-                Values idxName;
-                try
+                Values idxName = values?.GetValue(i);
+                if (idxName == null 
+                    || idxName.ToIgnore 
+                    || sourceSplitted[i].Equals(outboundSplitted[i])) continue;
+
+                if (idxName.ToRound)
                 {
-                    idxName = values?.GetValue(i);
+                    Int32.TryParse(sourceSplitted[i], out var x);
+                    Int32.TryParse(outboundSplitted[i], out var y);
+                    if (Math.Abs(x-y) <= 5) continue;
                 }
-                catch (Exception e)
+
+                if (_diffDictionary.ContainsKey(idxName.Name))
                 {
-                    Console.WriteLine(e);
-                    throw;
-                }
-                if (idxName != null)
-                {
-                    if (idxName.Name.Equals("GROSS-PREM"))
-                    {
-                        Int32.TryParse(sourceSplitted[i], out var x);
-                        Int32.TryParse(outboundSplitted[i], out var y);
-                        if (Math.Abs(x-y) <= 5) continue;
-                    }
-                    if (!sourceSplitted[i].Equals(outboundSplitted[i]) && !idxName.ToIgnore)
-                        if (_diffDictionary.ContainsKey(idxName.Name))
-                            _diffDictionary[idxName.Name]
-                                .Add(key + $@" - Source Val: {sourceSplitted[i]}, Outbound Val: {outboundSplitted[i]}");
-                        else
-                            _diffDictionary.Add(idxName.Name,
-                                new List<string>
-                                {
-                                    key + $@" - Source Val: {sourceSplitted[i]}, Outbound Val: {outboundSplitted[i]}"
-                                });
+                    _diffDictionary[idxName.Name]
+                        .Add(key + $@" - Source Val: {sourceSplitted[i]}, 
+                                         Outbound Val: {outboundSplitted[i]}");
+
                 }
                 else
                 {
-                    throw new NullReferenceException("Null IdxName: "+nameof(idxName)+ ", "+values?.GetType()+", pos:"+i);
+                    _diffDictionary.Add(idxName.Name,
+                        new List<string>
+                        {
+                            key + $@" - Source Val: {sourceSplitted[i]}, 
+                                        Outbound Val: {outboundSplitted[i]}"
+                        });
                 }
             }
         }

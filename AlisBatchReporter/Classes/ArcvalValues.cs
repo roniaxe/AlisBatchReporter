@@ -18,15 +18,15 @@ namespace AlisBatchReporter.Classes
         public static readonly Values State = new ArcvalValues(11, "CON-STATUS");
         public static readonly Values PremiumCode = new ArcvalValues(12, "STA I E-CODE");
         public static readonly Values GrossPrem = new ArcvalValues(13, "PREM-MODE");
-        public static readonly Values NumOfUnits = new ArcvalValues(14, "GROSS-PREM");
+        public static readonly Values NumOfUnits = new ArcvalValues(14, "GROSS-PREM",false,true);
         public static readonly Values CashValue = new ArcvalValues(15, "UNITS");
-        public static readonly Values ModalGrossPremium = new ArcvalValues(16, "CASH-VALUE");
-        public static readonly Values PaidToDate = new ArcvalValues(17, "MODE-PREMIUM");
+        public static readonly Values ModalGrossPremium = new ArcvalValues(16, "CASH-VALUE", false, true);
+        public static readonly Values PaidToDate = new ArcvalValues(17, "MODE-PREMIUM", false, true);
         public static readonly Values SubStdPremType = new ArcvalValues(18, "PAID-TO-DATE");
         public static readonly Values SubStdExtra = new ArcvalValues(19, "SS-TYPE");
         public static readonly Values SubStdExtraAnnPrem = new ArcvalValues(20, "EXTRA");
 
-        private ArcvalValues(int idxValue, string name, bool ignore = false) : base(idxValue, name, ignore)
+        private ArcvalValues(int idxValue, string name, bool ignore = false, bool toRound = false) : base(idxValue, name, ignore, toRound)
         {
         }
 

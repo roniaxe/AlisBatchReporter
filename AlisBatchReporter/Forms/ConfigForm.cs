@@ -6,17 +6,15 @@ namespace AlisBatchReporter.Forms
 {
     public partial class ConfigForm : Form
     {
-        private readonly DbContext _db;
 
-        public ConfigForm(DbContext dbContext)
+        public ConfigForm()
         {
-            _db = dbContext;
             InitializeComponent();
         }
 
         private void ConfigForm_Load(object sender, System.EventArgs e)
         {
-            var configViewControl = new ConfigView(_db);
+            var configViewControl = new ConfigView();
             panel1.Controls.Add(configViewControl);
         }
     }

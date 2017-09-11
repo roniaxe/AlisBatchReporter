@@ -4,10 +4,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace AlisBatchReporter.Models
 {
     [Table("saved_credentials")]
-    public class SavedCredentials
+    public class SavedCredentials : IEntity
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
@@ -17,5 +15,6 @@ namespace AlisBatchReporter.Models
         public string ConnString { get; set; }
         public bool ChoseLast { get; set; }
         public bool Saved { get; set; }
+        
     }
 }

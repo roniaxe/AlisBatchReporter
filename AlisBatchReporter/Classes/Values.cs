@@ -9,11 +9,14 @@ namespace AlisBatchReporter.Classes
         public int IdxValue { get; }
         public string Name { get; }
         public bool ToIgnore { get; }
-        protected Values(int idxValue, string name, bool toIgnore)
+        public bool ToRound { get; }
+
+        protected Values(int idxValue, string name, bool toIgnore, bool toRound)
         {
             IdxValue = idxValue;
             Name = name;
             ToIgnore = toIgnore;
+            ToRound = toRound;
         }
         protected Values() { }
 

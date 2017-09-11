@@ -20,8 +20,8 @@ namespace AlisBatchReporter.Forms
 
         private readonly string[] _pathList =
         {
-            @"\\dmfdwh001pr\X\Deploy\Prod\FTP\validation\AnalyticFeed\",
-            @"\\dmfdwh001pr\X\Deploy\Prod\FTP\Outbound\AnalyticFeed\"
+            @"\\dmfdwh001ut\E\Deploy\Prod\FTP\validation\AnalyticFeed\",
+            @"\\dmfdwh001ut\E\Deploy\Prod\FTP\Outbound\AnalyticFeed\"
         };
 
         private string[] _fileList;
