@@ -292,8 +292,7 @@ namespace AlisBatchReporter.Presentors
                 if (_diffDictionary.ContainsKey(idxName.Name))
                 {
                     _diffDictionary[idxName.Name]
-                        .Add(key + $@" - Source Val: {sourceSplitted[i]}, 
-                                         Outbound Val: {outboundSplitted[i]}");
+                        .Add(key + $@" - Source Val: {sourceSplitted[i]}, Outbound Val: {outboundSplitted[i]}");
 
                 }
                 else
@@ -301,8 +300,7 @@ namespace AlisBatchReporter.Presentors
                     _diffDictionary.Add(idxName.Name,
                         new List<string>
                         {
-                            key + $@" - Source Val: {sourceSplitted[i]}, 
-                                        Outbound Val: {outboundSplitted[i]}"
+                            key + $@" - Source Val: {sourceSplitted[i]}, Outbound Val: {outboundSplitted[i]}"
                         });
                 }
             }

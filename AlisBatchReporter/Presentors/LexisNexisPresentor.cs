@@ -27,29 +27,40 @@ namespace AlisBatchReporter.Presentors
             //Copy Files
             _view.LogProcess("Copy Files Asynch (!)...", false);
             //await CopyFiles();
+            var watch = System.Diagnostics.Stopwatch.StartNew();
             var copyTasks = new Task[2];
             copyTasks[0] = CopyFileAsync(@"\\dmfdwh001ut\E\Deploy\Prod\FTP\Validation\Lexis_Nexis\SSN_LEXIS_NEXIS.TXT",
                 Path.Combine(Directory.GetCurrentDirectory(), "LN_Source.txt"));
             copyTasks[1] = CopyFileAsync(@"\\dmfdwh001ut\E\Deploy\Prod\FTP\Outbound\SSN_Feed\SSN_Feed.txt",
                 Path.Combine(Directory.GetCurrentDirectory(), "LN_Outbound.txt"));
             await Task.WhenAll(copyTasks);
-            _view.LogProcess("Done!", true);
+            watch.Stop();
+            _view.LogProcess($@"Done! Time: {watch.ElapsedMilliseconds}ms", true);
+            watch.Reset();
 
             // Reading & Splitting
             _view.LogProcess("Reading Files...", false);
+            watch.Start();
             await ReadFiles();
-            _view.LogProcess("Done!", true);
+            watch.Stop();
+            _view.LogProcess($@"Done! Time: {watch.ElapsedMilliseconds}ms", true);
+            watch.Reset();
 
             // Validing
             _view.LogProcess("Validating...", false);
             //Validating();
+            watch.Start();
             await Validating();
-            _view.LogProcess("Done!", true);
+            watch.Stop();
+            _view.LogProcess($@"Done! Time: {watch.ElapsedMilliseconds}ms", true);
+            watch.Reset();
 
             // Writing File
             _view.LogProcess("Writing File...", false);
+            watch.Start();
             await WritingFile();
-            _view.LogProcess("Done!", true);
+            watch.Stop();
+            _view.LogProcess($@"Done! Time: {watch.ElapsedMilliseconds}ms", true);
 
             // Deleting Source/Outbound Files
             DeleteFiles();

@@ -98,7 +98,7 @@ namespace AlisBatchReporter.Views
 
         private void saveButton_Click(object sender, EventArgs e)
         {
-            if (!ValidateForm()) return;
+            if (!ValidateForm(false)) return;
             var envId = ((ComboboxItem) comboBoxEnv.SelectedItem).Value;
             var user = textBoxUser.Text;
             var pass = textBoxPassword.Text.Protect();
@@ -125,11 +125,11 @@ namespace AlisBatchReporter.Views
                         dbContext.SaveChanges();
                 }
                 Global.PropSetter(toUpdate);
-            }           
+            }
             Close();
         }
 
-        private bool ValidateForm()
+        private bool ValidateForm(bool dbValidation)
         {
             var isValid = true;
             // Clear error provider only once.
@@ -160,7 +160,7 @@ namespace AlisBatchReporter.Views
                 isValid = false;
             }
 
-            if (comboBoxDb.SelectedItem == null)
+            if (!dbValidation && comboBoxDb.SelectedItem == null)
             {
                 errorProvider1.SetError(comboBoxDb, "field required!");
                 isValid = false;
@@ -194,7 +194,7 @@ namespace AlisBatchReporter.Views
                     dbContext.SaveChanges();
                 }
                 InitComponents();
-            }                 
+            }
         }
 
         private void InitComponents()
@@ -210,32 +210,53 @@ namespace AlisBatchReporter.Views
 
         private void buttonGetDb_Click(object sender, EventArgs e)
         {
-            if (comboBoxEnv.Items.Count == 0 || textBoxUser.Text == "" || textBoxPassword.Text == "")
-                MessageBox.Show(@"Fill Mandatory Fields");
-            else
-                try
-                {
-                    var list = new List<string>();
-                    UpdateConnString();
+            if (!ValidateForm(true)) return;
+            string dbListQuery = "";
+            switch (((ComboboxItem)comboBoxEnv.SelectedValue).Value)
+            {
+                case 1:
+                    dbListQuery = @"SELECT db_name FROM auth_db_prod.dbo.sys_auth_data";
+                    break;
+                case 2:
+                    dbListQuery = @"SELECT db_name FROM auth_uat.dbo.sys_auth_data";
+                    break;
+                case 3:
+                    dbListQuery = @"SELECT db_name FROM 
+                                    SIT_red_auth_db.dbo.sys_auth_data
+                                    UNION
+                                    SELECT db_name FROM 
+                                    SIT_white_auth_db.dbo.sys_auth_data
+                                    UNION
+                                    SELECT db_name FROM 
+                                    SIT_blue_auth_db.dbo.sys_auth_data";
+                    break;
+                case 4:
+                    dbListQuery = @"SELECT db_name FROM sys_auth_data";
+                    break;
+            }
+            try
+            {
+                UpdateConnString();
 
-                    using (var con = new SqlConnection(_connString.ToString()))
+                var list = new List<string>();                
+                using (var con = new SqlConnection(_connString.ToString()))
+                {
+                    con.Open();                   
+                    using (var cmd = new SqlCommand(dbListQuery, con))
                     {
-                        con.Open();
-                        using (var cmd = new SqlCommand("SELECT name from sys.databases ORDER BY name", con))
+                        using (IDataReader dr = cmd.ExecuteReader())
                         {
-                            using (IDataReader dr = cmd.ExecuteReader())
-                            {
-                                while (dr.Read())
-                                    list.Add(dr[0].ToString());
-                            }
+                            while (dr.Read())
+                                list.Add(dr[0].ToString());
                         }
                     }
-                    comboBoxDb.DataSource = list;
                 }
-                catch (SqlException sqlException)
-                {
-                    MessageBox.Show(sqlException.Message);
-                }
+                comboBoxDb.DataSource = list;
+            }
+            catch (SqlException sqlException)
+            {
+                MessageBox.Show(sqlException.Message);
+            }
         }
 
         private void UpdateConnString()
@@ -243,14 +264,12 @@ namespace AlisBatchReporter.Views
             _connString.Clear();
 
             _connString
-                .Append("Data Source=")
-                .Append(textBoxServerAddress.Text).Append(";")
+                .Append("Data Source=").Append(textBoxServerAddress.Text).Append(";")
                 .Append("User ID=").Append(textBoxUser.Text).Append(";")
                 .Append("Password=").Append(textBoxPassword.Text).Append(";")
                 .Append("Persist Security Info=True;");
             if (comboBoxDb.SelectedItem != null)
-                _connString.Append("Initial Catalog=")
-                    .Append(comboBoxDb.SelectedItem).Append(";");
+                _connString.Append("Initial Catalog=").Append(comboBoxDb.SelectedItem).Append(";");
         }
 
         private void comboBoxDb_SelectedIndexChanged(object sender, EventArgs e)
