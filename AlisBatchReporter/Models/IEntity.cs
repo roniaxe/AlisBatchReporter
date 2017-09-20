@@ -5,8 +5,7 @@ namespace AlisBatchReporter.Models
 {
     public interface IEntity
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key, Column(Order = 0)]
         int Id { get; set; }
     }
 }

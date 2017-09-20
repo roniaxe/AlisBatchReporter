@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Entity.Infrastructure;
 using System.Data.SqlClient;
-using System.Data.SqlServerCe;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using System.Xml.Linq;
 using AlisBatchReporter.Classes;
 using AlisBatchReporter.Infra;
 using AlisBatchReporter.Models;
+using AlisBatchReporter.Models.EntityFramwork;
+using AlisBatchReporter.Properties;
 
 namespace AlisBatchReporter.Views
 {
@@ -27,6 +27,22 @@ namespace AlisBatchReporter.Views
         private void ConfigView_Load(object sender, EventArgs e)
         {
             PopulateEnvCombobox();
+            PopulateDistList();
+            ClearBoxes();
+            senderUserTxtBox.Text = Settings.Default.SenderMail;
+            sharingFolderTxtBox.Text = Settings.Default.SharingFolder;
+        }
+
+        private void PopulateDistList()
+        {
+            inDistList.DataSource = null;
+            using (var db = new AlisDbContext("CompactDBContext"))
+            {
+                var inList = db.Distributions.Where(dist => dist.DistFlag).ToList();
+                var bs = new BindingSource {DataSource = inList};
+                inDistList.DisplayMember = "DisplayMember";
+                inDistList.DataSource = bs;
+            }           
         }
 
         private void PopulateEnvCombobox()
@@ -64,41 +80,16 @@ namespace AlisBatchReporter.Views
             ReadFromAppSettings();
         }
 
-        private void ReadConfigurations()
-        {
-            var xelement = XElement.Load(Path.GetDirectoryName(Application.ExecutablePath) +
-                                         @"\connectionStrings.config");
-
-            //Run query
-            var connStringsList = from conn in xelement.Descendants("ConnectionString")
-                select new
-                {
-                    Env = conn.Element("Name")?.Value,
-                    Database = conn.Element("DataBase")?.Value,
-                    ConnString = conn.Element("Connection")?.Value
-                };
-            //Loop through results
-
-            foreach (var connectionString in connStringsList)
-            {
-                //PopulateConnectionStringList(conn);
-            }
-        }
-
-        private void DbQuery(string command)
-        {
-            using (var conn =
-                new SqlCeConnection("DataSource=\"alisReporter.sdf\"; Password=\"12345\";"))
-            {
-                conn.Open();
-                var cmd = new SqlCeCommand(command, conn);
-                cmd.ExecuteNonQuery();
-            }
-        }
-
         private void saveButton_Click(object sender, EventArgs e)
         {
             if (!ValidateForm(false)) return;
+            if (string.IsNullOrEmpty(senderUserTxtBox.Text))
+            {
+                errorProvider1.SetError(senderUserTxtBox, "field required!");
+                tabControl1.SelectedTab = tabControl1.TabPages["distPage"];
+                senderUserTxtBox.Focus();
+                return;
+            }
             var envId = ((ComboboxItem) comboBoxEnv.SelectedItem).Value;
             var user = textBoxUser.Text;
             var pass = textBoxPassword.Text.Protect();
@@ -125,7 +116,11 @@ namespace AlisBatchReporter.Views
                         dbContext.SaveChanges();
                 }
                 Global.PropSetter(toUpdate);
+                dbContext.SaveChanges();
             }
+            Settings.Default.SenderMail = senderUserTxtBox.Text;
+            Settings.Default.SharingFolder = sharingFolderTxtBox.Text;
+            Settings.Default.Save();
             Close();
         }
 
@@ -140,30 +135,40 @@ namespace AlisBatchReporter.Views
             {
                 errorProvider1.SetError(comboBoxEnv, "field required!");
                 isValid = false;
+                tabControl1.SelectedTab = tabControl1.TabPages["connectionPage"];
+                comboBoxEnv.Focus();
             }
 
             if (string.IsNullOrEmpty(textBoxServerAddress.Text.Trim()))
             {
                 errorProvider1.SetError(textBoxServerAddress, "field required!");
                 isValid = false;
+                tabControl1.SelectedTab = tabControl1.TabPages["connectionPage"];
+                textBoxServerAddress.Focus();
             }
 
             if (string.IsNullOrEmpty(textBoxUser.Text.Trim()))
             {
                 errorProvider1.SetError(textBoxUser, "field required!");
                 isValid = false;
+                tabControl1.SelectedTab = tabControl1.TabPages["connectionPage"];
+                textBoxUser.Focus();
             }
 
             if (string.IsNullOrEmpty(textBoxPassword.Text.Trim()))
             {
                 errorProvider1.SetError(textBoxPassword, "field required!");
                 isValid = false;
+                tabControl1.SelectedTab = tabControl1.TabPages["connectionPage"];
+                textBoxPassword.Focus();
             }
 
             if (!dbValidation && comboBoxDb.SelectedItem == null)
             {
                 errorProvider1.SetError(comboBoxDb, "field required!");
                 isValid = false;
+                tabControl1.SelectedTab = tabControl1.TabPages["connectionPage"];
+                comboBoxDb.Focus();
             }
             return isValid;
         }
@@ -211,8 +216,8 @@ namespace AlisBatchReporter.Views
         private void buttonGetDb_Click(object sender, EventArgs e)
         {
             if (!ValidateForm(true)) return;
-            string dbListQuery = "";
-            switch (((ComboboxItem)comboBoxEnv.SelectedValue).Value)
+            var dbListQuery = "";
+            switch (((ComboboxItem) comboBoxEnv.SelectedValue).Value)
             {
                 case 1:
                     dbListQuery = @"SELECT db_name FROM auth_db_prod.dbo.sys_auth_data";
@@ -238,10 +243,10 @@ namespace AlisBatchReporter.Views
             {
                 UpdateConnString();
 
-                var list = new List<string>();                
+                var list = new List<string>();
                 using (var con = new SqlConnection(_connString.ToString()))
                 {
-                    con.Open();                   
+                    con.Open();
                     using (var cmd = new SqlCommand(dbListQuery, con))
                     {
                         using (IDataReader dr = cmd.ExecuteReader())
@@ -303,6 +308,109 @@ namespace AlisBatchReporter.Views
                     ? ""
                     : queryResult.Password.Unprotect();
                 textBoxUser.Text = queryResult.Username;
+            }
+        }
+
+        private bool ValidateAddMember()
+        {
+            errorProvider2.Clear();
+            var isValid = true;
+            if (string.IsNullOrEmpty(firstNameTextBox.Text))
+            {
+                errorProvider2.SetError(firstNameTextBox, "field is required!");
+                tabControl1.SelectedTab = tabControl1.TabPages["distPage"];
+                firstNameTextBox.Focus();
+                isValid = false;
+            }
+            if (string.IsNullOrEmpty(lastNameTextBox.Text))
+            {
+                errorProvider2.SetError(lastNameTextBox, "field is required!");
+                tabControl1.SelectedTab = tabControl1.TabPages["distPage"];
+                lastNameTextBox.Focus();
+                isValid = false;
+            }
+            if (string.IsNullOrEmpty(emailTextBox.Text))
+            {
+                errorProvider2.SetError(emailTextBox, "field is required!");
+                tabControl1.SelectedTab = tabControl1.TabPages["distPage"];
+                emailTextBox.Focus();
+                isValid = false;
+            }
+            return isValid;
+        }
+
+
+        private void inDistList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            removeMemberButton.Enabled = inDistList.SelectedIndex >= 0;
+        }
+
+        private void ClearBoxes()
+        {
+            firstNameTextBox.Text = "";
+            lastNameTextBox.Text = "";
+            emailTextBox.Text = "";
+            idTextBox.Text = null;
+            idTextBox.Value = -1;
+        }
+
+        private void addMemberButton_Click(object sender, EventArgs e)
+        {
+            if (!ValidateAddMember()) return;
+            if (string.IsNullOrEmpty(idTextBox.Text) || idTextBox.Value < 0)
+            {
+                Distribution dist = new Distribution
+                {
+                    FirstName = firstNameTextBox.Text,
+                    LastName = lastNameTextBox.Text,
+                    EmailAddress = emailTextBox.Text,
+                    DistFlag = true
+                };
+                dist.DisplayMember = dist.ToString();
+                using (var db = new AlisDbContext())
+                {
+                    db.Distributions.Add(dist);
+                    try
+                    {
+                        db.SaveChanges();
+                    }
+                    catch (DbUpdateException)
+                    {
+                        MessageBox.Show(@"Email Address Already Exists, Please Add A Different One", @"Duplicate Email Error");
+                    }
+                }
+            }
+            else
+            {
+                using (var db = new AlisDbContext())
+                {
+                    var foundItemFromDb = db.Distributions.FirstOrDefault(i => i.Id.ToString().Equals(idTextBox.Text));
+                    if (foundItemFromDb != null)
+                    {
+                        foundItemFromDb.FirstName = firstNameTextBox.Text;
+                        foundItemFromDb.LastName = lastNameTextBox.Text;
+                        foundItemFromDb.EmailAddress = emailTextBox.Text;
+                        foundItemFromDb.DisplayMember = foundItemFromDb.ToString();
+                    }
+                    db.SaveChanges();
+                }
+            }
+            PopulateDistList();
+            ClearBoxes();
+        }
+
+        private void removeMemberButton_Click(object sender, EventArgs e)
+        {
+            using (var db = new AlisDbContext())
+            {
+                var foundItemFromDb = db.Distributions.FirstOrDefault(i => i.Id == ((Distribution)inDistList.SelectedItem).Id);
+                if (foundItemFromDb != null)
+                {
+                    db.Distributions.Remove(foundItemFromDb);
+                    db.SaveChanges();
+                    PopulateDistList();
+                    ClearBoxes();
+                }                
             }
         }
     }

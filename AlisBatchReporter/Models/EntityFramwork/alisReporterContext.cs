@@ -13,7 +13,7 @@ using System.Data.Linq.Mapping;
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace AlisBatchReporter.Models
+namespace AlisBatchReporter.Models.EntityFramwork
 {
     [Database(Name="C:\\Users\\Roni.axelrad\\AppData\\Local\\Temp\\alisReporter.sdf")]
 	public partial class alisReporterContext : System.Data.Linq.DataContext

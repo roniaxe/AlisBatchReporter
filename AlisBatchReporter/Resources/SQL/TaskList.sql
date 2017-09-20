@@ -24,8 +24,8 @@ FROM
       t_batch tb 
       ON gba.batch_id = tb.batch_id 
 WHERE
-   gba.ENTRY_TIME > {Param1} 
-   AND gba.ENTRY_TIME - 1 <= {Param2} 
+   CONVERT(DATE, gba.ENTRY_TIME+1) > {Param1} 
+   AND CONVERT(DATE, gba.ENTRY_TIME) <= {Param2} 
 GROUP BY
    gba.batch_id,
    tb.batch_name,

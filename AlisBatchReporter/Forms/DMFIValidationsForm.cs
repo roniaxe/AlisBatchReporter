@@ -269,7 +269,8 @@ namespace AlisBatchReporter.Forms
                 var entity = irf1Value.GetValue(idx);
                 var idxName = entity.Name;
                 if (!source[entity.IdxValue].Equals(outbound[entity.IdxValue]))
-                    Task.Run(() => AddDiffrence(idxName, source[1], source[entity.IdxValue], outbound[entity.IdxValue]));
+                    Task.Run(() =>
+                        AddDiffrence(idxName, source[1], source[entity.IdxValue], outbound[entity.IdxValue]));
             }
 
             if (validationTypesCombobox.Text.Equals("IRF2 File Comparison"))
@@ -280,6 +281,7 @@ namespace AlisBatchReporter.Forms
                 if (entitiy != null && !entitiy.Ignore)
                 {
                     irf2ValueName = entitiy.Name;
+
                     if (entitiy.Intable)
                     {
                         if (double.TryParse(source[entitiy.IdxValue], out var castedToDoubleSource) &&
@@ -295,12 +297,14 @@ namespace AlisBatchReporter.Forms
                     }
                     else
                     {
+                        if (!source[24].Equals("10")) return;
                         if (!source[entitiy.IdxValue].Equals(outbound[entitiy.IdxValue]))
                             Task.Run(() => AddDiffrence(irf2ValueName,
                                 source[1] + "-" + source[6],
                                 source[entitiy.IdxValue],
                                 outbound[entitiy.IdxValue]));
                     }
+
                 }
             }
         }

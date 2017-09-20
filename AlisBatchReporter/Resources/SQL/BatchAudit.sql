@@ -36,8 +36,8 @@ FROM
    ON gba.task_id = tt.task_id
 WHERE
    1=1
-   AND gba.entry_time > {Param1}
-   AND gba.entry_time - 1 <= {Param2}
+   AND CONVERT(DATE, gba.ENTRY_TIME+1) > {Param1}
+   AND CONVERT(DATE, gba.ENTRY_TIME) <= {Param2}
    {Param4}
    {Param3}
 GROUP BY

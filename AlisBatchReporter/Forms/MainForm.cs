@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Data.Entity;
 using System.Linq;
 using System.Windows.Forms;
 using AlisBatchReporter.Classes;
 using AlisBatchReporter.Models;
 using AlisBatchReporter.Presentors;
+using AlisBatchReporter.Models.EntityFramwork;
 
 namespace AlisBatchReporter.Forms
 {

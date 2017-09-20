@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.Entity;
 
-namespace AlisBatchReporter.Models
+namespace AlisBatchReporter.Models.EntityFramwork
 {
     class AlisDbInitializer : CreateDatabaseIfNotExists<AlisDbContext>
     {

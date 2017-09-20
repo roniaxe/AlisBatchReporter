@@ -1,7 +1,7 @@
 ﻿using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 
-namespace AlisBatchReporter.Models
+namespace AlisBatchReporter.Models.EntityFramwork
 {
     class AlisDbContext : DbContext
     {
@@ -26,5 +26,6 @@ namespace AlisBatchReporter.Models
         }
 
         public DbSet<SavedCredentials> SavedCredentialses { get; set; }
+        public DbSet<Distribution> Distributions { get; set; }
     }
 }

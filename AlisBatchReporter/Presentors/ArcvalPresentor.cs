@@ -229,7 +229,7 @@ namespace AlisBatchReporter.Presentors
                         {
                             string type = null;
                             int[] cuts = { };
-                            if (sourceEntry.Length == 100)
+                            if (sourceEntry.Length == 100 || sourceEntry.Length == 108)
                             {
                                 cuts = new[]
                                     {2, 14, 15, 16, 18, 19, 20, 28, 30, 42, 43, 44, 46, 47, 56, 64, 73, 82, 90, 91};

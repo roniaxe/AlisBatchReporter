@@ -3,7 +3,7 @@ using AlisBatchReporter.Models;
 
 namespace AlisBatchReporter.Classes
 {
-    internal static class Global
+    public static class Global
     {
         public static SavedCredentials SavedCredentials { get; set; }
         public static Version Version { get; set; } = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;

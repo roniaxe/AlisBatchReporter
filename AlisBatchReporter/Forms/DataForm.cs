@@ -1,13 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using AlisBatchReporter.Classes;
+using AlisBatchReporter.Models.EntityFramwork;
+using AlisBatchReporter.Properties;
 using Microsoft.Office.Interop.Excel;
 using Application = Microsoft.Office.Interop.Excel.Application;
 using DataTable = System.Data.DataTable;
+using Global = AlisBatchReporter.Classes.Global;
 using MenuItem = System.Windows.Forms.MenuItem;
 using Point = System.Drawing.Point;
 
@@ -178,7 +182,8 @@ namespace AlisBatchReporter.Forms
 
             // Create Query Params
             var typeRadioButton = !string.IsNullOrEmpty(polFilterTextBox.Text)
-                ? $@"AND (gba.primary_key LIKE '{polFilterTextBox.Text}' OR gba.primary_key = (SELECT id FROM p_client_role where policy_no = {polFilterTextBox.Text} and closing_status = 0 and role = 91))"
+                ? $@"AND (gba.primary_key LIKE '{polFilterTextBox.Text}' 
+                    OR gba.primary_key = convert(VARCHAR(10),(SELECT id FROM p_client_role where policy_no = {polFilterTextBox.Text} and closing_status = 0 and role = 91)))"
                 : "";
             string onlyErrors = "AND gba.entry_type in (5,6)";
             if (!string.IsNullOrEmpty(polFilterTextBox.Text) && allTypesRadioButton.Checked)
@@ -211,19 +216,7 @@ namespace AlisBatchReporter.Forms
             progressBar1.Visible = false;
             dataGridView1.Show();
             exportButton.Visible = dataGridView1.Rows.Count != 0;
-
-            //var newQuery = new ReportQuery(
-            //    Path.GetDirectoryName(Application.ExecutablePath) + selectedFunc,
-            //    fromDate.Value.ToString("MM/dd/yyyy"),
-            //    toDate.Value.ToString("MM/dd/yyyy"),
-            //    polFilterTextBox.Text,
-            //    typeRadioButton
-            //);
-            //// Set the datasource, run query (populate grid in backgroundWorker1_RunWorkerCompleted)   
-            //dataGridView1.DataSource = bindingSource1;
-            //progressBar1.Visible = true;
-            //dataGridView1.Show();
-            //backgroundWorker1.RunWorkerAsync(newQuery);
+            sendEmailButton.Visible = dataGridView1.Rows.Count > 0;
         }
 
         private void ResetComps()
@@ -257,18 +250,17 @@ namespace AlisBatchReporter.Forms
         /// <summary>
         ///     Exports the datagridview values to Excel.
         /// </summary>
-        private void ExportToExcel()
+        private string ExportToExcel()
         {
             // Creating a Excel object. 
             _Application excel = new Application();
             _Workbook workbook = excel.Workbooks.Add(Type.Missing);
-
+            string fileName = null;
             try
             {
                 _Worksheet worksheet = workbook.ActiveSheet;
 
-                worksheet.Name = "ExportedFromDatGrid";
-
+                worksheet.Name = DateTime.Today.ToString("M");
                 var cellRowIndex = 1;
                 var cellColumnIndex = 1;
 
@@ -279,22 +271,28 @@ namespace AlisBatchReporter.Forms
                     {
                         // Excel index starts from 1,1. As first Row would have the Column headers, adding a condition check. 
                         if (cellRowIndex == 1)
-                            worksheet.Cells[cellRowIndex, cellColumnIndex] = dataGridView1.Columns[j].HeaderText;
+                        {
+                            worksheet.Cells[cellRowIndex, cellColumnIndex] = dataGridView1.Columns[j].HeaderText;                            
+                        }                          
                         else
+                        {
                             worksheet.Cells[cellRowIndex, cellColumnIndex] =
-                                dataGridView1.Rows[i-1].Cells[j].Value.ToString();
+                                dataGridView1.Rows[i - 1].Cells[j].Value.ToString();         
+                        }
                         cellColumnIndex++;
                     }
                     cellColumnIndex = 1;
                     cellRowIndex++;
                 }
-
+                worksheet.Columns.AutoFit();
+                worksheet.Range["A1:Z100"].WrapText = false;
                 //Getting the location and file name of the excel to save from user. 
                 var saveDialog =
                     new SaveFileDialog
                     {
                         Filter = @"Excel files (*.xlsx)|*.xlsx|All files (*.*)|*.*",
-                        FilterIndex = 2
+                        FilterIndex = 2,
+                        FileName = Settings.Default.SharingFolder + "Daily_Report_"+DateTime.Today.ToString("M")+".xlsx"
                     };
 
                 if (saveDialog.ShowDialog() == DialogResult.OK)
@@ -302,15 +300,18 @@ namespace AlisBatchReporter.Forms
                     workbook.SaveAs(saveDialog.FileName);
                     MessageBox.Show(@"Export Successful");
                 }
+                fileName = saveDialog.FileName;
             }
             catch (Exception ex)
             {
+                mainPanel.Text += @"Failed!";
                 MessageBox.Show(ex.Message);
             }
             finally
             {
                 excel.Quit();
             }
+            return fileName;
         }
 
         private void exportButton_Click(object sender, EventArgs e)
@@ -352,6 +353,47 @@ namespace AlisBatchReporter.Forms
             {
                 dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Style = dataGridView1.DefaultCellStyle;
             }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            var confirmResult = MessageBox.Show($@"Send Report To Distribution List?", @"Confirm Send", MessageBoxButtons.YesNo);
+            if (confirmResult == DialogResult.No) return;
+            distributionProcessTxt.Visible = true;
+            distributionProcessTxt.Text += @"Creating Report...";
+            var attachment = ExportToExcel();
+            distributionProcessTxt.Text += $@"Done!{Environment.NewLine}";
+            if (!string.IsNullOrEmpty(attachment))
+            {                              
+                List<string> to;
+                using (var db = new AlisDbContext())
+                {
+                    to = db.Distributions.Where(d => d.DistFlag).Select(d => d.EmailAddress).ToList();
+                }
+                if (to.Any())
+                {
+                    distributionProcessTxt.Text += @"Sending Mails To Distribution List...";
+                    var body = $@"Hello, 
+Attached the daily batches error report for:
+Date: {DateTime.Today:D}
+Environment: {Global.SavedCredentials.Name}
+DB: {Global.SavedCredentials.Db}";
+                    MailModule.SendEmailFromAccount(
+                        new Microsoft.Office.Interop.Outlook.Application(), 
+                        $@"Daily Report - {Global.SavedCredentials.Name}, {Global.SavedCredentials.Db} - {DateTime.Today:D}", 
+                        to,
+                        body, 
+                        "roni.axelrad@sapiens.com", 
+                        attachment);
+                    MessageBox.Show(@"Mail Sent!");
+                }
+                else
+                {
+                    distributionProcessTxt.Text +=
+                        $@"Empty Distribution List, Mail Was Not Sent, Please Add Receipients On Settings.";
+                }
+            }
+            distributionProcessTxt.Visible = false;
         }
     }
 }

@@ -55,8 +55,8 @@ FROM
             T_BATCH B 
             ON G.BATCH_ID = B.BATCH_ID 
       WHERE
-         G.ENTRY_TIME > {Param1}
-         AND G.ENTRY_TIME - 1 <= {Param2}
+         CONVERT(DATE, g.ENTRY_TIME+1) > {Param1}
+         AND CONVERT(DATE, g.ENTRY_TIME) <= {Param2}
 		 AND G.TASK_ID != 0
       UNION ALL
       SELECT
@@ -93,8 +93,8 @@ FROM
             ON G.BATCH_ID = B.BATCH_ID , T_TASK T 
       WHERE
          1 = 1 
-         AND G.ENTRY_TIME > {Param1}
-         AND G.ENTRY_TIME - 1 <= {Param2}
+         AND CONVERT(DATE, g.ENTRY_TIME+1) > {Param1}
+         AND CONVERT(DATE, g.ENTRY_TIME) <= {Param2}
          AND G.TASK_ID = 0 
          AND DESCRIPTION LIKE 'Task ''%' 
          AND SUBSTRING(DESCRIPTION, 7, CHARINDEX('''', SUBSTRING(DESCRIPTION, 7, 100)) - 1) = T.TASK_NAME 
