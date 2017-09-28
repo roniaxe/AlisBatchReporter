@@ -13,7 +13,7 @@ namespace AlisBatchReporter.Models.EntityFramwork
             }
         }
 
-        public AlisDbContext() : base("CompactDBContext")
+        public AlisDbContext() : this("CompactDBContext")
         {
             //Database.SetInitializer(new AlisDbInitializer(this));
             //Database.SetInitializer(new DropCreateDatabaseIfModelChanges<AlisDbContext>());
@@ -21,8 +21,9 @@ namespace AlisBatchReporter.Models.EntityFramwork
 
         public AlisDbContext(string nameOrConnectionString) : base(nameOrConnectionString)
         {
-            Database.SetInitializer(new AlisDbInitializer(this));
-            Database.SetInitializer(new DropCreateDatabaseIfModelChanges<AlisDbContext>());
+            Database.SetInitializer(new AlisDbInitializer());
+            Database.SetInitializer(new AlisDbNewDbIfModelChanged());
+            //Database.SetInitializer(new DropCreateDatabaseIfModelChanges<AlisDbContext>());
         }
 
         public DbSet<SavedCredentials> SavedCredentialses { get; set; }

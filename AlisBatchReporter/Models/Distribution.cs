@@ -1,13 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Windows.Forms;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AlisBatchReporter.Models
 {
-    public class Distribution : IEntity
+    public class Distribution : Entity
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
         [Index(IsUnique = true)]
         public string EmailAddress { get; set; }
         public string FirstName { get; set; }

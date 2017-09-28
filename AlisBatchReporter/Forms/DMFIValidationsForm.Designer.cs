@@ -29,11 +29,9 @@
         private void InitializeComponent()
         {
             this.validationTypesCombobox = new System.Windows.Forms.ComboBox();
-            this.validationLabel = new System.Windows.Forms.Label();
             this.validateButton = new System.Windows.Forms.Button();
-            this.progressBar1 = new System.Windows.Forms.ProgressBar();
-            this.label1 = new System.Windows.Forms.Label();
             this.processTextBox = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // validationTypesCombobox
@@ -47,15 +45,6 @@
             this.validationTypesCombobox.Size = new System.Drawing.Size(121, 21);
             this.validationTypesCombobox.TabIndex = 0;
             // 
-            // validationLabel
-            // 
-            this.validationLabel.AutoSize = true;
-            this.validationLabel.Location = new System.Drawing.Point(12, 64);
-            this.validationLabel.Name = "validationLabel";
-            this.validationLabel.Size = new System.Drawing.Size(80, 13);
-            this.validationLabel.TabIndex = 1;
-            this.validationLabel.Text = "Validation Type";
-            // 
             // validateButton
             // 
             this.validateButton.Location = new System.Drawing.Point(12, 120);
@@ -66,23 +55,6 @@
             this.validateButton.UseVisualStyleBackColor = true;
             this.validateButton.Click += new System.EventHandler(this.validateButton_Click);
             // 
-            // progressBar1
-            // 
-            this.progressBar1.Location = new System.Drawing.Point(12, 149);
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(100, 23);
-            this.progressBar1.TabIndex = 3;
-            this.progressBar1.Visible = false;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(140, 159);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(35, 13);
-            this.label1.TabIndex = 6;
-            this.label1.Text = "label2";
-            // 
             // processTextBox
             // 
             this.processTextBox.Location = new System.Drawing.Point(12, 210);
@@ -91,16 +63,23 @@
             this.processTextBox.Size = new System.Drawing.Size(506, 163);
             this.processTextBox.TabIndex = 8;
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(12, 64);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(35, 13);
+            this.label1.TabIndex = 9;
+            this.label1.Text = "label1";
+            // 
             // DmfiValidationsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1124, 584);
-            this.Controls.Add(this.processTextBox);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.progressBar1);
+            this.Controls.Add(this.processTextBox);
             this.Controls.Add(this.validateButton);
-            this.Controls.Add(this.validationLabel);
             this.Controls.Add(this.validationTypesCombobox);
             this.Name = "DmfiValidationsForm";
             this.Text = "DMFIValidationsForm";
@@ -112,10 +91,8 @@
         #endregion
 
         private System.Windows.Forms.ComboBox validationTypesCombobox;
-        private System.Windows.Forms.Label validationLabel;
         private System.Windows.Forms.Button validateButton;
-        private System.Windows.Forms.ProgressBar progressBar1;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox processTextBox;
+        private System.Windows.Forms.Label label1;
     }
 }

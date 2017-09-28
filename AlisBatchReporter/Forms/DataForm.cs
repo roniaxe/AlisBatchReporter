@@ -38,7 +38,7 @@ namespace AlisBatchReporter.Forms
             _taskIdContextMenu.MenuItems.Add("Running Time", RunningTime);
             fromDate.Value = DateTime.Today.AddDays(-1);
             PopulateFuncCombobox();
-        }     
+        }
 
         private void PopulateFuncCombobox()
         {
@@ -95,15 +95,15 @@ namespace AlisBatchReporter.Forms
 
         private async void ChunkProcess(object sender, EventArgs e)
         {
-            Form dialogForm = new Form();
-            ProgressBar pb = new ProgressBar {Style = ProgressBarStyle.Marquee};
-            BindingSource bs = new BindingSource();
-            DataGridView dg = new DataGridView { DataSource = bs };
+            var dialogForm = new Form();
+            var pb = new ProgressBar {Style = ProgressBarStyle.Marquee};
+            var bs = new BindingSource();
+            var dg = new DataGridView {DataSource = bs};
             dialogForm.Controls.AddRange(new Control[] {pb, dg});
-            var query = QueryRepo.ChunkProcess;         
+            var query = QueryRepo.ChunkProcess;
             query.Params = new ParamObject(dataGridView1.CurrentCell.Value.ToString(), GetTaskId(dataGridView1));
             dialogForm.Show();
-            DataTable result = await QueryManager.Query(query.QueryDynamication());
+            var result = await QueryManager.Query(query.QueryDynamication());
             dg.Dock = DockStyle.Fill;
             bs.DataSource = result;
             pb.Hide();
@@ -183,9 +183,11 @@ namespace AlisBatchReporter.Forms
             // Create Query Params
             var typeRadioButton = !string.IsNullOrEmpty(polFilterTextBox.Text)
                 ? $@"AND (gba.primary_key LIKE '{polFilterTextBox.Text}' 
-                    OR gba.primary_key = convert(VARCHAR(10),(SELECT id FROM p_client_role where policy_no = {polFilterTextBox.Text} and closing_status = 0 and role = 91)))"
+                    OR gba.primary_key = convert(VARCHAR(10),(SELECT id FROM p_client_role where policy_no = {
+                        polFilterTextBox.Text
+                    } and closing_status = 0 and role = 91)))"
                 : "";
-            string onlyErrors = "AND gba.entry_type in (5,6)";
+            var onlyErrors = "AND gba.entry_type in (5,6)";
             if (!string.IsNullOrEmpty(polFilterTextBox.Text) && allTypesRadioButton.Checked)
                 onlyErrors = "";
 
@@ -211,12 +213,10 @@ namespace AlisBatchReporter.Forms
                 Console.WriteLine(exception);
                 throw;
             }
-            
+
             bindingSource1.DataSource = result;
             progressBar1.Visible = false;
             dataGridView1.Show();
-            exportButton.Visible = dataGridView1.Rows.Count != 0;
-            sendEmailButton.Visible = dataGridView1.Rows.Count > 0;
         }
 
         private void ResetComps()
@@ -244,7 +244,6 @@ namespace AlisBatchReporter.Forms
             var workerResult = (DataTable) e.Result;
             bindingSource1.DataSource = workerResult;
             progressBar1.Visible = false;
-            exportButton.Visible = dataGridView1.Rows.Count != 0;
         }
 
         /// <summary>
@@ -271,14 +270,10 @@ namespace AlisBatchReporter.Forms
                     {
                         // Excel index starts from 1,1. As first Row would have the Column headers, adding a condition check. 
                         if (cellRowIndex == 1)
-                        {
-                            worksheet.Cells[cellRowIndex, cellColumnIndex] = dataGridView1.Columns[j].HeaderText;                            
-                        }                          
+                            worksheet.Cells[cellRowIndex, cellColumnIndex] = dataGridView1.Columns[j].HeaderText;
                         else
-                        {
                             worksheet.Cells[cellRowIndex, cellColumnIndex] =
-                                dataGridView1.Rows[i - 1].Cells[j].Value.ToString();         
-                        }
+                                dataGridView1.Rows[i - 1].Cells[j].Value.ToString();
                         cellColumnIndex++;
                     }
                     cellColumnIndex = 1;
@@ -292,7 +287,8 @@ namespace AlisBatchReporter.Forms
                     {
                         Filter = @"Excel files (*.xlsx)|*.xlsx|All files (*.*)|*.*",
                         FilterIndex = 2,
-                        FileName = Settings.Default.SharingFolder + "Daily_Report_"+DateTime.Today.ToString("M")+".xlsx"
+                        FileName = Settings.Default.SharingFolder + "Daily_Report_" + Global.SavedCredentials.Name +
+                                   "_" + Global.SavedCredentials.Db + "_" + DateTime.Today.ToString("M") + ".xlsx"
                     };
 
                 if (saveDialog.ShowDialog() == DialogResult.OK)
@@ -343,28 +339,26 @@ namespace AlisBatchReporter.Forms
 
         private void dataGridView1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            if (dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value != null 
+            if (dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value != null
                 && !string.IsNullOrWhiteSpace(dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString())
                 && dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString().Equals("Did Not Finish"))
-            {
-                dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Style = new DataGridViewCellStyle { ForeColor = Color.Red};
-            }
+                dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Style =
+                    new DataGridViewCellStyle {ForeColor = Color.Red};
             else
-            {
                 dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Style = dataGridView1.DefaultCellStyle;
-            }
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            var confirmResult = MessageBox.Show($@"Send Report To Distribution List?", @"Confirm Send", MessageBoxButtons.YesNo);
+            var confirmResult = MessageBox.Show($@"Send Report To Distribution List?", @"Confirm Send",
+                MessageBoxButtons.YesNo);
             if (confirmResult == DialogResult.No) return;
             distributionProcessTxt.Visible = true;
             distributionProcessTxt.Text += @"Creating Report...";
             var attachment = ExportToExcel();
             distributionProcessTxt.Text += $@"Done!{Environment.NewLine}";
             if (!string.IsNullOrEmpty(attachment))
-            {                              
+            {
                 List<string> to;
                 using (var db = new AlisDbContext())
                 {
@@ -379,11 +373,13 @@ Date: {DateTime.Today:D}
 Environment: {Global.SavedCredentials.Name}
 DB: {Global.SavedCredentials.Db}";
                     MailModule.SendEmailFromAccount(
-                        new Microsoft.Office.Interop.Outlook.Application(), 
-                        $@"Daily Report - {Global.SavedCredentials.Name}, {Global.SavedCredentials.Db} - {DateTime.Today:D}", 
+                        new Microsoft.Office.Interop.Outlook.Application(),
+                        $@"Daily Report - {Global.SavedCredentials.Name}, {Global.SavedCredentials.Db} - {
+                                DateTime.Today
+                            :D}",
                         to,
-                        body, 
-                        "roni.axelrad@sapiens.com", 
+                        body,
+                        "roni.axelrad@sapiens.com",
                         attachment);
                     MessageBox.Show(@"Mail Sent!");
                 }
@@ -394,6 +390,12 @@ DB: {Global.SavedCredentials.Db}";
                 }
             }
             distributionProcessTxt.Visible = false;
+        }
+
+        private void bindingSource1_ListChanged(object sender, ListChangedEventArgs e)
+        {
+            exportButton.Visible = bindingSource1.Count > 0;
+            sendEmailButton.Visible = bindingSource1.Count > 0;
         }
     }
 }

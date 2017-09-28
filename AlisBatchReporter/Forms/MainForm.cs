@@ -15,10 +15,21 @@ namespace AlisBatchReporter.Forms
             InitializeComponent();
         }
 
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            SavedCredentials restoreFromDb;
+            using (var db = new AlisDbContext("CompactDBContext"))
+            {
+                //db.Database.Initialize(true);
+                restoreFromDb = db.SavedCredentialses.FirstOrDefault(i => i.ChoseLast && i.Saved);
+            }
+            Global.PropSetter(restoreFromDb);           
+        }
+
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(Global.SavedCredentials.Name) ||
-                string.IsNullOrEmpty(Global.SavedCredentials.ConnString))
+            if (string.IsNullOrEmpty(Global.SavedCredentials?.Name) ||
+                string.IsNullOrEmpty(Global.SavedCredentials?.ConnString))
             {
                 MessageBox.Show(@"Please Choose Environment In Settings", @"No Database Selected");
             }
@@ -53,18 +64,7 @@ namespace AlisBatchReporter.Forms
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Close();
-        }
-
-        private void MainForm_Load(object sender, EventArgs e)
-        {
-            SavedCredentials restoreFromDb;
-            using (var db = new AlisDbContext("CompactDBContext"))
-            {
-                db.Database.Initialize(true);
-                restoreFromDb = db.SavedCredentialses.FirstOrDefault(i => i.ChoseLast && i.Saved);
-            }
-            Global.PropSetter(restoreFromDb);
-        }
+        }      
 
         private void unallocatedSuspenseToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -112,6 +112,11 @@ namespace AlisBatchReporter.Forms
             var arcvalPresentor = new ArcvalPresentor(arcvalCompareForm);
 
             arcvalCompareForm.Show();
+        }
+
+        private void updateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            
         }
     }
 }

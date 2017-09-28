@@ -3,9 +3,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AlisBatchReporter.Models
 {
-    public interface IEntity
+    public abstract class Entity
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key, Column(Order = 0)]
-        int Id { get; set; }
+        public int Id { get; set; }
     }
 }

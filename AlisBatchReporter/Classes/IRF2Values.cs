@@ -40,7 +40,7 @@ namespace AlisBatchReporter.Classes
         public static readonly IrfValues PlanCode = new Irf2Values(10, false, "Plan Code", true);
         public static readonly IrfValues PlanName = new Irf2Values(11, false, "Plan Name", true);
         public static readonly IrfValues IssuedAge = new Irf2Values(12, true, "Issued Age");
-        public static readonly IrfValues IssuedGender = new Irf2Values(13, false, "Issued Gender");
+        public static readonly IrfValues IssuedGender = new Irf2Values(13, false, "Issued Gender", true);
         public static readonly IrfValues LastName = new Irf2Values(14, false, "Last Name", true);
         public static readonly IrfValues FirstName = new Irf2Values(15, false, "First Name", true);
         public static readonly IrfValues MiddleName = new Irf2Values(16, false, "Middle Name", true);
@@ -67,7 +67,6 @@ namespace AlisBatchReporter.Classes
 
         public override IEnumerable<IrfValues> Values()
         {
-
                 yield return CompanyCd;
                 yield return PolNo;
                 yield return MembershipNo;
@@ -94,8 +93,7 @@ namespace AlisBatchReporter.Classes
                 yield return ActiveFlag;
                 yield return PolicyStatus;
                 yield return PaymentMode;
-                yield return PaymentForm;
-            
+                yield return PaymentForm;          
         }
     }
 

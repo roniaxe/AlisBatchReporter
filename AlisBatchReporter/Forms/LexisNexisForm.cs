@@ -7,7 +7,6 @@ namespace AlisBatchReporter.Forms
     public partial class LexisNexisForm : Form, ILexisNexisView
     {
         public event Action NexisLexisValidated;
-        public event Action NexisLexisClosed;
         public string ProcessText => processTextBox.Text;
 
 

@@ -60,7 +60,7 @@ namespace AlisBatchReporter.Presentors
             }
 
             // Reading & Splitting
-            _arcvalView.LogProcess("Reading Files...", false);
+            _arcvalView.LogProcess("Reading Files Asynch (!)...", false);
             var sourceContent = ReadFiles("AV_Source.txt");
             var outboundContent = ReadFiles("AV_Outbound.txt");
             await Task.WhenAll(sourceContent, outboundContent);
@@ -68,10 +68,10 @@ namespace AlisBatchReporter.Presentors
 
             //Indexing
             _arcvalView.LogProcess("Indexing Source...", false);
-            var inactivePolList = await IndexingSource(await sourceContent);
+            await IndexingSource(await sourceContent);
             _arcvalView.LogProcess("Done!", true);
             _arcvalView.LogProcess("Indexing Outbound...", false);
-            await IndexingOutbound(await outboundContent, inactivePolList);
+            await IndexingOutbound(await outboundContent);
             _arcvalView.LogProcess("Done!", true);
 
             // Validing
@@ -107,40 +107,35 @@ namespace AlisBatchReporter.Presentors
             }
         }
 
-        private async Task<List<string>> IndexingSource(string content)
+        private async Task IndexingSource(string content)
         {
-            List<string> inactiveList = null;
             //Read Source File And Split
             await Task.Run(() =>
             {
                 var sourceMotation = content.Replace(Convert.ToChar(0x0).ToString(), " ")
-                    .Split(new[] {Environment.NewLine}, StringSplitOptions.None);
-                inactiveList = new List<string>();
+                    .Split(new[] { Environment.NewLine }, StringSplitOptions.None);
                 foreach (var sourceRow in sourceMotation)
                 {
                     if (sourceRow.Length < 30)
                         continue;
-
-                    var rowType = sourceRow.Substring(42, 2);
-                    if (rowType[0].Equals('1') && !rowType[1].Equals('1'))
-                    {
-                        inactiveList.Add(sourceRow.Substring(30, 9));
-                        continue;
-                    }
-                    var polNo = sourceRow.Substring(30, 9);
-                    if (inactiveList.Contains(polNo))
-                        continue;
+                    var rowType = sourceRow.Substring(42, 1);
                     var key = sourceRow.Substring(30, 13);
                     if (rowType[0].Equals('5'))
                     {
-                        var secondKey = sourceRow.Substring(55, 15);
+                        var secondKey = sourceRow.Substring(62,8);
                         key += $@"-{secondKey}";
                     }
 
                     try
                     {
                         // Creating Dic with Uniqe Key
-                        _sourceDictionary.Add($@"{key}", sourceRow);
+                        if (_sourceDictionary.ContainsKey(key))
+                            if (_diffDictionary.ContainsKey("Duplicates"))
+                                _diffDictionary["Duplicates"].Add(key);
+                            else
+                                _diffDictionary.Add("Duplicates", new List<string> { key });
+                        else
+                            _sourceDictionary.Add($@"{key}", sourceRow);
                     }
                     catch (ArgumentException e)
                     {
@@ -150,32 +145,22 @@ namespace AlisBatchReporter.Presentors
                     }
                 }
             });
-            return inactiveList;
         }
 
-        private async Task IndexingOutbound(string content, List<string> inactiveList)
+        private async Task IndexingOutbound(string content)
         {
             await Task.Run(() =>
             {
-                var outboundSplitted = content.Split(new[] {Environment.NewLine}, StringSplitOptions.None);
+                var outboundSplitted = content.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
                 foreach (var outboundRow in outboundSplitted)
                 {
                     if (outboundRow.Length < 30)
                         continue;
-                    var polNo = outboundRow.Substring(30, 9);
-                    if (inactiveList.Contains(polNo))
-                    {
-                        if (_diffDictionary.ContainsKey("Inactive Policies"))
-                            _diffDictionary["Inactive Policies"].Add(polNo);
-                        else
-                            _diffDictionary.Add("Inactive Policies", new List<string> {polNo});
-                        continue;
-                    }
                     var rowType = outboundRow.Substring(42, 1);
                     var key = outboundRow.Substring(30, 13);
                     if (rowType.Equals("5"))
                     {
-                        var secondKey = outboundRow.Substring(55, 15);
+                        var secondKey = outboundRow.Substring(62, 8);
                         key += $@"-{secondKey}";
                     }
                     try

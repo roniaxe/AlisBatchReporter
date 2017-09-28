@@ -37,6 +37,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.createButton = new System.Windows.Forms.Button();
             this.mainPanel = new System.Windows.Forms.Panel();
+            this.distributionProcessTxt = new System.Windows.Forms.TextBox();
             this.sendEmailButton = new System.Windows.Forms.Button();
             this.exportButton = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -51,7 +52,6 @@
             this.comboBoxFunc = new System.Windows.Forms.ComboBox();
             this.bindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            this.distributionProcessTxt = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.mainPanel.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -152,6 +152,16 @@
             this.mainPanel.Name = "mainPanel";
             this.mainPanel.Size = new System.Drawing.Size(1500, 663);
             this.mainPanel.TabIndex = 11;
+            // 
+            // distributionProcessTxt
+            // 
+            this.distributionProcessTxt.Location = new System.Drawing.Point(1123, 14);
+            this.distributionProcessTxt.Multiline = true;
+            this.distributionProcessTxt.Name = "distributionProcessTxt";
+            this.distributionProcessTxt.ReadOnly = true;
+            this.distributionProcessTxt.Size = new System.Drawing.Size(182, 234);
+            this.distributionProcessTxt.TabIndex = 12;
+            this.distributionProcessTxt.Visible = false;
             // 
             // sendEmailButton
             // 
@@ -304,22 +314,16 @@
             this.comboBoxFunc.TabIndex = 13;
             this.comboBoxFunc.SelectedIndexChanged += new System.EventHandler(this.comboBoxFunc_SelectedIndexChanged);
             // 
+            // bindingSource1
+            // 
+            this.bindingSource1.ListChanged += new System.ComponentModel.ListChangedEventHandler(this.bindingSource1_ListChanged);
+            // 
             // backgroundWorker1
             // 
             this.backgroundWorker1.WorkerReportsProgress = true;
             this.backgroundWorker1.WorkerSupportsCancellation = true;
             this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
             this.backgroundWorker1.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker1_RunWorkerCompleted);
-            // 
-            // distributionProcessTxt
-            // 
-            this.distributionProcessTxt.Location = new System.Drawing.Point(1123, 14);
-            this.distributionProcessTxt.Multiline = true;
-            this.distributionProcessTxt.Name = "distributionProcessTxt";
-            this.distributionProcessTxt.ReadOnly = true;
-            this.distributionProcessTxt.Size = new System.Drawing.Size(182, 234);
-            this.distributionProcessTxt.TabIndex = 12;
-            this.distributionProcessTxt.Visible = false;
             // 
             // DataForm
             // 

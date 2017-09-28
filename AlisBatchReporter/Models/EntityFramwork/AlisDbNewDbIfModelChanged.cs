@@ -3,17 +3,9 @@ using System.Data.Entity;
 
 namespace AlisBatchReporter.Models.EntityFramwork
 {
-    class AlisDbInitializer : CreateDatabaseIfNotExists<AlisDbContext>
+    class AlisDbNewDbIfModelChanged : DropCreateDatabaseIfModelChanges<AlisDbContext>
     {
-        //public AlisDbInitializer(AlisDbContext alisDbContext)
-        //{
-        //    //if (!alisDbContext.Database.Exists())
-        //    //{
-        //    //    Seed(alisDbContext);
-        //    //}
-        //}
-
-        protected sealed override void Seed(AlisDbContext context)
+        protected override void Seed(AlisDbContext context)
         {
             List<SavedCredentials> initDbList = new List<SavedCredentials>()
             {
