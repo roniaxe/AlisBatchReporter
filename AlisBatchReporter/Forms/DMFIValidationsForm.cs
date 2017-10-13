@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using AlisBatchReporter.Classes;
@@ -12,11 +13,25 @@ namespace AlisBatchReporter.Forms
 {
     public partial class DmfiValidationsForm : Form
     {
-        private readonly Dictionary<string, List<string>> _differencesCount = new Dictionary<string, List<string>>();
+        private readonly ConcurrentDictionary<string, List<string>> _differencesCount =
+            new ConcurrentDictionary<string, List<string>>();
+
+        private long _current;
+        private long _total;
 
         public DmfiValidationsForm()
         {
             InitializeComponent();
+        }
+
+        public double Progress
+        {
+            get
+            {
+                if (_total == 0)
+                    return 0;
+                return (double) _current / _total;
+            }
         }
 
         private async void validateButton_Click(object sender, EventArgs e)
@@ -35,216 +50,181 @@ namespace AlisBatchReporter.Forms
             }
         }
 
-        public async Task<List<IrfRecord>> ReadAllLinesAsync(string path)
+        public async Task<string> ReadAllLinesAsync(string path, Encoding encoding)
         {
-            return await ReadAllLinesAsync(path, Encoding.UTF8);
-        }
-
-        public async Task<List<IrfRecord>> ReadAllLinesAsync(string path, Encoding encoding)
-        {
-            var irfs = new List<IrfRecord>();
-
-            // Open the FileStream with the same FileMode, FileAccess
-            // and FileShare as a call to File.OpenText would've done.
             using (var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read, 4096,
                 FileOptions.Asynchronous))
             using (var reader = new StreamReader(stream, encoding))
             {
-                string line;
-                var indexArr = new[]
-                {
-                    3, 13, 23, 25, 35, 45, 55, 56, 59,
-                    69, 74, 94, 96, 97, 122, 137, 152, 162, 172, 182, 192, 202, 212, 213, 215, 217
-                };
-                while ((line = await reader.ReadLineAsync()) != null)
-                {
-                    var irf = new IrfRecord()
-                    {
-                        Key = line.Substring(3, 10)+"-"+line.Substring(45,10),
-                        Body = SplitAt(line, indexArr).Select((item, idx) => new IrfRecordProperty
-                        {
-                            Value = item
-                        }).ToList()
-                    };
-                    for (var i = 0; i < irf.Body.Count -1; i++)
-                    {
-                        irf.Body[i].Settings = irf.Body[i].GetValue(i);
-                    }
-                    irfs.Add(irf);
-                }                   
+                return await reader.ReadToEndAsync();
             }
-            return irfs;
         }
 
         private async Task ValidateAnalytic(string selectedItem)
         {
             if (selectedItem.Equals("IRF2 File Comparison"))
-            {
-                DeleteFiles();
-                LogProcess("Copy Files Asynch (!)...", false);
-                //await CopyFiles();
-                var copyTasks = new Task[2];
-
-                var sourceFileName = "LFCM_IRF2.txt";
-
-                var outboundFileName = "IRF2.txt";
-
-                var envPath = @"\\dmfdwh001ut\E";
-
-                copyTasks[0] = CopyFileAsync(
-                    $@"{envPath}\Deploy\Prod\FTP\Validation\AnalyticFeed\{sourceFileName}",
-                    Path.Combine(Directory.GetCurrentDirectory(), "IRF_Source.txt"));
-
-                copyTasks[1] = CopyFileAsync(
-                    $@"{envPath}\Deploy\Prod\FTP\Outbound\AnalyticFeed\{outboundFileName}",
-                    Path.Combine(Directory.GetCurrentDirectory(), "IRF_Outbound.txt"));
-
-                await Task.WhenAll(copyTasks);
-                LogProcess("Done!", true);
-                //Read New Files
-                LogProcess("Reading Files Asynch (!)...", false);
-                var sourceFileRead = ReadAllLinesAsync(Directory.GetCurrentDirectory() + @"\IRF_Source.txt");
-                var outboundFileRead = ReadAllLinesAsync(Directory.GetCurrentDirectory() + @"\IRF_Outbound.txt");
-                await Task.WhenAll(sourceFileRead, outboundFileRead);
-                LogProcess("Done!", true);
-                await Compare(await sourceFileRead, await outboundFileRead);
-                //Map Files
-                //var sourceDic = MapFile(sourceFileRead.Result, Tuple.Create(3, 10), Tuple.Create(45, 11));
-                //var outboundDic = MapFile(outboundFileRead.Result, Tuple.Create(3, 10), Tuple.Create(45, 11));
-                // Compare
-                //var indexArr = new[]
-                //{
-                //    3, 13, 23, 25, 35, 45, 55, 56, 59,
-                //    69, 74, 94, 96, 97, 122, 137, 152, 162, 172, 182, 192, 202, 212, 213, 215, 217, 218
-                //};
-                LogProcess(@"Validating...", false);
-                //SplitAndCompare(sourceDic, outboundDic, indexArr);
-                LogProcess(@"Done!", true);
-                // Create Output
-                processTextBox.AppendText(@"Writing To File...");
-                CreateOutputFile();
-                processTextBox.AppendText($@"Done!{Environment.NewLine}");
-            }
+                await Compare(2);
 
             if (selectedItem.Equals("IRF1 File Comparison"))
-            {
-                DeleteFiles();
-                LogProcess("Copy Files Asynch (!)...", false);
-                //await CopyFiles();
-                var copyTasks = new Task[2];
-
-                var sourceFileName = "LFCM_IRF1.txt";
-
-                var outboundFileName = "IRF1.txt";
-
-                var envPath = @"\\dmfdwh001ut\E";
-
-                copyTasks[0] = CopyFileAsync(
-                    $@"{envPath}\Deploy\Prod\FTP\Validation\ARCVAL\{sourceFileName}",
-                    Path.Combine(Directory.GetCurrentDirectory(), "IRF_Source.txt"));
-
-                copyTasks[1] = CopyFileAsync(
-                    $@"{envPath}\Deploy\Prod\FTP\Outbound\ARCVAL\{outboundFileName}",
-                    Path.Combine(Directory.GetCurrentDirectory(), "IRF_Outbound.txt"));
-
-                await Task.WhenAll(copyTasks);
-                LogProcess("Done!", true);
-                //Read New Files
-                LogProcess("Reading Files Asynch (!)...", false);
-                var sourceFileRead = ReadAllLinesAsync(Directory.GetCurrentDirectory() + @"\IRF_Source.txt");
-                var outboundFileRead = ReadAllLinesAsync(Directory.GetCurrentDirectory() + @"\IRF_Outbound.txt");
-                //await Task.WhenAll(sourceFileRead, outboundFileRead);
-                LogProcess("Done!", true);
-                await Compare(await sourceFileRead, await outboundFileRead);
-                //Map Files
-                //var test = outboundFileRead.Result.Where(ob => sourceFileRead.Result.Contains(ob.Substring(3, 10)));
-                //var sourceDic = MapFile(sourceFileRead.Result, Tuple.Create(3, 10));
-                //var outboundDic = MapFile(outboundFileRead.Result, Tuple.Create(3, 10));
-                // Compare
-                //var indexArr = new[]
-                //{
-                //    3, 13, 23, 33, 35, 36, 38, 48, 58
-                //};
-                //processTextBox.AppendText(@"Validating...");
-                //SplitAndCompare(sourceDic, outboundDic, indexArr);
-                //processTextBox.AppendText($@"Done!{Environment.NewLine}");
-                // Create Output
-                processTextBox.AppendText(@"Writing To File...");
-                CreateOutputFile();
-                processTextBox.AppendText($@"Done!{Environment.NewLine}");
-            }
+                await Compare(1);
         }
 
-        private async Task Compare(List<IrfRecord> sourceFileRead, List<IrfRecord> outboundFileRead)
+        private async Task Compare(int irfType)
         {
-            foreach (var src in sourceFileRead)
-            {
-                var matched = outboundFileRead.FirstOrDefault(ob => ob.Key == src.Key);
-                if (matched == null)
-                {
-                    ReportMissing(src.Key);
-                    continue;
-                }
-                await Task.Run(() => CompareEntities(src, matched));
-            }
+            DeleteFiles();
+            LogProcess("Copy Files Asynch (!)...", false);
+            //await CopyFiles();
+            var copyTasks = new Task[2];
+            var sourceFileName = $"LFCM_IRF{irfType}.txt";
+            var outboundFileName = $"IRF{irfType}.txt";
+            var envPath = @"\\dmfdwh001ut\E";
+            copyTasks[0] = CopyFileAsync(
+                $@"{envPath}\Deploy\Prod\FTP\Validation\AnalyticFeed\{sourceFileName}",
+                Path.Combine(Directory.GetCurrentDirectory(), "IRF_Source.txt"));
+            copyTasks[1] = CopyFileAsync(
+                $@"{envPath}\Deploy\Prod\FTP\Outbound\AnalyticFeed\{outboundFileName}",
+                Path.Combine(Directory.GetCurrentDirectory(), "IRF_Outbound.txt"));
+            await Task.WhenAll(copyTasks);
+            LogProcess("Done!", true);
+
+            //Read New Files
+            LogProcess("Reading Files Asynch (!)...", false);
+            var sourceFileRead =
+                ReadAllLinesAsync(Directory.GetCurrentDirectory() + @"\IRF_Source.txt", Encoding.UTF8);
+            var outboundFileRead =
+                ReadAllLinesAsync(Directory.GetCurrentDirectory() + @"\IRF_Outbound.txt", Encoding.UTF8);
+            await Task.WhenAll(sourceFileRead, outboundFileRead);
+            LogProcess("Done!", true);
+
+            LogProcess("Processing Data...", false);
+            panel1.Visible = true;
+            var sourceObjects = ProcessData(await sourceFileRead, await outboundFileRead);
+            await Task.WhenAll(sourceObjects);
+            panel1.Visible = false;
+            LogProcess("Done!", true);
+
+            // Create Output
+            LogProcess(@"Writing To File...", false);
+            CreateOutputFile();
+            LogProcess("Done!", true);
         }
 
-        private void CompareEntities(IrfRecord src, IrfRecord matched)
+        private async Task ProcessData(string sourceFileContent, string outboundFileContent)
         {
-            for (var i = 0; i < src.Body.Count - 1; i++)
+            // The Progress<T> constructor captures our UI context,
+            //  so the lambda will be run on the UI thread.
+            IProgress<int> progress = new Progress<int>(percent =>
             {
-                if (src.Body[i].Settings.ToIgnore) continue;
-                if (src.Body[i].Settings.Intable)
+                label1.Text = percent + @"%";
+                progressBar1.Value = percent;
+            });
+
+            var indexArr = new[]
+            {
+                3, 13, 23, 25, 35, 45, 55, 56, 59,
+                69, 74, 94, 96, 97, 122, 137, 152, 162, 172, 182, 192, 202, 212, 213, 215, 217
+            };
+
+            var srcDic = new Dictionary<string, string>();
+            foreach (var srcItem in sourceFileContent.Split(new[] {Environment.NewLine}, StringSplitOptions.None).Where(i => i.Any() && i[212] == 'Y'))
+                if (srcItem.Length > 0)
+                    if (!srcDic.ContainsKey(srcItem.Substring(3, 10) + "-" + srcItem.Substring(45, 10)))
+                        srcDic.Add(srcItem.Substring(3, 10) + "-" + srcItem.Substring(45, 10), srcItem);
+                    else
+                        _differencesCount.AddOrUpdate("Duplicates Src",
+                            new List<string> {srcItem.Substring(3, 10) + "-" + srcItem.Substring(45, 10)},
+                            (dicKey, existingVal) =>
+                            {
+                                existingVal.Add(srcItem.Substring(3, 10) + "-" + srcItem.Substring(45, 10));
+                                return existingVal;
+                            });
+
+            var srcOb = new Dictionary<string, string>();
+            foreach (var obItem in outboundFileContent.Split(new[] {Environment.NewLine}, StringSplitOptions.None))
+                if (obItem.Length > 0)
+                    if (!srcOb.ContainsKey(obItem.Substring(3, 10) + "-" + obItem.Substring(45, 10)))
+                        srcOb.Add(obItem.Substring(3, 10) + "-" + obItem.Substring(45, 10), obItem);
+                    else
+                        _differencesCount.AddOrUpdate("Duplicates Outbound",
+                            new List<string> {obItem.Substring(3, 10) + "-" + obItem.Substring(45, 10)},
+                            (dicKey, existingVal) =>
+                            {
+                                existingVal.Add(obItem.Substring(3, 10) + "-" + obItem.Substring(45, 10));
+                                return existingVal;
+                            });
+
+            _total = srcDic.Count - 1;
+            _current = 0;
+            await Task.Run(() =>
+            {
+                Parallel.ForEach(srcDic, idx =>
                 {
-                    int.TryParse(src.Body[i].Value, out var intResult);
-                    src.Body[i].Value = intResult.ToString();
-                    int.TryParse(matched.Body[i].Value, out var intResult2);
-                    matched.Body[i].Value = intResult2.ToString();
-                }
-                if (src.Body[i].Value != matched.Body[i].Value)
+                    progress.Report((int) (Progress * 100));
+                    if (idx.Value.Length == 0)
+                        return;
+                    try
+                    {
+                        srcOb.TryGetValue(idx.Key, out var matchedIrf);
+                        if (matchedIrf == null)
+                        {
+                            ReportMissing(idx.Key);
+                            return;
+                        }
+
+                        var bodySrc = SplitAt(idx.Value, indexArr);
+                        var bodyOb = SplitAt(matchedIrf, indexArr);
+                        for (var i = 0; i < bodySrc.Length - 1; i++)
+                        {
+                            var valueSettings = IrfPropSettings.PropSettArray[i];
+                            if (valueSettings.ToIgnore) return;
+                            if (valueSettings.Intable)
+                            {
+                                int.TryParse(bodySrc[i], out var intResult);
+                                bodySrc[i] = intResult.ToString();
+                                int.TryParse(bodyOb[i], out var intResult2);
+                                bodyOb[i] = intResult2.ToString();
+                            }
+                            if (bodySrc[i] != bodyOb[i])
+                            {
+                                if (bodySrc[25] != bodyOb[25]) return;
+                                ReportDifference(idx.Key, bodySrc[i], bodyOb[i], valueSettings);
+                            }
+                                
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                        throw;
+                    }
+                    finally
+                    {
+                        Interlocked.Increment(ref _current);
+                    }
+                });
+            });
+        }
+
+        private void ReportDifference(string key, string srcVal, string obVal,
+            IrfPropSettings.PropertySettings settings)
+        {
+            _differencesCount.AddOrUpdate(settings.Name,
+                new List<string> {key + $@"  LifeCom Value: {srcVal}, DMFI Value: {obVal}"},
+                (dicKey, existingVal) =>
                 {
-                    if (src.Body[i].Settings.Name.Equals("Payment Mode")) continue;
-                    ReportDiff(src.Body[i], matched.Body[i], src.Key);
-                }
-            }
+                    existingVal.Add(key + $@"  LifeCom Value: {srcVal}, DMFI Value: {obVal}");
+                    return existingVal;
+                });
         }
 
         private void ReportMissing(string srcKey)
         {
-            if (_differencesCount.ContainsKey("Missing Policies"))
-                _differencesCount["Missing Policies"].Add(srcKey);
-            else
-                try
+            _differencesCount.AddOrUpdate("Missing Policies", new List<string> {srcKey},
+                (key, existingVal) =>
                 {
-                    _differencesCount.Add("Missing Policies", new List<string>
-                    {
-                        srcKey
-                    });
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                    throw;
-                }
-        }
-
-        private void ReportDiff(IrfRecordProperty srcProp, IrfRecordProperty obProp, string srcKey)
-        {
-            if (_differencesCount.ContainsKey(srcProp.Settings.Name))
-                _differencesCount[srcProp.Settings.Name].Add(srcKey + $@"  LifeCom Value: {srcProp.Value}, DMFI Value: {obProp.Value}");
-            else
-                try
-                {
-                    _differencesCount.Add(srcProp.Settings.Name, new List<string>
-                    {
-                        srcKey + $@"  LifeCom Value: {srcProp.Value}, DMFI Value: {obProp.Value}"
-                    });
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                    throw;
-                }
+                    existingVal.Add(srcKey);
+                    return existingVal;
+                });
         }
 
         private void LogProcess(string message, bool newLine)
@@ -270,111 +250,11 @@ namespace AlisBatchReporter.Forms
             }
         }
 
-        private void SplitAndCompare(Dictionary<string, string> sourceDic, Dictionary<string, string> outboundDic,
-            int[] indexCuts)
-        {
-            foreach (var key in sourceDic.Keys)
-                if (outboundDic.TryGetValue(key, out var outboundValue))
-                {
-                    if (!sourceDic.TryGetValue(key, out var sourceValue)) continue;
-                    var sourceSplittedRow = SplitAt(sourceValue, indexCuts).ToList();
-                    var outboundSplittedRow = SplitAt(outboundValue, indexCuts).ToList();
-                    CompareRows(sourceSplittedRow, outboundSplittedRow);
-                }
-        }
-
-        private Dictionary<string, string> MapFile(string[] fileRows, params Tuple<int, int>[] keyIndexes)
-        {
-            var dic = new Dictionary<string, string>();
-            foreach (var row in fileRows)
-            {
-                var key = "";
-                foreach (var pair in keyIndexes)
-                    key += row.Substring(pair.Item1, pair.Item2);
-                dic[key] = row;
-            }
-            return dic;
-        }
 
         private void DeleteFiles()
         {
             File.Delete(Directory.GetCurrentDirectory() + @"\Source.txt");
             File.Delete(Directory.GetCurrentDirectory() + @"\Outbound.txt");
-        }
-
-        private void CompareRows(List<string> source, List<string> outbound)
-        {
-            for (var i = 0; i < source.Count - 1; i++)
-                if (!source[i].Equals(outbound[i]))
-                    Compare(source, outbound, i);
-        }
-
-        private void Compare(List<string> source, List<string> outbound, int idx)
-        {
-            if (validationTypesCombobox.Text.Equals("IRF1 File Comparison"))
-            {
-                var irf1Value = new Irf1Values();
-                var entity = irf1Value.GetValue(idx);
-                var idxName = entity.Name;
-                if (!source[entity.IdxValue].Equals(outbound[entity.IdxValue]))
-                    Task.Run(() =>
-                        AddDiffrence(idxName, source[1], source[entity.IdxValue], outbound[entity.IdxValue]));
-            }
-
-            if (validationTypesCombobox.Text.Equals("IRF2 File Comparison"))
-            {
-                var irf2Value = new Irf2Values();
-                var entity = irf2Value.GetValue(idx);
-                string irf2ValueName;
-                if (entity != null && !entity.Ignore)
-                {
-                    irf2ValueName = entity.Name;
-                    var sourceVal = source[entity.IdxValue];
-                    var outboundVal = outbound[entity.IdxValue];
-                    if (new[] { "24201", "30109", "30110" }.Contains(source[10])) return;
-                    if (entity.Intable)
-                    {
-                        if (double.TryParse(sourceVal, out var castedToDoubleSource) &&
-                            double.TryParse(outboundVal, out var castedToDoubleOutbound))
-                        {
-                            var diff = Math.Abs(castedToDoubleSource - castedToDoubleOutbound);
-                            if (!irf2ValueName.Equals("Modal Premium") && diff > 0 ||
-                                irf2ValueName.Equals("Modal Premium") && diff > 2)
-                                Task.Run(() => AddDiffrence(
-                                    irf2ValueName,
-                                    source[1] + " - " + source[6],
-                                    castedToDoubleSource.ToString(CultureInfo.InvariantCulture),
-                                    castedToDoubleOutbound.ToString(CultureInfo.InvariantCulture)));
-                        }
-                    }
-                    else
-                    {
-                        if (!source[24].Equals("10")) return;
-                        if (!sourceVal.Equals(outboundVal))
-                        {
-                            if (irf2ValueName.Equals("Payment Mode")) return;
-                            Task.Run(() => AddDiffrence(
-                                irf2ValueName,
-                                source[1] + "-" + source[6],
-                                sourceVal,
-                                outboundVal));
-                        }
-                    }
-                }
-            }
-        }
-
-        private void AddDiffrence(object idxName, string polNo, string souceValue, string outboundValue)
-        {
-            if (idxName.Equals("Payment Mode")) return;
-            if (_differencesCount.ContainsKey(idxName.ToString()))
-                _differencesCount[idxName.ToString()]
-                    .Add(polNo + $@"  LifeCom Value: {souceValue}, DMFI Value: {outboundValue}");
-            else
-                _differencesCount.Add(idxName.ToString(), new List<string>
-                {
-                    polNo + $@"  LifeCom Value: {souceValue}, DMFI Value: {outboundValue}"
-                });
         }
 
         public string[] SplitAt(string source, params int[] index)

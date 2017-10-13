@@ -31,6 +31,35 @@ namespace AlisBatchReporter.Classes
         public static readonly Values RdrModePrem = new ArcvalValuesType6A(24, "RDR-MODE-PREMIUM", false, true);
         public static readonly Values Extra = new ArcvalValuesType6A(25, "EXTRA");
 
+        public static Values[] ValusArr { get; } =
+        {
+            CoCode,
+            ConPlanCode,
+            Gender,
+            RiskClass,
+            SsTable,
+            Filler,
+            WaiverSw,
+            IssDate,
+            IssAge,
+            ConNum,
+            RecType,
+            RecInfo,
+            RdrPlancode,
+            RdrWp,
+            CovPlancode,
+            CovId,
+            RdrGender,
+            RdrRisk,
+            RdrAge,
+            RdrSub,
+            RdrEff,
+            RdrExp,
+            RdrFace,
+            RdrGrossPrem,
+            RdrModePrem,
+            Extra
+        };
 
         private ArcvalValuesType6A(int idxValue, string name, bool toIgnore = false, bool toRound = false) : base(idxValue, name, toIgnore, toRound)
         {

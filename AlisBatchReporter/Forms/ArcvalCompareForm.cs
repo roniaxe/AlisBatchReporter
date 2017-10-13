@@ -14,6 +14,8 @@ namespace AlisBatchReporter.Forms
 
         public event Action Compared;
 
+        public event Action Cancelled;
+
         public event Action OverrideFilesChecked;
 
         public Panel OverridePanel => fileNamesPanel;
@@ -51,11 +53,37 @@ namespace AlisBatchReporter.Forms
                 ProcessTextBox += Environment.NewLine;
         }
 
+        public void DisabledCompareButton()
+        {
+            compareButton.Enabled = false;
+        }
+
+        public void EnabledCompareButton()
+        {
+            compareButton.Enabled = true;
+        }
+
+        public void DisabledCancelButton()
+        {
+            CancelButton.Enabled = false;
+        }
+
+        public void EnabledCancelButton()
+        {
+            CancelButton.Enabled = true;
+        }
+
         private void BindComponents()
         {
             compareButton.Click += ComparedClicked;
+            CancelButton.Click += CancelledClicked;
             closeButton.Click += CloseClicked;
             overrideCheckBox.CheckedChanged += OverrideCheckedChanged;
+        }
+
+        private void CancelledClicked(object sender, EventArgs e)
+        {
+            Cancelled?.Invoke();
         }
 
         private void OverrideCheckedChanged(object sender, EventArgs e)

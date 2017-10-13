@@ -106,7 +106,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\ArcvalEntityTypeFactory.cs" />
-    <Compile Include="Classes\IrfRecord.cs" />
+    <Compile Include="Classes\ArcvalValuesType4.cs" />
+    <Compile Include="Classes\IrfPropSettings.cs" />
     <Compile Include="Classes\MailModule.cs" />
     <Compile Include="Classes\QueryFactory.cs" />
     <Compile Include="Models\Distribution.cs" />
@@ -199,6 +200,8 @@
     <Compile Include="Infra\DataProtectionExtensions.cs" />
     <Compile Include="Models\IEntity.cs" />
     <Compile Include="Models\SavedCredentials.cs" />
+    <Compile Include="Presentors\ArcvalFactory.cs" />
+    <Compile Include="Presentors\ArcvalInstance.cs" />
     <Compile Include="Presentors\ArcvalPresentor.cs" />
     <Compile Include="Presentors\LexisNexisPresentor.cs" />
     <Compile Include="Program.cs" />

@@ -7,6 +7,8 @@ namespace AlisBatchReporter.Views
     {
         event Action Compared;
 
+        event Action Cancelled;
+
         event Action OverrideFilesChecked;
 
         Panel OverridePanel { get; }
@@ -26,5 +28,13 @@ namespace AlisBatchReporter.Views
         bool OverrideFiles { get; }
 
         void LogProcess(string text, bool newLine);
+
+        void DisabledCompareButton();
+
+        void EnabledCompareButton();
+
+        void DisabledCancelButton();
+
+        void EnabledCancelButton();
     }
 }

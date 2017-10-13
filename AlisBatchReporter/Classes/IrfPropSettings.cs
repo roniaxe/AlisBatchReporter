@@ -3,18 +3,7 @@ using System.Linq;
 
 namespace AlisBatchReporter.Classes
 {
-    public class IrfRecord
-    {
-        #region Properties
-
-        public string Key { get; set; }
-        public List<IrfRecordProperty> Body { get; set; }
-
-        #endregion
-
-    }
-
-    public class IrfRecordProperty
+    public static class IrfPropSettings
     {
         public class PropertySettings
         {
@@ -33,7 +22,6 @@ namespace AlisBatchReporter.Classes
         }
 
         #region Properties
-
         public static readonly PropertySettings CompanyCd = new PropertySettings(0, "Company Cd");
         public static readonly PropertySettings PolNo = new PropertySettings(1, "Policy No");
         public static readonly PropertySettings MembershipNo = new PropertySettings(2, "Membership No");
@@ -53,7 +41,7 @@ namespace AlisBatchReporter.Classes
         public static readonly PropertySettings MiddleName = new PropertySettings(16, "Middle Name", false, true);
         public static readonly PropertySettings PolicyIssueDate = new PropertySettings(17, "Policy Issue Date");
         public static readonly PropertySettings PaidToPaid = new PropertySettings(18, "Paid To Paid");
-        public static readonly PropertySettings CurrentCashValue = new PropertySettings(19, "Current Cash Value" , true);
+        public static readonly PropertySettings CurrentCashValue = new PropertySettings(19, "Current Cash Value", true);
         public static readonly PropertySettings ModalPremium = new PropertySettings(20, "Modal Premium", true);
         public static readonly PropertySettings FaceValue = new PropertySettings(21, "Face Value", true);
         public static readonly PropertySettings SpouseFaceValue = new PropertySettings(22, "Spouse Face Value", true);
@@ -61,45 +49,51 @@ namespace AlisBatchReporter.Classes
         public static readonly PropertySettings PolicyStatus = new PropertySettings(24, "Policy Status");
         public static readonly PropertySettings PaymentMode = new PropertySettings(25, "Payment Mode");
         public static readonly PropertySettings PaymentForm = new PropertySettings(26, "Payment Form");
-        public PropertySettings Settings { get; set; }
-        public string Value { get; set; }
+
+        public static PropertySettings[] PropSettArray =
+        {
+            CompanyCd, PolNo, MembershipNo, Lob, Region, WritingAgency, WritingAgent, PrimaryAgentFlag, Commission,
+            Servicing, PlanCode, PlanName, IssuedAge, IssuedGender, LastName, FirstName, MiddleName, PolicyIssueDate,
+            PaidToPaid, CurrentCashValue, ModalPremium,
+            FaceValue, SpouseFaceValue, ActiveFlag, PolicyStatus, PaymentMode, PaymentForm
+        };
+
+        public static Dictionary<int, PropertySettings> PropSettDictionary = new Dictionary<int, PropertySettings>()
+        {
+            {0 , CompanyCd },
+            {1 , PolNo },
+            {2, MembershipNo },
+            {3, Lob },
+            {4, Region },
+            {5, WritingAgency },
+            {6, WritingAgent },
+            {7, PrimaryAgentFlag },
+            {8, Commission },
+            {9, Servicing },
+            {10, PlanCode },
+            {11, PlanName },
+            {12, IssuedAge },
+            {13, IssuedGender },
+            {14, LastName },
+            {15, FirstName },
+            {16, MiddleName },
+            {17, PolicyIssueDate },
+            {18, PaidToPaid },
+            {19, CurrentCashValue },
+            {20, ModalPremium },
+            {21, FaceValue },
+            {22, SpouseFaceValue },
+            {23, ActiveFlag },
+            {24, PolicyStatus },
+            {25, PaymentMode },
+            {26, PaymentForm }
+        };
 
         #endregion
 
         #region Methods
 
-        public PropertySettings GetValue(int key) => Values().First(v => v.Index == key);
-
-        public IEnumerable<PropertySettings> Values()
-        {
-            yield return CompanyCd;
-            yield return PolNo;
-            yield return MembershipNo;
-            yield return Lob;
-            yield return Region;
-            yield return WritingAgency;
-            yield return WritingAgent;
-            yield return PrimaryAgentFlag;
-            yield return Commission;
-            yield return Servicing;
-            yield return PlanCode;
-            yield return PlanName;
-            yield return IssuedAge;
-            yield return IssuedGender;
-            yield return LastName;
-            yield return FirstName;
-            yield return MiddleName;
-            yield return PolicyIssueDate;
-            yield return PaidToPaid;
-            yield return CurrentCashValue;
-            yield return ModalPremium;
-            yield return FaceValue;
-            yield return SpouseFaceValue;
-            yield return ActiveFlag;
-            yield return PolicyStatus;
-            yield return PaymentMode;
-            yield return PaymentForm;
-        }
+        public static PropertySettings GetValue(int key) => PropSettDictionary[key];
 
         #endregion
     }

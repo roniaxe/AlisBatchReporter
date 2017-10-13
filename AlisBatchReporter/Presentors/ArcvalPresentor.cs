@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using AlisBatchReporter.Classes;
 using AlisBatchReporter.Views;
 
 namespace AlisBatchReporter.Presentors
@@ -13,15 +13,23 @@ namespace AlisBatchReporter.Presentors
     {
         private readonly IArcvalView _arcvalView;
         private readonly Dictionary<string, List<string>> _diffDictionary = new Dictionary<string, List<string>>();
-        private readonly Dictionary<string, string> _outboundDictionary = new Dictionary<string, string>();
-        private readonly Dictionary<string, string> _sourceDictionary = new Dictionary<string, string>();
+        private readonly HashSet<string> _inactivePolicies = new HashSet<string>();
+        private readonly Dictionary<string, ArcvalInstance> _outboundDictionary = new Dictionary<string, ArcvalInstance>();
+        private readonly Dictionary<string, ArcvalInstance> _sourceDictionary = new Dictionary<string, ArcvalInstance>();
+        private CancellationTokenSource _cancellationTokenSource;
 
 
         public ArcvalPresentor(IArcvalView arcvalView)
         {
             _arcvalView = arcvalView;
             _arcvalView.Compared += CompareArcval;
+            _arcvalView.Cancelled += CancelCompare;
             _arcvalView.OverrideFilesChecked += OverrideFiles;
+        }
+
+        private void CancelCompare()
+        {
+            _cancellationTokenSource.Cancel();
         }
 
         private void OverrideFiles()
@@ -31,6 +39,8 @@ namespace AlisBatchReporter.Presentors
 
         private async void CompareArcval()
         {
+            _arcvalView.DisabledCompareButton();
+            _arcvalView.EnabledCancelButton();
             if (_arcvalView.CopyFiles)
             {
                 _arcvalView.LogProcess("Copy Files Asynch (!)...", false);
@@ -86,15 +96,18 @@ namespace AlisBatchReporter.Presentors
 
             // Deleting Source/Outbound Files
             DeleteFiles();
+            _arcvalView.DisabledCompareButton();
+            _arcvalView.DisabledCancelButton();
         }
 
         private async Task CopyFileAsync(string sourcePath, string destinationPath)
         {
+            _cancellationTokenSource = new CancellationTokenSource();
             using (Stream source = File.Open(sourcePath, FileMode.Open, FileAccess.Read))
             {
                 using (Stream destination = File.Create(destinationPath))
                 {
-                    await source.CopyToAsync(destination);
+                    await source.CopyToAsync(destination, 81920, _cancellationTokenSource.Token);
                 }
             }
         }
@@ -109,185 +122,149 @@ namespace AlisBatchReporter.Presentors
 
         private async Task IndexingSource(string content)
         {
+            _cancellationTokenSource = new CancellationTokenSource();
             //Read Source File And Split
             await Task.Run(() =>
             {
                 var sourceMotation = content.Replace(Convert.ToChar(0x0).ToString(), " ")
-                    .Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+                    .Split(new[] {Environment.NewLine}, StringSplitOptions.None);
                 foreach (var sourceRow in sourceMotation)
                 {
-                    if (sourceRow.Length < 30)
-                        continue;
-                    var rowType = sourceRow.Substring(42, 1);
-                    var key = sourceRow.Substring(30, 13);
-                    if (rowType[0].Equals('5'))
+                    var arcval = ArcvalFactory.GetArcvalInstance(sourceRow);
+
+                    if (!arcval.Valid) continue;
+
+                    if (_inactivePolicies.Contains(arcval.PolicyNo)) continue;
+
+                    if (arcval.Type == ArcvalRowType.BaseCover &&
+                        arcval.Status == ArcvalRowStatus.Inactive)
                     {
-                        var secondKey = sourceRow.Substring(62,8);
-                        key += $@"-{secondKey}";
+                        _inactivePolicies.Add(arcval.PolicyNo);
+                        continue;
                     }
 
                     try
                     {
-                        // Creating Dic with Uniqe Key
-                        if (_sourceDictionary.ContainsKey(key))
-                            if (_diffDictionary.ContainsKey("Duplicates"))
-                                _diffDictionary["Duplicates"].Add(key);
-                            else
-                                _diffDictionary.Add("Duplicates", new List<string> { key });
-                        else
-                            _sourceDictionary.Add($@"{key}", sourceRow);
+                        AddToSrcDic(arcval, "Duplicates in source");
                     }
                     catch (ArgumentException e)
                     {
                         Console.WriteLine(
-                            $@"Error {DateTimeOffset.Now}: {e.Message}, Value: {key}");
+                            $@"Error {DateTimeOffset.Now}: {e.Message}, Value: {arcval.Key}");
                         throw;
                     }
                 }
-            });
+            }, _cancellationTokenSource.Token);
+        }
+
+        private void AddToSrcDic(ArcvalInstance arcval, string dicKey)
+        {
+            if (_sourceDictionary.ContainsKey(arcval.Key))
+                if (_diffDictionary.ContainsKey(dicKey))
+                    _diffDictionary[dicKey].Add(arcval.Key);
+                else
+                    _diffDictionary.Add(dicKey, new List<string> {arcval.Key});
+            else
+                _sourceDictionary.Add(arcval.Key, arcval);
         }
 
         private async Task IndexingOutbound(string content)
         {
+            _cancellationTokenSource = new CancellationTokenSource();
             await Task.Run(() =>
             {
-                var outboundSplitted = content.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+                var outboundSplitted = content.Split(new[] {Environment.NewLine}, StringSplitOptions.None);
                 foreach (var outboundRow in outboundSplitted)
                 {
-                    if (outboundRow.Length < 30)
+                    var arcval = ArcvalFactory.GetArcvalInstance(outboundRow);
+                    if (!arcval.Valid)
                         continue;
-                    var rowType = outboundRow.Substring(42, 1);
-                    var key = outboundRow.Substring(30, 13);
-                    if (rowType.Equals("5"))
-                    {
-                        var secondKey = outboundRow.Substring(62, 8);
-                        key += $@"-{secondKey}";
-                    }
+                    if (_inactivePolicies.Contains(arcval.PolicyNo)) continue;
                     try
                     {
-                        // Creating Dic with Uniqe Key
-                        if (_outboundDictionary.ContainsKey(key))
-                            if (_diffDictionary.ContainsKey("Duplicates"))
-                                _diffDictionary["Duplicates"].Add(key);
-                            else
-                                _diffDictionary.Add("Duplicates", new List<string> {key});
-                        else
-                            _outboundDictionary.Add($@"{key}", outboundRow);
+                        AddToObDic(arcval, "Duplicates in outbound");
                     }
                     catch (ArgumentException e)
                     {
                         Console.WriteLine(
-                            $@"Error {DateTimeOffset.Now}: {e.Message}, Value: {key}");
+                            $@"Error {DateTimeOffset.Now}: {e.Message}, Value: {arcval.Key}");
                         throw;
                     }
                 }
-            });
+            }, _cancellationTokenSource.Token);
+        }
+
+        private void AddToObDic(ArcvalInstance arcval, string dicKey)
+        {
+            if (_outboundDictionary.ContainsKey(arcval.Key))
+                if (_diffDictionary.ContainsKey(dicKey))
+                    _diffDictionary[dicKey].Add(arcval.Key);
+                else
+                    _diffDictionary.Add(dicKey, new List<string> {arcval.Key});
+            else
+                _outboundDictionary.Add(arcval.Key, arcval);
         }
 
         private async Task Validating()
         {
+            _cancellationTokenSource = new CancellationTokenSource();
             await Task.Run(() =>
             {
-                foreach (var sourceKey in _sourceDictionary.Keys)
+                foreach (var source in _sourceDictionary)
                 {
-                    _outboundDictionary.TryGetValue(sourceKey, out var outboundEntry);
+                    _outboundDictionary.TryGetValue(source.Key, out var outboundEntry);
                     if (outboundEntry == null)
                     {
-                        if (_diffDictionary.ContainsKey("[InSourceNotInOutbound]"))
-                            _diffDictionary["[InSourceNotInOutbound]"].Add(sourceKey);
-                        else
-                            _diffDictionary.Add("[InSourceNotInOutbound]", new List<string> {sourceKey});
+                        AddToDiffDic(source.Value, null, "[InSourceNotInOutbound]", null);
                     }
                     else
                     {
-                        var sourceEntry = _sourceDictionary[sourceKey];
-                        sourceEntry = sourceEntry.TrimEnd();
-                        outboundEntry = outboundEntry.TrimEnd();
-                        if (outboundEntry.Length != sourceEntry.Length)
+                        if (outboundEntry.ArcvalProps.Count != source.Value.ArcvalProps.Count)
                         {
-                            if (_diffDictionary.ContainsKey("[Different Row Length]"))
-                                _diffDictionary["[Different Row Length]"].Add(sourceKey);
-                            else
-                                _diffDictionary.Add("[Different Row Length]", new List<string> {sourceKey});
+                            AddToDiffDic(source.Value, null, "[Different Row Length]", null);
                         }
                         else
                         {
-                            string type = null;
-                            int[] cuts = { };
-                            if (sourceEntry.Length == 100 || sourceEntry.Length == 108)
-                            {
-                                cuts = new[]
-                                    {2, 14, 15, 16, 18, 19, 20, 28, 30, 42, 43, 44, 46, 47, 56, 64, 73, 82, 90, 91};
-                                type = "Type1";
-                            }
-                            if (sourceEntry.Length == 72)
-                            {
-                                cuts = new[] {2, 14, 15, 16, 18, 19, 20, 28, 30, 42, 43, 44, 46, 48};
-                                type = "Type7";
-                            }
-                            if (sourceEntry.Length == 177)
-                            {
-                                cuts = new[]
-                                {
-                                    2, 14, 15, 16, 18, 19, 20, 28, 30, 42, 43, 44, 56, 57, 69, 71, 72, 73, 75, 77, 85, 93,
-                                    101, 110, 119
-                                };
-                                type = "Type6A";
-                            }
-                            if (sourceEntry.Length == 195)
-                            {
-                                cuts = new[]
-                                {
-                                    2, 14, 15, 16, 18, 19, 20, 28, 30, 42, 43, 55, 56, 57, 58, 60, 62, 70, 78,
-                                    101, 110, 119, 128, 137, 146
-                                };
-                                type = "Type5";
-                            }
-                            var sourceSplitted = SplitAt(sourceEntry, cuts);
-                            var outboundSplitted = SplitAt(outboundEntry, cuts);
-                            Compare(sourceSplitted, outboundSplitted, type, sourceKey);
+                            Compare(source.Value, outboundEntry);
                         }
                     }
                 }
-            });
+            }, _cancellationTokenSource.Token);
+        }
+
+        private void AddToDiffDic(ArcvalInstance source, ArcvalInstance outbound, string dicKey, int? index)
+        {
+            var val = source.Type == ArcvalRowType.BaseCover || source.Type == ArcvalRowType.Rpu
+                ? $@"{source.Key} ({source.Status.ToString()})"
+                : source.Key;
+            if (outbound != null && index != null)
+            {
+                val = val + $@" - Source Val: {source.ArcvalProps[index.Value].Value}, Outbound Val: {
+                              outbound.ArcvalProps[index.Value].Value
+                          }";
+            }
+            if (_diffDictionary.ContainsKey(dicKey))
+                _diffDictionary[dicKey].Add(val);
+            else
+                _diffDictionary.Add(dicKey, new List<string> { val });
         }
 
         private void Compare(
-            IReadOnlyList<string> sourceSplitted, 
-            IReadOnlyList<string> outboundSplitted, 
-            string type, 
-            string key)
+            ArcvalInstance sourceProps,
+            ArcvalInstance outboundProps)
         {
-            Values values = ArcvalEntityTypeFactory.GetArcvalType(type);
-            
-            for (var i = 0; i < sourceSplitted.Count - 1; i++)
+            for (var i = 0; i < sourceProps.ArcvalProps.Count - 1; i++)
             {
-                Values idxName = values?.GetValue(i);
-                if (idxName == null 
-                    || idxName.ToIgnore 
-                    || sourceSplitted[i].Equals(outboundSplitted[i])) continue;
+                if (sourceProps.ArcvalProps[i].ToIgnore || 
+                    sourceProps.ArcvalProps[i].Value.Equals(outboundProps.ArcvalProps[i].Value)) continue;
 
-                if (idxName.ToRound)
+                if (sourceProps.ArcvalProps[i].Intable)
                 {
-                    Int32.TryParse(sourceSplitted[i], out var x);
-                    Int32.TryParse(outboundSplitted[i], out var y);
-                    if (Math.Abs(x-y) <= 5) continue;
+                    int.TryParse(sourceProps.ArcvalProps[i].Value, out var x);
+                    int.TryParse(outboundProps.ArcvalProps[i].Value, out var y);
+                    if (Math.Abs(x - y) <= 5) continue;
                 }
-
-                if (_diffDictionary.ContainsKey(idxName.Name))
-                {
-                    _diffDictionary[idxName.Name]
-                        .Add(key + $@" - Source Val: {sourceSplitted[i]}, Outbound Val: {outboundSplitted[i]}");
-
-                }
-                else
-                {
-                    _diffDictionary.Add(idxName.Name,
-                        new List<string>
-                        {
-                            key + $@" - Source Val: {sourceSplitted[i]}, Outbound Val: {outboundSplitted[i]}"
-                        });
-                }
+                AddToDiffDic(sourceProps, outboundProps, sourceProps.ArcvalProps[i].Name , i);
             }
         }
 

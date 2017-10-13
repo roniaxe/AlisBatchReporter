@@ -20,6 +20,25 @@ namespace AlisBatchReporter.Classes
         public static readonly Values NumFields = new ArcvalValuesType7(13, "NUM-FIELDS");
         public static readonly Values Extra = new ArcvalValuesType7(14, "EXTRA");
 
+        public static Values[] ValusArr { get; } =
+        {
+            CoCode,
+            ConPlanCode,
+            Gender,
+            RiskClass,
+            SsTable,
+            Filler,
+            WaiverSw,
+            IssDate,
+            IssAge,
+            ConNum,
+            RecType,
+            RecInfo,
+            NumSelected,
+            NumFields,
+            Extra
+        };
+
         private ArcvalValuesType7(int idxValue, string name, bool toIgnore = false, bool toRound=false) : base(idxValue, name, toIgnore, toRound)
         {
         }

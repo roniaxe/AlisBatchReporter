@@ -9,22 +9,47 @@ namespace AlisBatchReporter.Classes
         public static readonly Values InsuredGender = new ArcvalValues(2, "GENDER");
         public static readonly Values RiskClass = new ArcvalValues(3, "RISK-CLASS");
         public static readonly Values SubStdIndex = new ArcvalValues(4, "SS-TABLE");
-        public static readonly Values WaiverPremInd = new ArcvalValues(5, "FILLER");
-        public static readonly Values IssueDate = new ArcvalValues(6, "WAIVER-SW");
-        public static readonly Values InsuredIssueAge = new ArcvalValues(7, "ISS-DATE");
-        public static readonly Values ContractNum = new ArcvalValues(8, "ISS-AGE");
-        public static readonly Values RecordType = new ArcvalValues(9, "CON-NUM");
-        public static readonly Values StatusCode = new ArcvalValues(10, "REC-TYPE");
-        public static readonly Values State = new ArcvalValues(11, "CON-STATUS");
-        public static readonly Values PremiumCode = new ArcvalValues(12, "STA I E-CODE");
-        public static readonly Values GrossPrem = new ArcvalValues(13, "PREM-MODE");
-        public static readonly Values NumOfUnits = new ArcvalValues(14, "GROSS-PREM",false,true);
-        public static readonly Values CashValue = new ArcvalValues(15, "UNITS");
-        public static readonly Values ModalGrossPremium = new ArcvalValues(16, "CASH-VALUE", false, true);
-        public static readonly Values PaidToDate = new ArcvalValues(17, "MODE-PREMIUM", false, true);
-        public static readonly Values SubStdPremType = new ArcvalValues(18, "PAID-TO-DATE");
-        public static readonly Values SubStdExtra = new ArcvalValues(19, "SS-TYPE");
-        public static readonly Values SubStdExtraAnnPrem = new ArcvalValues(20, "EXTRA");
+        public static readonly Values Filler = new ArcvalValues(5, "FILLER");
+        public static readonly Values WaiverPremInd = new ArcvalValues(6, "WAIVER-SW");
+        public static readonly Values IssueDate = new ArcvalValues(7, "ISS-DATE");
+        public static readonly Values InsuredIssueAge = new ArcvalValues(8, "ISS-AGE");
+        public static readonly Values ContractNum = new ArcvalValues(9, "CON-NUM");
+        public static readonly Values RecordType = new ArcvalValues(10, "REC-TYPE");
+        public static readonly Values StatusCode = new ArcvalValues(11, "CON-STATUS");
+        public static readonly Values State = new ArcvalValues(12, "STATE-CODE");
+        public static readonly Values PremiumMode = new ArcvalValues(13, "PREM-MODE");
+        public static readonly Values GrossPrem = new ArcvalValues(14, "GROSS-PREM",false,true);
+        public static readonly Values NumOfUnits = new ArcvalValues(15, "UNITS");
+        public static readonly Values CashValue = new ArcvalValues(16, "CASH-VALUE", false, true);
+        public static readonly Values ModalGrossPremium = new ArcvalValues(17, "MODE-PREMIUM", false, true);
+        public static readonly Values PaidToDate = new ArcvalValues(18, "PAID-TO-DATE");
+        public static readonly Values SubStdPremType = new ArcvalValues(19, "SS-TYPE");
+        public static readonly Values SubStdExtra = new ArcvalValues(20, "EXTRA");
+
+        public static Values[] ValusArr { get; } =
+        {
+            CompanyCode,
+            PlanCode,
+            InsuredGender,
+            RiskClass,
+            SubStdIndex,
+            Filler,
+            WaiverPremInd,
+            IssueDate,
+            InsuredIssueAge,
+            ContractNum,
+            RecordType,
+            StatusCode,
+            State,
+            PremiumMode,
+            GrossPrem,
+            NumOfUnits,
+            CashValue,
+            ModalGrossPremium,
+            PaidToDate,
+            SubStdPremType,
+            SubStdExtra
+        };
 
         private ArcvalValues(int idxValue, string name, bool ignore = false, bool toRound = false) : base(idxValue, name, ignore, toRound)
         {
@@ -47,7 +72,7 @@ namespace AlisBatchReporter.Classes
                 yield return RecordType;
                 yield return StatusCode;
                 yield return State;
-                yield return PremiumCode;
+                yield return PremiumMode;
                 yield return GrossPrem;
                 yield return NumOfUnits;
                 yield return CashValue;
@@ -55,7 +80,6 @@ namespace AlisBatchReporter.Classes
                 yield return PaidToDate;
                 yield return SubStdPremType;
                 yield return SubStdExtra;
-                yield return SubStdExtraAnnPrem;
             }
         }
     }

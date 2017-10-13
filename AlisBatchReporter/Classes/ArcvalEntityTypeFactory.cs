@@ -13,7 +13,7 @@ namespace AlisBatchReporter.Classes
             Values result = null;
             switch (type)
             {
-                case "Type1":
+                case "Type":
                     result = new ArcvalValues();
                     break;
                 case "Type7":
