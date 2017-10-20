@@ -232,6 +232,6 @@
         private System.Windows.Forms.RadioButton uatRadioButton;
         private System.Windows.Forms.RadioButton prodRadioButton;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Button CancelButton;
+        private new System.Windows.Forms.Button CancelButton;
     }
 }

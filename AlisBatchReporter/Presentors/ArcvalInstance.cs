@@ -10,76 +10,131 @@ namespace AlisBatchReporter.Presentors
         private readonly string _outboundRow;
         private string[] _splitted;
 
-        public string Key { get; private set; }
-        public string PolicyNo { get; private set; }
-        public ArcvalRowStatus Status { get; private set; }
-        public ArcvalRowType Type { get; private set; }
-        public bool Valid { get; private set; }
-        public List<ArcvalProps> ArcvalProps { get; set; } = new List<ArcvalProps>();
-
         public ArcvalInstance(string outboundRow)
         {
             _outboundRow = outboundRow;
         }
 
-        private bool Validate()
+        public string Key { get; private set; }
+        public string PolicyNo { get; private set; }
+        public ArcvalRowStatus? Status { get; set; }
+        public ArcvalRowType Type { get; private set; }
+        public StructureType StructureType { get; private set; }
+        public List<ArcvalProps> ArcvalProps { get; set; } = new List<ArcvalProps>();
+
+        public bool Validate()
         {
-            bool val = false;
-            if (_outboundRow.Length >= 30)
-            {
-                Valid = true;
-                val = true;
-            }
-            return val;
+            return _outboundRow.Length >= 30;
         }
 
-        public void SetKeyAndType()
+        public void SetPolicyNo()
         {
-            Validate();
-            if (!Valid) return;
             PolicyNo = _outboundRow.Substring(30, 12);
+        }
+
+        public void Configure()
+        {
+            // Get Type
             int.TryParse(_outboundRow.Substring(42, 1), out var type);
             Type = (ArcvalRowType) type;
-            GetKey(Type);
-            if (Type == ArcvalRowType.BaseCover)
+
+            // Get Key
+            Key = GetKey(Type);
+
+
+            if (Type == ArcvalRowType.PolicyRecord)
             {
                 int.TryParse(_outboundRow[43].ToString(), out var status);
                 Status = GetStatus(status);
-                // Type 1 - RPU
-                if (Status == ArcvalRowStatus.Rpu)
-                {
-                    Type = ArcvalRowType.Rpu;
-                }
+                ArcvalFactory.PolicyStatusDic.Add(PolicyNo, Status);
             }
-            _splitted = CutArcval();
-            GetProperties(Type);
         }
 
-        private void GetProperties(ArcvalRowType type)
+        public void Process()
+        {
+            if (Status == null)
+                GetStatusNonPolicyRecord();
+            StructureType = GetStructureType();
+            _splitted = CutArcval();
+            GetProperties(StructureType);
+        }
+
+        private void GetStatusNonPolicyRecord()
+        {
+            if (ArcvalFactory.PolicyStatusDic.ContainsKey(PolicyNo))
+                Status = ArcvalFactory.PolicyStatusDic[PolicyNo];
+        }
+
+        private StructureType GetStructureType()
+        {
+            StructureType result = 0;
+
+            switch (Type)
+            {
+                case ArcvalRowType.PolicyRecord:
+                    switch (Status)
+                    {
+                        case ArcvalRowStatus.Active:
+                            result = StructureType.PolicyStructure;
+                            break;
+                        case ArcvalRowStatus.Rpu:
+                            result = StructureType.RpuStructure;
+                            break;
+                        case ArcvalRowStatus.Eti:
+                            result = StructureType.EtiStructure;
+                            break;
+                        case ArcvalRowStatus.Disability:
+                            break;
+                        case ArcvalRowStatus.PaidUp:
+                            break;
+                        case null:
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                    break;
+                case ArcvalRowType.Rider:
+                    result = StructureType.RiderStructure;
+                    break;
+                case ArcvalRowType.Waiver:
+                    result = StructureType.WaiverStructure;
+                    break;
+                case ArcvalRowType.UserDefined:
+                    result = StructureType.UserDefinedStructure;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            return result;
+        }
+
+        private void GetProperties(StructureType type)
         {
             Values[] arcvalValues;
             switch (type)
             {
-                case ArcvalRowType.BaseCover:
+                case StructureType.PolicyStructure:
                     arcvalValues = ArcvalValues.ValusArr;
                     break;
-                case ArcvalRowType.Rpu:
-                    arcvalValues = ArcvalValuesType4.ValusArr;
+                case StructureType.RpuStructure:
+                    arcvalValues = ArcvalValuesStatusRpu.ValusArr;
                     break;
-                case ArcvalRowType.Rider:
+                case StructureType.EtiStructure:
+                    arcvalValues = ArcvalValuesStatusEti.ValusArr;
+                    break;
+                case StructureType.RiderStructure:
                     arcvalValues = ArcvalValuesType5.ValusArr;
                     break;
-                case ArcvalRowType.Waiver:
+                case StructureType.WaiverStructure:
                     arcvalValues = ArcvalValuesType6A.ValusArr;
                     break;
-                case ArcvalRowType.UserDefined:
+                case StructureType.UserDefinedStructure:
                     arcvalValues = ArcvalValuesType7.ValusArr;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
             for (var i = 0; i <= arcvalValues.Length - 1; i++)
-            {
                 ArcvalProps.Add(new ArcvalProps
                 {
                     Intable = arcvalValues[i].ToRound,
@@ -87,38 +142,40 @@ namespace AlisBatchReporter.Presentors
                     ToIgnore = arcvalValues[i].ToIgnore,
                     Value = _splitted[i]
                 });
-            }
         }
 
         private string[] CutArcval()
         {
             int[] cuts = { };
-            switch (Type)
+            switch (StructureType)
             {
-                case ArcvalRowType.BaseCover:
+                case StructureType.PolicyStructure:
                     cuts = new[]
                         {2, 14, 15, 16, 18, 19, 20, 28, 30, 42, 43, 44, 46, 47, 56, 64, 73, 82, 90, 91};
                     break;
-                case ArcvalRowType.Rpu:
+                case StructureType.RpuStructure:
                     cuts = new[]
                         {2, 14, 15, 16, 18, 19, 20, 28, 30, 42, 43, 44, 46, 47, 56, 64, 73, 75, 83};
                     break;
-                case ArcvalRowType.UserDefined:
-                    cuts = new[] { 2, 14, 15, 16, 18, 19, 20, 28, 30, 42, 43, 44, 46, 48 };
+                case StructureType.EtiStructure:
+                    cuts = new[]
+                        {2, 14, 15, 16, 18, 19, 20, 28, 30, 42, 43, 44, 46, 53, 56, 64, 73, 81};
                     break;
-                case ArcvalRowType.Waiver:
+                case StructureType.UserDefinedStructure:
+                    cuts = new[] {2, 14, 15, 16, 18, 19, 20, 28, 30, 42, 43, 44, 46, 48};
+                    break;
+                case StructureType.WaiverStructure:
                     cuts = new[]
                     {
-                        2, 14, 15, 16, 18, 19, 20, 28, 30, 42, 43, 44, 56, 57, 69, 71, 72, 73, 75, 77,
-                        85, 93,
-                        101, 110, 119
+                        2, 14, 15, 16, 18, 19, 20, 28, 30, 42, 43, 44, 56, 57, 69, 71, 72, 73, 75, 77, 85, 93, 101, 110,
+                        119
                     };
                     break;
-                case ArcvalRowType.Rider:
+                case StructureType.RiderStructure:
                     cuts = new[]
                     {
-                        2, 14, 15, 16, 18, 19, 20, 28, 30, 42, 43, 55, 56, 57, 58, 60, 62, 70, 78,
-                        101, 110, 119, 128, 137, 146
+                        2, 14, 15, 16, 18, 19, 20, 28, 30, 42, 43, 55, 56, 57, 58, 60, 62, 70, 78, 101, 110, 119, 128,
+                        137, 146
                     };
                     break;
             }
@@ -165,23 +222,20 @@ namespace AlisBatchReporter.Presentors
             }
         }
 
-        private void GetKey(ArcvalRowType type)
+        private string GetKey(ArcvalRowType type)
         {
             switch (type)
             {
-                case ArcvalRowType.BaseCover:
-                case ArcvalRowType.Rpu:
+                case ArcvalRowType.PolicyRecord:
                 case ArcvalRowType.Waiver:
                 case ArcvalRowType.UserDefined:
-                    Key = PolicyNo + (int)Type;
-                    break;
+                    return PolicyNo + (int) Type;
                 case ArcvalRowType.Rider:
                     var secondKey = _outboundRow.Substring(62, 8);
                     var thirdKey = _outboundRow.Substring(70, 8);
-                    Key = PolicyNo + (int)Type + $@"-{secondKey}-{thirdKey}";
-                    break;
+                    return PolicyNo + (int) Type + $@"-{secondKey}-{thirdKey}";
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+                    throw new ArgumentOutOfRangeException(nameof(type), type, @"Unrecognized Arcval Type");
             }
         }
     }
@@ -196,8 +250,7 @@ namespace AlisBatchReporter.Presentors
 
     public enum ArcvalRowType
     {
-        BaseCover = 1,
-        Rpu = 4,
+        PolicyRecord = 1,
         Rider = 5,
         Waiver = 6,
         UserDefined = 7
@@ -211,6 +264,15 @@ namespace AlisBatchReporter.Presentors
         Eti = 5,
         Disability = 6,
         PaidUp = 7
+    }
 
+    public enum StructureType
+    {
+        PolicyStructure = 1,
+        RpuStructure = 4,
+        EtiStructure = 5,
+        RiderStructure = 55,
+        WaiverStructure = 6,
+        UserDefinedStructure = 7
     }
 }

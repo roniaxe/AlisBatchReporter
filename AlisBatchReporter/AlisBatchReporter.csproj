@@ -105,11 +105,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Classes\ArcvalEntityTypeFactory.cs" />
-    <Compile Include="Classes\ArcvalValuesType4.cs" />
+    <Compile Include="Classes\ArcvalValuesStatusEti.cs" />
+    <Compile Include="Classes\ArcvalValuesStatusRpu.cs" />
     <Compile Include="Classes\IrfPropSettings.cs" />
     <Compile Include="Classes\MailModule.cs" />
     <Compile Include="Classes\QueryFactory.cs" />
+    <Compile Include="Classes\ArcvalValuesType1.cs" />
     <Compile Include="Models\Distribution.cs" />
     <Compile Include="Models\EntityFramwork\AlisDbContext.cs" />
     <Compile Include="Models\EntityFramwork\AlisDbInitializer.cs" />

@@ -1,22 +1,7 @@
-﻿using System.Collections.Generic;
-
-namespace AlisBatchReporter.Classes
+﻿namespace AlisBatchReporter.Classes
 {
-    public class ArcvalValues : Values
+    class ArcvalValues : ArcvalValuesType1
     {
-        public static readonly Values CompanyCode = new ArcvalValues(0, "CO-CODE");
-        public static readonly Values PlanCode = new ArcvalValues(1, "CON-PLANCODE", true);
-        public static readonly Values InsuredGender = new ArcvalValues(2, "GENDER");
-        public static readonly Values RiskClass = new ArcvalValues(3, "RISK-CLASS");
-        public static readonly Values SubStdIndex = new ArcvalValues(4, "SS-TABLE");
-        public static readonly Values Filler = new ArcvalValues(5, "FILLER");
-        public static readonly Values WaiverPremInd = new ArcvalValues(6, "WAIVER-SW");
-        public static readonly Values IssueDate = new ArcvalValues(7, "ISS-DATE");
-        public static readonly Values InsuredIssueAge = new ArcvalValues(8, "ISS-AGE");
-        public static readonly Values ContractNum = new ArcvalValues(9, "CON-NUM");
-        public static readonly Values RecordType = new ArcvalValues(10, "REC-TYPE");
-        public static readonly Values StatusCode = new ArcvalValues(11, "CON-STATUS");
-        public static readonly Values State = new ArcvalValues(12, "STATE-CODE");
         public static readonly Values PremiumMode = new ArcvalValues(13, "PREM-MODE");
         public static readonly Values GrossPrem = new ArcvalValues(14, "GROSS-PREM",false,true);
         public static readonly Values NumOfUnits = new ArcvalValues(15, "UNITS");
@@ -53,34 +38,6 @@ namespace AlisBatchReporter.Classes
 
         private ArcvalValues(int idxValue, string name, bool ignore = false, bool toRound = false) : base(idxValue, name, ignore, toRound)
         {
-        }
-
-        public ArcvalValues() { }
-
-        public override IEnumerable<Values> GetValues {
-            get
-            {
-                yield return CompanyCode;
-                yield return PlanCode;
-                yield return InsuredGender;
-                yield return RiskClass;
-                yield return SubStdIndex;
-                yield return WaiverPremInd;
-                yield return IssueDate;
-                yield return InsuredIssueAge;
-                yield return ContractNum;
-                yield return RecordType;
-                yield return StatusCode;
-                yield return State;
-                yield return PremiumMode;
-                yield return GrossPrem;
-                yield return NumOfUnits;
-                yield return CashValue;
-                yield return ModalGrossPremium;
-                yield return PaidToDate;
-                yield return SubStdPremType;
-                yield return SubStdExtra;
-            }
         }
     }
 }

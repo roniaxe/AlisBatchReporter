@@ -34,11 +34,6 @@ namespace AlisBatchReporter
 
         private static void ApplicationOnThreadException(object sender, ThreadExceptionEventArgs e)
         {
-            if (e.Exception is TaskCanceledException)
-            {
-                MessageBox.Show(e.Exception.Message, @"Task Canelled");
-                return;
-            }
             var message = $@"Sorry, Something went wrong:{Environment.NewLine}{e.Exception.Message}";
             Console.WriteLine($@"Error {DateTimeOffset.Now}: {e.Exception}");
             MessageBox.Show(message, @"Unexpected Error");

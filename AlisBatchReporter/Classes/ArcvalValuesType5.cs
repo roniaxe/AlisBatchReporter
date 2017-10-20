@@ -4,17 +4,15 @@ namespace AlisBatchReporter.Classes
 {
     class ArcvalValuesType5 : Values
     {
-        public static readonly Values CoCode = new ArcvalValuesType5(0, "CO-CODE");
-        public static readonly Values ConPlanCode = new ArcvalValuesType5(1, "CON-PLANCODE", true);
-        public static readonly Values Gender = new ArcvalValuesType5(2, "GENDER");
-        public static readonly Values RiskClass = new ArcvalValuesType5(3, "RISK-CLASS");
-        public static readonly Values SsTable = new ArcvalValuesType5(4, "SS-TABLE");
-        public static readonly Values Filler = new ArcvalValuesType5(5, "FILLER");
-        public static readonly Values WaiverSw = new ArcvalValuesType5(6, "WAIVER-SW");
-        public static readonly Values IssDate = new ArcvalValuesType5(7, "ISS-DATE");
-        public static readonly Values IssAge = new ArcvalValuesType5(8, "ISS-AGE");
-        public static readonly Values ConNum = new ArcvalValuesType5(9, "CON-NUM");
-        public static readonly Values RecType = new ArcvalValuesType5(10, "REC-TYPE");
+        #region Constructor
+
+        private ArcvalValuesType5(int idxValue, string name, bool toIgnore = false, bool toRound = false) : base(idxValue, name, toIgnore, toRound)
+        {
+        }
+
+        #endregion
+
+        #region Properties
         public static readonly Values CovPlancode = new ArcvalValuesType5(11, "COV-PLANCODE", true);
         public static readonly Values RdrWp = new ArcvalValuesType5(12, "RDR-WP");
         public static readonly Values RdrGender = new ArcvalValuesType5(13, "RDR-GENDER");
@@ -30,20 +28,22 @@ namespace AlisBatchReporter.Classes
         public static readonly Values RdrModePrem = new ArcvalValuesType5(23, "RDR-MODE-PREMIUM", false, true);
         public static readonly Values RdrCashValue = new ArcvalValuesType5(24, "RDR-CASH-VALUE", false, true);
         public static readonly Values Extra = new ArcvalValuesType5(25, "EXTRA");
+        #endregion
 
+        #region StaticProperties
         public static Values[] ValusArr { get; } =
         {
-            CoCode,
-            ConPlanCode,
-            Gender,
+            CompanyCode,
+            PlanCode,
+            InsuredGender,
             RiskClass,
-            SsTable,
+            SubStdIndex,
             Filler,
-            WaiverSw,
-            IssDate,
-            IssAge,
-            ConNum,
-            RecType,
+            WaiverPremInd,
+            IssueDate,
+            InsuredIssueAge,
+            ContractNum,
+            RecordType,
             CovPlancode,
             RdrWp,
             RdrGender,
@@ -59,43 +59,7 @@ namespace AlisBatchReporter.Classes
             RdrModePrem,
             RdrCashValue,
             Extra
-        };
-
-        private ArcvalValuesType5(int idxValue, string name, bool toIgnore = false, bool toRound = false) : base(idxValue, name, toIgnore, toRound)
-        {
-        }
-        public ArcvalValuesType5() { }
-        public override IEnumerable<Values> GetValues
-        {
-            get
-            {
-                yield return CoCode;
-                yield return ConPlanCode;
-                yield return Gender;
-                yield return RiskClass;
-                yield return SsTable;
-                yield return Filler;
-                yield return WaiverSw;
-                yield return IssDate;
-                yield return IssAge;
-                yield return ConNum;
-                yield return RecType;
-                yield return CovPlancode;
-                yield return RdrWp;
-                yield return RdrGender;
-                yield return RdrRisk;
-                yield return RdrAge;
-                yield return RdrSub;
-                yield return RdrEff;
-                yield return RdrExp;
-                yield return RdrFace;
-                yield return RdrStatRes;
-                yield return RdrTaxRes;
-                yield return RdrGrossPrem;
-                yield return RdrModePrem;
-                yield return RdrCashValue;
-                yield return Extra;
-            }
-        }
+        };        
+        #endregion
     }
 }

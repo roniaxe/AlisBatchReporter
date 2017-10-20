@@ -11,13 +11,17 @@ namespace AlisBatchReporter.Presentors
 {
     internal class ArcvalPresentor
     {
+        #region Properties
+
         private readonly IArcvalView _arcvalView;
+        private readonly Dictionary<string, ArcvalInstance> _outboundDic = new Dictionary<string, ArcvalInstance>();
+        private readonly Dictionary<string, ArcvalInstance> _sourceDic = new Dictionary<string, ArcvalInstance>();
         private readonly Dictionary<string, List<string>> _diffDictionary = new Dictionary<string, List<string>>();
-        private readonly HashSet<string> _inactivePolicies = new HashSet<string>();
-        private readonly Dictionary<string, ArcvalInstance> _outboundDictionary = new Dictionary<string, ArcvalInstance>();
-        private readonly Dictionary<string, ArcvalInstance> _sourceDictionary = new Dictionary<string, ArcvalInstance>();
         private CancellationTokenSource _cancellationTokenSource;
 
+        #endregion
+
+        #region Constructor
 
         public ArcvalPresentor(IArcvalView arcvalView)
         {
@@ -26,6 +30,10 @@ namespace AlisBatchReporter.Presentors
             _arcvalView.Cancelled += CancelCompare;
             _arcvalView.OverrideFilesChecked += OverrideFiles;
         }
+
+        #endregion
+
+        
 
         private void CancelCompare()
         {
@@ -43,46 +51,34 @@ namespace AlisBatchReporter.Presentors
             _arcvalView.EnabledCancelButton();
             if (_arcvalView.CopyFiles)
             {
-                _arcvalView.LogProcess("Copy Files Asynch (!)...", false);
-                //await CopyFiles();
-                var copyTasks = new Task[2];
-
-                var sourceFileName = !string.IsNullOrEmpty(_arcvalView.SourceFileName)
-                    ? _arcvalView.SourceFileName
-                    : "ARCVAL.TXT";
-
-                var outboundFileName = !string.IsNullOrEmpty(_arcvalView.OutboundFileName)
-                    ? _arcvalView.OutboundFileName
-                    : "ARCVAL_Traditional.txt";
-
-                var envPath = _arcvalView.ProdRadioButton ? @"\\dmfdwh001pr\X" : @"\\dmfdwh001ut\E";
-
-                copyTasks[0] = CopyFileAsync(
-                    $@"{envPath}\Deploy\Prod\FTP\Validation\ARCVAL\{sourceFileName}",
-                    Path.Combine(Directory.GetCurrentDirectory(), "AV_Source.txt"));
-
-                copyTasks[1] = CopyFileAsync(
-                    $@"{envPath}\Deploy\Prod\FTP\Outbound\ARCVAL\{outboundFileName}",
-                    Path.Combine(Directory.GetCurrentDirectory(), "AV_Outbound.txt"));
-
-                await Task.WhenAll(copyTasks);
-                _arcvalView.LogProcess("Done!", true);
+                await CopyFiles();
             }
 
             // Reading & Splitting
-            _arcvalView.LogProcess("Reading Files Asynch (!)...", false);
-            var sourceContent = ReadFiles("AV_Source.txt");
-            var outboundContent = ReadFiles("AV_Outbound.txt");
-            await Task.WhenAll(sourceContent, outboundContent);
-            _arcvalView.LogProcess("Done!", true);
+            _cancellationTokenSource = new CancellationTokenSource();
+            try
+            {
+                _arcvalView.LogProcess("Reading Files...", false);
+                var sourceContent = ReadFiles("AV_Source.txt");
+                var outboundContent = ReadFiles("AV_Outbound.txt");
+                await Task.WhenAll(sourceContent, outboundContent);
+                _arcvalView.LogProcess("Done!", true);
 
-            //Indexing
-            _arcvalView.LogProcess("Indexing Source...", false);
-            await IndexingSource(await sourceContent);
-            _arcvalView.LogProcess("Done!", true);
-            _arcvalView.LogProcess("Indexing Outbound...", false);
-            await IndexingOutbound(await outboundContent);
-            _arcvalView.LogProcess("Done!", true);
+                _arcvalView.LogProcess("Indexing Source File...", false);
+                await Task.Run(() => Indexing(sourceContent.Result, _sourceDic));
+                _arcvalView.LogProcess("Done!", true);
+
+                _arcvalView.LogProcess("Indexing Outbound File...", false);
+                await Task.Run(() => Indexing(outboundContent.Result, _outboundDic));
+                _arcvalView.LogProcess("Done!", true);               
+            }
+            catch (TaskCanceledException exception)
+            {
+                MessageBox.Show(exception.Message, @"Task Cancelled");
+                _arcvalView.DisabledCancelButton();
+                _arcvalView.EnabledCompareButton();
+                return;
+            }
 
             // Validing
             _arcvalView.LogProcess("Validating...", false);
@@ -100,6 +96,33 @@ namespace AlisBatchReporter.Presentors
             _arcvalView.DisabledCancelButton();
         }
 
+        private async Task CopyFiles()
+        {
+            _arcvalView.LogProcess("Copy Files Asynch (!)...", false);
+            var copyTasks = new Task[2];
+
+            var sourceFileName = !string.IsNullOrEmpty(_arcvalView.SourceFileName)
+                ? _arcvalView.SourceFileName
+                : "ARCVAL.TXT";
+
+            var outboundFileName = !string.IsNullOrEmpty(_arcvalView.OutboundFileName)
+                ? _arcvalView.OutboundFileName
+                : "ARCVAL_Traditional.txt";
+
+            var envPath = _arcvalView.ProdRadioButton ? @"\\dmfdwh001pr\X" : @"\\dmfdwh001ut\E";
+
+            copyTasks[0] = CopyFileAsync(
+                $@"{envPath}\Deploy\Prod\FTP\Validation\ARCVAL\{sourceFileName}",
+                Path.Combine(Directory.GetCurrentDirectory(), "AV_Source.txt"));
+
+            copyTasks[1] = CopyFileAsync(
+                $@"{envPath}\Deploy\Prod\FTP\Outbound\ARCVAL\{outboundFileName}",
+                Path.Combine(Directory.GetCurrentDirectory(), "AV_Outbound.txt"));
+
+            await Task.WhenAll(copyTasks);
+            _arcvalView.LogProcess("Done!", true);
+        }
+
         private async Task CopyFileAsync(string sourcePath, string destinationPath)
         {
             _cancellationTokenSource = new CancellationTokenSource();
@@ -112,97 +135,69 @@ namespace AlisBatchReporter.Presentors
             }
         }
 
-        private async Task<string> ReadFiles(string fileName)
+        private static async Task<string> ReadFiles(string fileName)
         {
-            using (var sourceReader = File.OpenText(Directory.GetCurrentDirectory() + $@"\{fileName}"))
+            try
             {
-                return await sourceReader.ReadToEndAsync();
+                using (var sourceReader = File.OpenText(Directory.GetCurrentDirectory() + $@"\{fileName}"))
+                {
+                    return await sourceReader.ReadToEndAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
             }
         }
 
-        private async Task IndexingSource(string content)
+        private void Indexing(string content, IDictionary<string, ArcvalInstance> dic)
         {
-            _cancellationTokenSource = new CancellationTokenSource();
-            //Read Source File And Split
-            await Task.Run(() =>
+            ArcvalFactory.PolicyStatusDic.Clear();
+            var sourceMotation = content
+                .Replace(Convert.ToChar(0x0).ToString(), " ")
+                .Split(new[] {Environment.NewLine}, StringSplitOptions.None);
+
+            foreach (var sourceInstance in sourceMotation)
             {
-                var sourceMotation = content.Replace(Convert.ToChar(0x0).ToString(), " ")
-                    .Split(new[] {Environment.NewLine}, StringSplitOptions.None);
-                foreach (var sourceRow in sourceMotation)
-                {
-                    var arcval = ArcvalFactory.GetArcvalInstance(sourceRow);
-
-                    if (!arcval.Valid) continue;
-
-                    if (_inactivePolicies.Contains(arcval.PolicyNo)) continue;
-
-                    if (arcval.Type == ArcvalRowType.BaseCover &&
-                        arcval.Status == ArcvalRowStatus.Inactive)
-                    {
-                        _inactivePolicies.Add(arcval.PolicyNo);
-                        continue;
-                    }
-
-                    try
-                    {
-                        AddToSrcDic(arcval, "Duplicates in source");
-                    }
-                    catch (ArgumentException e)
-                    {
-                        Console.WriteLine(
-                            $@"Error {DateTimeOffset.Now}: {e.Message}, Value: {arcval.Key}");
-                        throw;
-                    }
-                }
-            }, _cancellationTokenSource.Token);
+                ProcessArcval(sourceInstance, dic);
+            }
         }
 
-        private void AddToSrcDic(ArcvalInstance arcval, string dicKey)
+        private void ProcessArcval(string arcvalRow, IDictionary<string, ArcvalInstance> dic)
         {
-            if (_sourceDictionary.ContainsKey(arcval.Key))
-                if (_diffDictionary.ContainsKey(dicKey))
-                    _diffDictionary[dicKey].Add(arcval.Key);
-                else
-                    _diffDictionary.Add(dicKey, new List<string> {arcval.Key});
-            else
-                _sourceDictionary.Add(arcval.Key, arcval);
-        }
+            var arcval = ArcvalFactory.GetArcvalInstance(arcvalRow);
+            if (arcval == null) return;
 
-        private async Task IndexingOutbound(string content)
-        {
-            _cancellationTokenSource = new CancellationTokenSource();
-            await Task.Run(() =>
+            try
             {
-                var outboundSplitted = content.Split(new[] {Environment.NewLine}, StringSplitOptions.None);
-                foreach (var outboundRow in outboundSplitted)
-                {
-                    var arcval = ArcvalFactory.GetArcvalInstance(outboundRow);
-                    if (!arcval.Valid)
-                        continue;
-                    if (_inactivePolicies.Contains(arcval.PolicyNo)) continue;
-                    try
-                    {
-                        AddToObDic(arcval, "Duplicates in outbound");
-                    }
-                    catch (ArgumentException e)
-                    {
-                        Console.WriteLine(
-                            $@"Error {DateTimeOffset.Now}: {e.Message}, Value: {arcval.Key}");
-                        throw;
-                    }
-                }
-            }, _cancellationTokenSource.Token);
+                AddToDictionary(dic, arcval);
+            }
+            catch (ArgumentException e)
+            {
+                Console.WriteLine(
+                    $@"Error {DateTimeOffset.Now}: {e.Message}, Value: {arcval.Key}");
+                throw;
+            }
         }
 
-        private void AddToObDic(ArcvalInstance arcval, string dicKey)
+        private void AddToDictionary(IDictionary<string, ArcvalInstance> dic, ArcvalInstance arcval)
         {
-            if (_outboundDictionary.ContainsKey(arcval.Key))
-                if (_diffDictionary.ContainsKey(dicKey))
-                    _diffDictionary[dicKey].Add(arcval.Key);
+            if (dic.ContainsKey(arcval.Key))
+            {
+                if (_diffDictionary.ContainsKey("Duplicates"))
+                {
+                    _diffDictionary["Duplicates"].Add(arcval.Key);
+                }
                 else
-                    _diffDictionary.Add(dicKey, new List<string> {arcval.Key});
+                {
+                    _diffDictionary["Duplicates"] = new List<string>{ arcval.Key };
+                }
+            }
             else
-                _outboundDictionary.Add(arcval.Key, arcval);
+            {
+                dic.Add(arcval.Key, arcval);
+            }
         }
 
         private async Task Validating()
@@ -210,9 +205,9 @@ namespace AlisBatchReporter.Presentors
             _cancellationTokenSource = new CancellationTokenSource();
             await Task.Run(() =>
             {
-                foreach (var source in _sourceDictionary)
+                foreach (var source in _sourceDic)
                 {
-                    _outboundDictionary.TryGetValue(source.Key, out var outboundEntry);
+                    _outboundDic.TryGetValue(source.Key, out var outboundEntry);
                     if (outboundEntry == null)
                     {
                         AddToDiffDic(source.Value, null, "[InSourceNotInOutbound]", null);
@@ -220,13 +215,9 @@ namespace AlisBatchReporter.Presentors
                     else
                     {
                         if (outboundEntry.ArcvalProps.Count != source.Value.ArcvalProps.Count)
-                        {
                             AddToDiffDic(source.Value, null, "[Different Row Length]", null);
-                        }
                         else
-                        {
                             Compare(source.Value, outboundEntry);
-                        }
                     }
                 }
             }, _cancellationTokenSource.Token);
@@ -234,19 +225,16 @@ namespace AlisBatchReporter.Presentors
 
         private void AddToDiffDic(ArcvalInstance source, ArcvalInstance outbound, string dicKey, int? index)
         {
-            var val = source.Type == ArcvalRowType.BaseCover || source.Type == ArcvalRowType.Rpu
-                ? $@"{source.Key} ({source.Status.ToString()})"
-                : source.Key;
+            var val = $@"{source.Key} ({source.Status.ToString()})";
+
             if (outbound != null && index != null)
-            {
                 val = val + $@" - Source Val: {source.ArcvalProps[index.Value].Value}, Outbound Val: {
                               outbound.ArcvalProps[index.Value].Value
                           }";
-            }
             if (_diffDictionary.ContainsKey(dicKey))
                 _diffDictionary[dicKey].Add(val);
             else
-                _diffDictionary.Add(dicKey, new List<string> { val });
+                _diffDictionary.Add(dicKey, new List<string> {val});
         }
 
         private void Compare(
@@ -255,7 +243,7 @@ namespace AlisBatchReporter.Presentors
         {
             for (var i = 0; i < sourceProps.ArcvalProps.Count - 1; i++)
             {
-                if (sourceProps.ArcvalProps[i].ToIgnore || 
+                if (sourceProps.ArcvalProps[i].ToIgnore ||
                     sourceProps.ArcvalProps[i].Value.Equals(outboundProps.ArcvalProps[i].Value)) continue;
 
                 if (sourceProps.ArcvalProps[i].Intable)
@@ -264,7 +252,7 @@ namespace AlisBatchReporter.Presentors
                     int.TryParse(outboundProps.ArcvalProps[i].Value, out var y);
                     if (Math.Abs(x - y) <= 5) continue;
                 }
-                AddToDiffDic(sourceProps, outboundProps, sourceProps.ArcvalProps[i].Name , i);
+                AddToDiffDic(sourceProps, outboundProps, sourceProps.ArcvalProps[i].Name, i);
             }
         }
 
