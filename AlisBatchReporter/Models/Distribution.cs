@@ -13,7 +13,6 @@ namespace AlisBatchReporter.Models
 
         public override string ToString()
         {
-            //DisplayMember = $@"{FirstName} {LastName} ({EmailAddress})";
             return $@"{FirstName} {LastName} ({EmailAddress})";
         }
     }

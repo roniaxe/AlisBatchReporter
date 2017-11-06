@@ -79,7 +79,7 @@
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
             this.newToolStripMenuItem.Size = new System.Drawing.Size(191, 26);
             this.newToolStripMenuItem.Text = "New Report";
-            this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
+            this.newToolStripMenuItem.Click += new System.EventHandler(this.NewToolStripMenuItem_Click);
             // 
             // validateExportsToolStripMenuItem
             // 
@@ -98,49 +98,49 @@
             this.unallocatedSuspenseToolStripMenuItem.Name = "unallocatedSuspenseToolStripMenuItem";
             this.unallocatedSuspenseToolStripMenuItem.Size = new System.Drawing.Size(267, 26);
             this.unallocatedSuspenseToolStripMenuItem.Text = "Unallocated Suspense";
-            this.unallocatedSuspenseToolStripMenuItem.Click += new System.EventHandler(this.unallocatedSuspenseToolStripMenuItem_Click);
+            this.unallocatedSuspenseToolStripMenuItem.Click += new System.EventHandler(this.UnallocatedSuspenseToolStripMenuItem_Click);
             // 
             // eftExportToolStripMenuItem
             // 
             this.eftExportToolStripMenuItem.Name = "eftExportToolStripMenuItem";
             this.eftExportToolStripMenuItem.Size = new System.Drawing.Size(267, 26);
             this.eftExportToolStripMenuItem.Text = "Eft Export";
-            this.eftExportToolStripMenuItem.Click += new System.EventHandler(this.eftExportToolStripMenuItem_Click);
+            this.eftExportToolStripMenuItem.Click += new System.EventHandler(this.EftExportToolStripMenuItem_Click);
             // 
             // dMFIOutboundValidationsToolStripMenuItem
             // 
             this.dMFIOutboundValidationsToolStripMenuItem.Name = "dMFIOutboundValidationsToolStripMenuItem";
             this.dMFIOutboundValidationsToolStripMenuItem.Size = new System.Drawing.Size(267, 26);
             this.dMFIOutboundValidationsToolStripMenuItem.Text = "DMFI Outbound Validations";
-            this.dMFIOutboundValidationsToolStripMenuItem.Click += new System.EventHandler(this.dMFIOutboundValidationsToolStripMenuItem_Click);
+            this.dMFIOutboundValidationsToolStripMenuItem.Click += new System.EventHandler(this.DMFIOutboundValidationsToolStripMenuItem_Click);
             // 
             // lexisNexisToolStripMenuItem
             // 
             this.lexisNexisToolStripMenuItem.Name = "lexisNexisToolStripMenuItem";
             this.lexisNexisToolStripMenuItem.Size = new System.Drawing.Size(267, 26);
             this.lexisNexisToolStripMenuItem.Text = "LexisNexis";
-            this.lexisNexisToolStripMenuItem.Click += new System.EventHandler(this.lexisNexisToolStripMenuItem_Click);
+            this.lexisNexisToolStripMenuItem.Click += new System.EventHandler(this.LexisNexisToolStripMenuItem_Click);
             // 
             // arcvalToolStripMenuItem
             // 
             this.arcvalToolStripMenuItem.Name = "arcvalToolStripMenuItem";
             this.arcvalToolStripMenuItem.Size = new System.Drawing.Size(267, 26);
             this.arcvalToolStripMenuItem.Text = "Arcval";
-            this.arcvalToolStripMenuItem.Click += new System.EventHandler(this.arcvalToolStripMenuItem_Click);
+            this.arcvalToolStripMenuItem.Click += new System.EventHandler(this.ArcvalToolStripMenuItem_Click);
             // 
             // findObjectToolStripMenuItem
             // 
             this.findObjectToolStripMenuItem.Name = "findObjectToolStripMenuItem";
             this.findObjectToolStripMenuItem.Size = new System.Drawing.Size(191, 26);
             this.findObjectToolStripMenuItem.Text = "Find Object";
-            this.findObjectToolStripMenuItem.Click += new System.EventHandler(this.findObjectToolStripMenuItem_Click);
+            this.findObjectToolStripMenuItem.Click += new System.EventHandler(this.FindObjectToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
             this.exitToolStripMenuItem.Size = new System.Drawing.Size(191, 26);
             this.exitToolStripMenuItem.Text = "Exit";
-            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItem_Click);
             // 
             // toolsToolStripMenuItem
             // 
@@ -155,7 +155,7 @@
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
             this.settingsToolStripMenuItem.Size = new System.Drawing.Size(137, 26);
             this.settingsToolStripMenuItem.Text = "Settings";
-            this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
+            this.settingsToolStripMenuItem.Click += new System.EventHandler(this.SettingsToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -171,14 +171,14 @@
             this.updateToolStripMenuItem.Name = "updateToolStripMenuItem";
             this.updateToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
             this.updateToolStripMenuItem.Text = "Update";
-            this.updateToolStripMenuItem.Click += new System.EventHandler(this.updateToolStripMenuItem_Click);
+            this.updateToolStripMenuItem.Click += new System.EventHandler(this.UpdateToolStripMenuItem_Click);
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
             this.aboutToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
             this.aboutToolStripMenuItem.Text = "About";
-            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.AboutToolStripMenuItem_Click);
             // 
             // label1
             // 

@@ -12,13 +12,21 @@ namespace AlisBatchReporter.Forms
             BindComponents();
         }
 
+        private void BindComponents()
+        {
+            compareButton.Click += ComparedClicked;
+            CancelButton.Click += CancelledClicked;
+            closeButton.Click += CloseClicked;
+            overrideCheckBox.CheckedChanged += OverrideCheckedChanged;
+        }
+
         public event Action Compared;
 
         public event Action Cancelled;
 
         public event Action OverrideFilesChecked;
 
-        public Panel OverridePanel => fileNamesPanel;
+        public Panel OverridePanel => FileNamesPanel;
 
         public string ProcessTextBox
         {
@@ -71,15 +79,7 @@ namespace AlisBatchReporter.Forms
         public void EnabledCancelButton()
         {
             CancelButton.Enabled = true;
-        }
-
-        private void BindComponents()
-        {
-            compareButton.Click += ComparedClicked;
-            CancelButton.Click += CancelledClicked;
-            closeButton.Click += CloseClicked;
-            overrideCheckBox.CheckedChanged += OverrideCheckedChanged;
-        }
+        }       
 
         private void CancelledClicked(object sender, EventArgs e)
         {

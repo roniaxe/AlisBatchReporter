@@ -7,13 +7,9 @@ namespace AlisBatchReporter.Presentors
 {
     internal class ArcvalInstance
     {
+        #region Properties
         private readonly string _outboundRow;
         private string[] _splitted;
-
-        public ArcvalInstance(string outboundRow)
-        {
-            _outboundRow = outboundRow;
-        }
 
         public string Key { get; private set; }
         public string PolicyNo { get; private set; }
@@ -21,7 +17,16 @@ namespace AlisBatchReporter.Presentors
         public ArcvalRowType Type { get; private set; }
         public StructureType StructureType { get; private set; }
         public List<ArcvalProps> ArcvalProps { get; set; } = new List<ArcvalProps>();
+        #endregion
 
+        #region Constructor
+        public ArcvalInstance(string outboundRow)
+        {
+            _outboundRow = outboundRow;
+        }
+        #endregion
+
+        #region Methods
         public bool Validate()
         {
             return _outboundRow.Length >= 30;
@@ -36,7 +41,7 @@ namespace AlisBatchReporter.Presentors
         {
             // Get Type
             int.TryParse(_outboundRow.Substring(42, 1), out var type);
-            Type = (ArcvalRowType) type;
+            Type = (ArcvalRowType)type;
 
             // Get Key
             Key = GetKey(Type);
@@ -154,29 +159,19 @@ namespace AlisBatchReporter.Presentors
                         {2, 14, 15, 16, 18, 19, 20, 28, 30, 42, 43, 44, 46, 47, 56, 64, 73, 82, 90, 91};
                     break;
                 case StructureType.RpuStructure:
-                    cuts = new[]
-                        {2, 14, 15, 16, 18, 19, 20, 28, 30, 42, 43, 44, 46, 47, 56, 64, 73, 75, 83};
+                    cuts = new[] { 2, 14, 15, 16, 18, 19, 20, 28, 30, 42, 43, 44, 46, 47, 56, 64, 73, 75, 83 };
                     break;
                 case StructureType.EtiStructure:
-                    cuts = new[]
-                        {2, 14, 15, 16, 18, 19, 20, 28, 30, 42, 43, 44, 46, 53, 56, 64, 73, 81};
+                    cuts = new[] { 2, 14, 15, 16, 18, 19, 20, 28, 30, 42, 43, 44, 46, 53, 56, 64, 73, 81 };
                     break;
                 case StructureType.UserDefinedStructure:
-                    cuts = new[] {2, 14, 15, 16, 18, 19, 20, 28, 30, 42, 43, 44, 46, 48};
+                    cuts = new[] { 2, 14, 15, 16, 18, 19, 20, 28, 30, 42, 43, 44, 46, 48 };
                     break;
                 case StructureType.WaiverStructure:
-                    cuts = new[]
-                    {
-                        2, 14, 15, 16, 18, 19, 20, 28, 30, 42, 43, 44, 56, 57, 69, 71, 72, 73, 75, 77, 85, 93, 101, 110,
-                        119
-                    };
+                    cuts = new[] { 2, 14, 15, 16, 18, 19, 20, 28, 30, 42, 43, 44, 56, 57, 69, 71, 72, 73, 75, 77, 85, 93, 101, 110, 119 };
                     break;
                 case StructureType.RiderStructure:
-                    cuts = new[]
-                    {
-                        2, 14, 15, 16, 18, 19, 20, 28, 30, 42, 43, 55, 56, 57, 58, 60, 62, 70, 78, 101, 110, 119, 128,
-                        137, 146
-                    };
+                    cuts = new[] { 2, 14, 15, 16, 18, 19, 20, 28, 30, 42, 43, 55, 56, 57, 58, 60, 62, 70, 78, 101, 110, 119, 128, 137, 146 };
                     break;
             }
             return SplitAt(_outboundRow.TrimEnd(), cuts);
@@ -229,17 +224,19 @@ namespace AlisBatchReporter.Presentors
                 case ArcvalRowType.PolicyRecord:
                 case ArcvalRowType.Waiver:
                 case ArcvalRowType.UserDefined:
-                    return PolicyNo + (int) Type;
+                    return PolicyNo + (int)Type;
                 case ArcvalRowType.Rider:
                     var secondKey = _outboundRow.Substring(62, 8);
                     var thirdKey = _outboundRow.Substring(70, 8);
-                    return PolicyNo + (int) Type + $@"-{secondKey}-{thirdKey}";
+                    return PolicyNo + (int)Type + $@"-{secondKey}-{thirdKey}";
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, @"Unrecognized Arcval Type");
             }
-        }
+        } 
+        #endregion
     }
 
+    #region ArcvalPropsClass
     public class ArcvalProps
     {
         public string Name { get; set; }
@@ -247,7 +244,9 @@ namespace AlisBatchReporter.Presentors
         public bool Intable { get; set; }
         public bool ToIgnore { get; set; }
     }
+    #endregion
 
+    #region Enums
     public enum ArcvalRowType
     {
         PolicyRecord = 1,
@@ -274,5 +273,6 @@ namespace AlisBatchReporter.Presentors
         RiderStructure = 55,
         WaiverStructure = 6,
         UserDefinedStructure = 7
-    }
+    } 
+    #endregion
 }

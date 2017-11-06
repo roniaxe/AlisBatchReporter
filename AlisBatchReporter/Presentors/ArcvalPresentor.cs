@@ -33,7 +33,6 @@ namespace AlisBatchReporter.Presentors
 
         #endregion
 
-        
 
         private void CancelCompare()
         {
@@ -61,15 +60,15 @@ namespace AlisBatchReporter.Presentors
                 _arcvalView.LogProcess("Reading Files...", false);
                 var sourceContent = ReadFiles("AV_Source.txt");
                 var outboundContent = ReadFiles("AV_Outbound.txt");
-                await Task.WhenAll(sourceContent, outboundContent);
+                string[] readingTaskResults = await Task.WhenAll(sourceContent, outboundContent);
                 _arcvalView.LogProcess("Done!", true);
 
                 _arcvalView.LogProcess("Indexing Source File...", false);
-                await Task.Run(() => Indexing(sourceContent.Result, _sourceDic));
+                await Task.Run(() => Indexing(readingTaskResults[0], _sourceDic));
                 _arcvalView.LogProcess("Done!", true);
 
                 _arcvalView.LogProcess("Indexing Outbound File...", false);
-                await Task.Run(() => Indexing(outboundContent.Result, _outboundDic));
+                await Task.Run(() => Indexing(readingTaskResults[1], _outboundDic));
                 _arcvalView.LogProcess("Done!", true);               
             }
             catch (TaskCanceledException exception)
@@ -191,7 +190,7 @@ namespace AlisBatchReporter.Presentors
                 }
                 else
                 {
-                    _diffDictionary["Duplicates"] = new List<string>{ arcval.Key };
+                    _diffDictionary["Duplicates"] = new List<string> { arcval.Key };
                 }
             }
             else
@@ -225,16 +224,11 @@ namespace AlisBatchReporter.Presentors
 
         private void AddToDiffDic(ArcvalInstance source, ArcvalInstance outbound, string dicKey, int? index)
         {
-            var val = $@"{source.Key} ({source.Status.ToString()})";
-
-            if (outbound != null && index != null)
-                val = val + $@" - Source Val: {source.ArcvalProps[index.Value].Value}, Outbound Val: {
-                              outbound.ArcvalProps[index.Value].Value
-                          }";
+            var format = ArcvalUtils.FormatDifferenceString(source, outbound, index);
             if (_diffDictionary.ContainsKey(dicKey))
-                _diffDictionary[dicKey].Add(val);
+                _diffDictionary[dicKey].Add(format);
             else
-                _diffDictionary.Add(dicKey, new List<string> {val});
+                _diffDictionary.Add(dicKey, new List<string> { format });
         }
 
         private void Compare(

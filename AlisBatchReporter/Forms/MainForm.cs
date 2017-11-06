@@ -3,8 +3,8 @@ using System.Linq;
 using System.Windows.Forms;
 using AlisBatchReporter.Classes;
 using AlisBatchReporter.Models;
-using AlisBatchReporter.Presentors;
 using AlisBatchReporter.Models.EntityFramwork;
+using AlisBatchReporter.Presentors;
 
 namespace AlisBatchReporter.Forms
 {
@@ -23,10 +23,10 @@ namespace AlisBatchReporter.Forms
                 //db.Database.Initialize(true);
                 restoreFromDb = db.SavedCredentialses.FirstOrDefault(i => i.ChoseLast && i.Saved);
             }
-            Global.PropSetter(restoreFromDb);           
+            Global.PropSetter(restoreFromDb);
         }
 
-        private void newToolStripMenuItem_Click(object sender, EventArgs e)
+        private void NewToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(Global.SavedCredentials?.Name) ||
                 string.IsNullOrEmpty(Global.SavedCredentials?.ConnString))
@@ -41,7 +41,7 @@ namespace AlisBatchReporter.Forms
             }
         }
 
-        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var configForm = new ConfigForm();
             configForm.Show();
@@ -55,24 +55,24 @@ namespace AlisBatchReporter.Forms
                 currentRunningLabel.Text = "";
         }
 
-        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MessageBox.Show($@"Version: {Global.Version}" + "\n" +
                             @"For Issues/Requests - Contact Roni Axelrad - roni.axelrad@sapiens.com");
         }
 
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Close();
-        }      
+        }
 
-        private void unallocatedSuspenseToolStripMenuItem_Click(object sender, EventArgs e)
+        private void UnallocatedSuspenseToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var exportValidationForm = new ExportValidationForm();
             exportValidationForm.Show();
         }
 
-        private void eftExportToolStripMenuItem_Click(object sender, EventArgs e)
+        private void EftExportToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(Global.SavedCredentials.Name) ||
                 string.IsNullOrEmpty(Global.SavedCredentials.ConnString))
@@ -86,19 +86,19 @@ namespace AlisBatchReporter.Forms
             }
         }
 
-        private void dMFIOutboundValidationsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void DMFIOutboundValidationsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var dmfiValidationsForm = new DmfiValidationsForm();
             dmfiValidationsForm.Show();
         }
 
-        private void findObjectToolStripMenuItem_Click(object sender, EventArgs e)
+        private void FindObjectToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var findObjectForm = new FindObjectForm();
             findObjectForm.Show();
         }
 
-        private void lexisNexisToolStripMenuItem_Click(object sender, EventArgs e)
+        private void LexisNexisToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var lexisNexisForm = new LexisNexisForm();
             var lexisNexisPresentor = new LexisNexisPresentor(lexisNexisForm);
@@ -106,7 +106,7 @@ namespace AlisBatchReporter.Forms
             lexisNexisForm.Show();
         }
 
-        private void arcvalToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ArcvalToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var arcvalCompareForm = new ArcvalCompareForm();
             var arcvalPresentor = new ArcvalPresentor(arcvalCompareForm);
@@ -114,9 +114,8 @@ namespace AlisBatchReporter.Forms
             arcvalCompareForm.Show();
         }
 
-        private void updateToolStripMenuItem_Click(object sender, EventArgs e)
+        private void UpdateToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            
         }
     }
 }

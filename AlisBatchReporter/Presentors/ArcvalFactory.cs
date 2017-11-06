@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace AlisBatchReporter.Presentors
 {
@@ -20,6 +22,20 @@ namespace AlisBatchReporter.Presentors
             }
             arcval.Process();
             return arcval;
+        }
+    }
+
+    internal class ArcvalUtils
+    {
+        public static string FormatDifferenceString(ArcvalInstance src, ArcvalInstance ob, int? idx)
+        {
+            string extra = null;
+            if (ob != null && idx != null)
+            {
+                extra = $@" - Source Val: {src.ArcvalProps[idx.Value].Value}, Outbound Val: {ob.ArcvalProps[idx.Value].Value}";
+            }
+
+            return $@"{src.Key} ({src.Status.ToString()}) {extra}";
         }
     }
 }
